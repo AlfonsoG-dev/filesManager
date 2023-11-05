@@ -25,7 +25,7 @@ public class Operaciones {
      * busca los archivos y puede navegar entre directorios
      * @param nPath: dirección nueva a ver los archivos
      */
-    public String ChangeDirectory(String nPath) {
+    public void ChangeDirectory(String nPath) {
         File localFile = new File(localFilePath);
         try {
             if(nPath.equals("./") == false || nPath.equals("..")) {
@@ -37,7 +37,6 @@ public class Operaciones {
         } catch(Exception e) {
             System.err.println(e);
         }
-        return localFilePath;
     }
     /**
      * lista los archivos del directorio
@@ -58,6 +57,8 @@ public class Operaciones {
     }
     /**
      * crea un directorio en el directorio local
+     * @param directoryNames: nombre del directorio a crear
+     * @throws Execute no soporta crear varios directorios separados por ","
      */
     public void CreateDirectories(String directoryNames) {
         try {
@@ -85,6 +86,33 @@ public class Operaciones {
                 utils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
             }
         } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
+     * elimina un directorio deseado o varios directorios
+     * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
+     * @param directoryPath: direccion del directorio(s) a eliminar
+     */
+    public void DeleteDirectories(String directoryPath) {
+        try {
+            //TODO: crear la función para eliminar un directorio o varios directorios
+            throw new Exception("not implemented yet");
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
+     * mueve los archivos de source to target
+     * <br> post: </br> los archivos de source seran eliminados
+     * @param sourceFilePath: direccion source de archivos
+     * @param targetFilePath: direccion target para los archivos
+     */
+    public void MoveFilesFromSourceToTarget(String sourceFilePath, String targetFilePath) {
+        try {
+            //TODO: crear la función para mover los archivos de source to target
+            throw new Exception("not implemented yet");
+        } catch(Exception e) {
             System.err.println(e);
         }
     }

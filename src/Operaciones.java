@@ -57,6 +57,38 @@ public class Operaciones {
         }
     }
     /**
+     * crea un directorio en el directorio local
+     */
+    public void CreateDirectories(String directoryNames) {
+        try {
+            String cDirectory = directoryNames.replace("/", "\\").replace(".", "");
+            String[] valores = cDirectory.split("\\\\");
+            int count = 0;
+            File localFile = new File(localFilePath);
+            for(String v: valores) {
+                if(v.isEmpty() == false) {
+                    ++count;
+                }
+            }
+            if(cDirectory.contains(",")) {
+                //TODO: permitir crear varios directorios en la misma direccion, utilizando ",".
+                throw new Exception("not implemented yet");
+            } else if(count <= 1) {
+                String nDirectory = localFile.getCanonicalPath() + "\\"+ cDirectory;
+                File miFile = new File(nDirectory);
+                if(miFile.exists() == false) {
+                    if(miFile.mkdir() == true) {
+                        System.out.println("se creo: " + cDirectory);
+                    }
+                }
+            } else if(count > 1) {
+                utils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
      * copia todos los archivos desde source a target
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
      * @param sourceFilePath: ruta del directorio source

@@ -1,7 +1,7 @@
 class App {
     public static void main(String[] args) {
         try {
-            for(int i=0; i<args.length; ++i) {
+            outter:for(int i=0; i<args.length; ++i) {
                 Operaciones op = new Operaciones("./");
                 switch(args[i]) {
                     case "-lc": 
@@ -13,6 +13,19 @@ class App {
                             op.CopyFilesfromSourceToTarget(args[i+1], args[i+3]);
                         }
                         break;
+                    case "-md":
+                        if((i+1) < args.length) {
+                            op.CreateDirectories(args[i+1]);
+                        }
+                        break;
+                    case "--h":
+                        System.out.println("utiliza -lc para listar los elementos de un directorio");
+                        System.out.println("utiliza -cp para copiar los archivos del directorio source");
+                        System.out.println("\t\tpara copiarlos en el directorio target");
+                        break;
+                    default: 
+                        System.out.println("utiliza --h para mas informacion");
+                        break outter;
                 }
             }
         } catch(Exception e) {

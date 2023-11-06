@@ -1,3 +1,5 @@
+package Mundo;
+
 import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -6,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 
 import Utils.BusquedaUtils;
 import Utils.Formulario;
+import Utils.OperationUtils;
 public class Operaciones {
     /**
      * declaración de la instancia {@link BusquedaUtils}
@@ -14,6 +17,9 @@ public class Operaciones {
     /**
      */
     private Formulario formulario;
+    /**
+     */
+    private OperationUtils operationUtils;
     /**
      */
     private String localFilePath;
@@ -25,6 +31,7 @@ public class Operaciones {
         utils = new BusquedaUtils();
         localFilePath = nLocalFilePath;
         formulario = new Formulario();
+        operationUtils = new OperationUtils();
     }
     /**
      * busca los archivos y puede navegar entre directorios
@@ -34,7 +41,7 @@ public class Operaciones {
         File localFile = new File(localFilePath);
         try {
             if(nPath.equals("./") == false || nPath.equals("..")) {
-                String cPath = nPath.replace(".", "").replace("/", "\\").replace("\\\\", "\\");
+                String cPath = operationUtils.GetCleanPath(nPath);
                 localFilePath = localFile.getCanonicalPath().concat(cPath);
             } else {
                 throw new Exception("not implemented yet");
@@ -69,9 +76,7 @@ public class Operaciones {
         try {
             String cDirectory = "";
             if(directoryNames.startsWith(".")) {
-                cDirectory = directoryNames.replace(".", "").replace("/", "\\");
-            } else {
-                cDirectory = directoryNames.replace("/", "\\").replace(".", "_");
+                cDirectory = operationUtils.GetCleanPath(directoryNames);
             }
             String[] valores = cDirectory.split("\\\\");
             int count = 0;

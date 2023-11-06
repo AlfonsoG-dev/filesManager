@@ -107,7 +107,7 @@ public class Operaciones {
     public void DeleteDirectories(String filePath, String permiso) {
         try {
             String cFile = filePath.replace("/", "\\");
-            if(filePath.contains(",")) {
+            if(filePath.contains(",") || filePath.contains("*")) {
                 // TODO: eliminar varios directorios separados por ","
                 throw new Exception("not implemented yet");
             }
@@ -148,8 +148,19 @@ public class Operaciones {
      */
     public void MoveFilesFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
-            // TODO: crear la función para mover los archivos de source to target
-            throw new Exception("not implemented yet");
+            if(sourceFilePath.equals(targetFilePath)) {
+                throw new Exception("no se puede mover un archivo del mismo nombre");
+            }
+            File sourceFile = new File(sourceFilePath);
+            File targetFile = new File(targetFilePath);
+            if(sourceFile.exists() && targetFile.exists()) {
+                Path sourcePath = sourceFile.toPath();
+                Path targetPath = targetFile.toPath();
+                Path movePath = Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                if(movePath.toFile().getName().isEmpty() == false) {
+                    System.out.println("archivos se movieron de: " + sourceFilePath + " to: " + targetFilePath);
+                }
+            }
         } catch(Exception e) {
             System.err.println(e);
         }

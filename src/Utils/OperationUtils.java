@@ -60,7 +60,7 @@ public final class OperationUtils {
     public boolean VerifyAssign() {
         boolean res = false;
         if((i+2) < options.length && options[i+2].equals("to") ||
-                options[i+2].equals("yes")) {
+                options[i+2].equals("--y")) {
             res = true;
         }
         return res;
@@ -108,7 +108,7 @@ public final class OperationUtils {
     public void DeleteDirectoryOperation() {
         if(VerifySecuence().isEmpty() && verifyFirstFile().isEmpty() == false &&
                 VerifyAssign() == true) {
-            fileOperations.DeleteDirectories(verifyFirstFile(), "yes");
+            fileOperations.DeleteDirectories(verifyFirstFile(), "--y");
         }
     }
     /**

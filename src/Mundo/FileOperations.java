@@ -6,16 +6,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import Utils.BusquedaUtils;
-import Utils.Formulario;
 import Utils.TextUtils;
 public class FileOperations {
     /**
      * declaración de la instancia {@link BusquedaUtils}
      */
     private BusquedaUtils busquedaUtils;
-    /**
-     */
-    private Formulario formulario;
+    /*
     /**
      */
     private TextUtils textUtils;
@@ -29,7 +26,6 @@ public class FileOperations {
     public FileOperations(String nLocalFilePath) {
         busquedaUtils = new BusquedaUtils();
         localFilePath = nLocalFilePath;
-        formulario = new Formulario();
         textUtils = new TextUtils();
     }
     /**
@@ -101,15 +97,15 @@ public class FileOperations {
      */
     public void DeleteDirectories(String filePath, String permiso) {
         try {
+            File localFile = new File(localFilePath);
             String cFile = textUtils.GetCleanPath(filePath);
-            File miFile = new File(cFile);
-            if(miFile.exists() && miFile.isFile() &&
-                    formulario.ComprobarAccion(permiso) == true) {
+            File miFile = new File(localFile.getCanonicalPath() + "\\" + cFile);
+            if(miFile.isFile()) {
                 if(miFile.delete() == true) {
-                    System.out.println("se elimino el directorio: " + cFile);
+                    System.out.println("se elimino el archivo: " + miFile.getName());
                 }
-            } else if(miFile.exists() && miFile.isDirectory() && miFile.listFiles().length > 0 && 
-                    formulario.ComprobarAccion(permiso) == true) {
+            }
+            if(miFile.isDirectory() && miFile.listFiles().length >0) {
                 boolean b = false;
                 File[] files = miFile.listFiles();
                 for(File f: files) {
@@ -121,8 +117,7 @@ public class FileOperations {
                 if(b == true && miFile.delete() == true) {
                     System.out.println("se elimino el directorio: " + miFile);
                 }
-            } else if(miFile.exists() && miFile.isDirectory() && miFile.listFiles().length == 0 &&
-                    formulario.ComprobarAccion(permiso) == true) {
+            } else if(miFile.listFiles().length == 0) {
                 if(miFile.delete() == true) {
                     System.out.println("se elimino el directorio: " + miFile);
                 }
@@ -148,14 +143,22 @@ public class FileOperations {
                 Path sourcePath = sourceFile.toPath();
                 Path targetPath = targetFile.toPath();
                 Path movePath = Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-                if(movePath.toFile().getName().isEmpty() == false) {
-                    System.out.println("archivos se movieron de: " + sourceFilePath + " to: " + targetFilePath);
-                }
+                    for(File f: sourceFile.listFiles()) {
+                        if(movePath.toFile().getName().isEmpty() == false &&
+                                f.delete() == true) {
+                            f.deleteOnExit();
+                            System.out.println("archivos se movieron de: " + sourceFilePath + " to: " + targetFilePath);
+                        }
+                    }
             }
         } catch(Exception e) {
             System.err.println(e);
         }
     }
+    /**
+     * renombra un directorio con otro nombre
+     * <br> post: </br> los archivos de 
+     */
     /**
      * copia el directorio source en el target
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea

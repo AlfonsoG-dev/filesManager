@@ -37,8 +37,8 @@ java -jar app.jar operation
 -------
 
 ## TODO'S
--[] delete, create using the separator: ","
--[] copy, move only the files and not the entire directory
+- [] delete, create using the separator: ","
+- [] copy, move only the files and not the entire directory
 
 -------
 

@@ -5,7 +5,7 @@
 ## Features
 - [x] delete directory and it content
 - [x] make a directory and nested directories
-- [x] move the directory to another
+- [x] move the content of the source directory to the target directory
 - [x] copy the directory to another
 
 -------
@@ -25,6 +25,9 @@ java -jar app.jar operation
 >>- cant create directories with: ","
 >>- can create nested directories: "test/testTwo"
 
+>- `-mv`: move the content of source to target
+>>- `java -jar app.jar -mv .\source to .\target`
+
 >- `-cp`: copy a source directory into target directory
 >>- `java -jar app.jar -cp source to target`
 >>- only copy directories and their content into another directory
@@ -38,7 +41,7 @@ java -jar app.jar operation
 
 ## TODO'S
 - [ ] delete, create using the separator: ","
-- [ ] copy, move only the files and not the entire directory
+- [ ] copy only the files and not the entire directory
 
 -------
 

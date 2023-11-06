@@ -9,8 +9,8 @@ class App {
                         op.ListFiles();
                         break;
                     case "-cp":
-                        if((i+2) < args.length && args[i+2].toLowerCase().equals("to") && (i+3) < args.length) {
-                            op.CopyFilesfromSourceToTarget(args[i+1], args[i+3]);
+                        if((i+1) < args.length && args[i+2].toLowerCase().equals("to") && (i+3) < args.length) {
+                            op.CopyFilesfromSourceDirectoryToTargetDirectory(args[i+1], args[i+3]);
                         }
                         break;
                     case "-mv":

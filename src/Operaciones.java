@@ -166,19 +166,23 @@ public class Operaciones {
         }
     }
     /**
-     * copia todos los archivos desde source a target
+     * copia el directorio source en el target
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
      * @param sourceFilePath: ruta del directorio source
      * @param targetFilePath: ruta del directorio target
      */
-    public void CopyFilesfromSourceToTarget(String sourceFilePath, String targetFilePath) {
+    public void CopyFilesfromSourceDirectoryToTargetDirectory(String sourceFilePath, String targetFilePath) {
         try {
+            if(sourceFilePath.contains("\\\\*") || targetFilePath.contains(", ")) {
+                // TODO: crear la opcion para que se pueda copiar los archivos del directorio a otro directorio
+                throw new Exception("not implemented yet");
+            }
             String[] fileNames = utils.listFilesFromPath(sourceFilePath).split("\n");
             for(String fn: fileNames) {
                 File sourceFile = new File(fn);
                 String[] parentName = sourceFile.getCanonicalPath().split("\\\\");
                 String targetNames = "";
-                for(int i=5; i<parentName.length; ++i) {
+                for(int i=6; i<parentName.length; ++i) {
                     targetNames += parentName[i] + "\\";
                 }
                 String cTargetNames = targetNames + ";";

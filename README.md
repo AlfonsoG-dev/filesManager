@@ -2,6 +2,14 @@
 >- a basic file system operator
 >>- for basic operations like: delete, create, copy and move files or directories
 
+## Features
+- [x] delete directory and it content
+- [x] make a directory and nested directories
+- [x] move the directory to another
+- [x] copy the directory to another
+
+-------
+
 # Usage
 
 >- you can use the `.jar` file to execute the proyect
@@ -26,6 +34,13 @@ java -jar app.jar operation
 >>- you need to give consent: `-df test_file yes`
 >>>- or: `-df test_file no`
 
+-------
+
+## TODO'S
+-[] delete, create using the separator: ","
+-[] copy, move only the files and not the entire directory
+
+-------
 
 ## Disclaimer
 >- this proyect is for educational purposes

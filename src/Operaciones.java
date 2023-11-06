@@ -167,16 +167,14 @@ public class Operaciones {
     }
     /**
      * copia el directorio source en el target
+     * TODO: por el momento solo se puede copiar un directorio completo
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
      * @param sourceFilePath: ruta del directorio source
      * @param targetFilePath: ruta del directorio target
      */
     public void CopyFilesfromSourceDirectoryToTargetDirectory(String sourceFilePath, String targetFilePath) {
         try {
-            if(sourceFilePath.contains("\\\\*") || targetFilePath.contains(", ")) {
-                // TODO: crear la opcion para que se pueda copiar los archivos del directorio a otro directorio
-                throw new Exception("not implemented yet");
-            }
+            // TODO: encontrar la forma de corroborar la copia por "*" o ","
             String[] fileNames = utils.listFilesFromPath(sourceFilePath).split("\n");
             for(String fn: fileNames) {
                 File sourceFile = new File(fn);

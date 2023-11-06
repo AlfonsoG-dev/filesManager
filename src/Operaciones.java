@@ -5,11 +5,15 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import Utils.BusquedaUtils;
+import Utils.Formulario;
 public class Operaciones {
     /**
      * declaración de la instancia {@link BusquedaUtils}
      */
     private BusquedaUtils utils;
+    /**
+     */
+    private Formulario formulario;
     /**
      */
     private String localFilePath;
@@ -20,6 +24,7 @@ public class Operaciones {
     public Operaciones(String nLocalFilePath) {
         utils = new BusquedaUtils();
         localFilePath = nLocalFilePath;
+        formulario = new Formulario();
     }
     /**
      * busca los archivos y puede navegar entre directorios
@@ -62,7 +67,12 @@ public class Operaciones {
      */
     public void CreateDirectories(String directoryNames) {
         try {
-            String cDirectory = directoryNames.replace("/", "\\").replace(".", "");
+            String cDirectory = "";
+            if(directoryNames.startsWith(".")) {
+                cDirectory = directoryNames.replace(".", "").replace("/", "\\");
+            } else {
+                cDirectory = directoryNames.replace("/", "\\").replace(".", "_");
+            }
             String[] valores = cDirectory.split("\\\\");
             int count = 0;
             File localFile = new File(localFilePath);
@@ -90,14 +100,39 @@ public class Operaciones {
         }
     }
     /**
+     * TODO: crear la función para eliminar un directorio o varios directorios
      * elimina un directorio deseado o varios directorios
      * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
      * @param directoryPath: direccion del directorio(s) a eliminar
      */
-    public void DeleteDirectories(String directoryPath) {
+    public void DeleteDirectories(String filePath, String permiso) {
         try {
-            //TODO: crear la función para eliminar un directorio o varios directorios
-            throw new Exception("not implemented yet");
+            String cFile = filePath.replace("/", "\\");
+            File miFile = new File(cFile);
+            if(miFile.exists() && miFile.isFile() &&
+                    formulario.ComprobarAccion(permiso) == true) {
+                if(miFile.delete() == true) {
+                    System.out.println("se elimino el directorio: " + cFile);
+                }
+            } else if(miFile.exists() && miFile.isDirectory() && miFile.listFiles().length > 0 && 
+                    formulario.ComprobarAccion(permiso) == true) {
+                boolean b = false;
+                File[] files = miFile.listFiles();
+                for(File f: files) {
+                    b = f.delete();
+                    if(b == true) {
+                        System.out.println("se elimino el elemento: " + f);
+                    }
+                }
+                if(b == true && miFile.delete() == true) {
+                    System.out.println("se elimino el directorio: " + miFile);
+                }
+            } else if(miFile.exists() && miFile.isDirectory() && miFile.listFiles().length == 0 &&
+                    formulario.ComprobarAccion(permiso) == true) {
+                if(miFile.delete() == true) {
+                    System.out.println("se elimino el directorio: " + miFile);
+                }
+            }
         } catch(Exception e) {
             System.err.println(e);
         }
@@ -110,7 +145,7 @@ public class Operaciones {
      */
     public void MoveFilesFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
-            //TODO: crear la función para mover los archivos de source to target
+            // TODO: crear la función para mover los archivos de source to target
             throw new Exception("not implemented yet");
         } catch(Exception e) {
             System.err.println(e);

@@ -2,6 +2,23 @@ package Utils;
 import java.io.File;
 public class BusquedaUtils {
     /**
+     * ayuda a generar la ruta de los elementos del directorio
+     * @param miFiles: elementos del directorio
+     * @return string con la ruta de los elementos del directorio
+     */
+    public String getFileElements(File[] miFiles) throws Exception {
+        String fileNames = "";
+        try {
+            for(File f: miFiles) {
+                fileNames += f.getPath() + "\n";
+            }
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+        String cFiles = fileNames.substring(0, fileNames.length()-2);
+        return cFiles;
+    }
+    /**
      * ayuda a generar la ruta de los archivos dentro de cualquier directorio
      * @param miFiles: los archivos dentro de un directorio
      * @return la ruta de los archivos dentro de cualquier directorio

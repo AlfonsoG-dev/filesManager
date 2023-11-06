@@ -18,6 +18,11 @@ class App {
                             op.CreateDirectories(args[i+1]);
                         }
                         break;
+                    case "-df":
+                        if((i+1) < args.length && (i+2) < args.length) {
+                            op.DeleteDirectories(args[i+1], args[i+2]);
+                        }
+                        break;
                     case "--h":
                         System.out.println("utiliza -lc para listar los elementos de un directorio");
                         System.out.println("utiliza -cp para copiar los archivos del directorio source");

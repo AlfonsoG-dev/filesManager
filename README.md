@@ -34,14 +34,14 @@ java -jar app.jar operation
 >>- cant copy files or the contend of source directory with: `test/*`
 
 >- `-df`: delete a directory and the content inside
->>- you need to give consent: `-df test_file yes`
->>>- or: `-df test_file no`
+>>- you need to give consent: `-df test_file --y`
 
 -------
 
 ## TODO'S
 - [ ] delete, create using the separator: ","
 - [ ] copy only the files and not the entire directory
+- [ ] rename directory
 
 -------
 

@@ -100,7 +100,6 @@ public class Operaciones {
         }
     }
     /**
-     * TODO: crear la función para eliminar un directorio o varios directorios
      * elimina un directorio deseado o varios directorios
      * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
      * @param directoryPath: direccion del directorio(s) a eliminar
@@ -108,6 +107,10 @@ public class Operaciones {
     public void DeleteDirectories(String filePath, String permiso) {
         try {
             String cFile = filePath.replace("/", "\\");
+            if(filePath.contains(",")) {
+                // TODO: eliminar varios directorios separados por ","
+                throw new Exception("not implemented yet");
+            }
             File miFile = new File(cFile);
             if(miFile.exists() && miFile.isFile() &&
                     formulario.ComprobarAccion(permiso) == true) {

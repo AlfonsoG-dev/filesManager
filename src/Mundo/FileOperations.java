@@ -157,8 +157,18 @@ public class FileOperations {
     }
     /**
      * renombra un directorio con otro nombre
-     * <br> post: </br> los archivos de 
+     * <br> post: </br> los archivos del source se quedan
+     * @param oldName: nombre a cambiar
+     * @param newName: nuevo nombre
      */
+    public void RenameDirectory(String oldName, String newName) {
+        try {
+            // TODO: crear la funcionalidad para renombrar un directorio
+            throw new Exception("not implemented yet");
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
     /**
      * copia el directorio source en el target
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea

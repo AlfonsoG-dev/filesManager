@@ -24,4 +24,19 @@ public class OperationUtils {
         }
         return targetNames;
     }
+    /**
+     * count the number of file within a directory
+     * @param directory: path of the directory
+     * @return the number of files
+     */
+    public int CountFilesInDirectory(String directory) {
+        int count = 0;
+        String[] valores = directory.split("\\\\");
+        for(String v: valores) {
+            if(v.isEmpty() == false) {
+                ++count;
+            }
+        }
+        return count;
+    }
 }

@@ -1,7 +1,6 @@
 package Mundo;
 
 import java.io.File;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -13,7 +12,7 @@ public class Operaciones {
     /**
      * declaración de la instancia {@link BusquedaUtils}
      */
-    private BusquedaUtils utils;
+    private BusquedaUtils busquedaUtils;
     /**
      */
     private Formulario formulario;
@@ -28,7 +27,7 @@ public class Operaciones {
      * <br> post: </br> inicializa la intancia de {@link BusquedaUtils}
      */
     public Operaciones(String nLocalFilePath) {
-        utils = new BusquedaUtils();
+        busquedaUtils = new BusquedaUtils();
         localFilePath = nLocalFilePath;
         formulario = new Formulario();
         operationUtils = new OperationUtils();
@@ -75,21 +74,12 @@ public class Operaciones {
     public void CreateDirectories(String directoryNames) {
         try {
             String cDirectory = "";
+            File localFile = new File(localFilePath);
             if(directoryNames.startsWith(".")) {
                 cDirectory = operationUtils.GetCleanPath(directoryNames);
             }
-            String[] valores = cDirectory.split("\\\\");
-            int count = 0;
-            File localFile = new File(localFilePath);
-            for(String v: valores) {
-                if(v.isEmpty() == false) {
-                    ++count;
-                }
-            }
-            if(cDirectory.contains(",")) {
-                //TODO: permitir crear varios directorios en la misma direccion, utilizando ",".
-                throw new Exception("not implemented yet");
-            } else if(count <= 1) {
+            int count = operationUtils.CountFilesInDirectory(cDirectory);
+            if(count <= 1) {
                 String nDirectory = localFile.getCanonicalPath() + "\\"+ cDirectory;
                 File miFile = new File(nDirectory);
                 if(miFile.exists() == false) {
@@ -98,7 +88,7 @@ public class Operaciones {
                     }
                 }
             } else if(count > 1) {
-                utils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
+                busquedaUtils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
             }
         } catch (Exception e) {
             System.err.println(e);
@@ -111,11 +101,7 @@ public class Operaciones {
      */
     public void DeleteDirectories(String filePath, String permiso) {
         try {
-            String cFile = filePath.replace("/", "\\");
-            if(filePath.contains(",") || filePath.contains("*")) {
-                // TODO: eliminar varios directorios separados por ","
-                throw new Exception("not implemented yet");
-            }
+            String cFile = operationUtils.GetCleanPath(filePath);
             File miFile = new File(cFile);
             if(miFile.exists() && miFile.isFile() &&
                     formulario.ComprobarAccion(permiso) == true) {
@@ -172,31 +158,24 @@ public class Operaciones {
     }
     /**
      * copia el directorio source en el target
-     * TODO: por el momento solo se puede copiar un directorio completo
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
      * @param sourceFilePath: ruta del directorio source
      * @param targetFilePath: ruta del directorio target
      */
     public void CopyFilesfromSourceDirectoryToTargetDirectory(String sourceFilePath, String targetFilePath) {
         try {
-            // TODO: encontrar la forma de corroborar la copia por "*" o ","
-            String[] fileNames = utils.listFilesFromPath(sourceFilePath).split("\n");
+            String[] fileNames = busquedaUtils.listFilesFromPath(sourceFilePath).split("\n");
+
             for(String fn: fileNames) {
                 File sourceFile = new File(fn);
-                String[] parentName = sourceFile.getCanonicalPath().split("\\\\");
-                String targetNames = "";
-                for(int i=6; i<parentName.length; ++i) {
-                    targetNames += parentName[i] + "\\";
-                }
-                String cTargetNames = targetNames + ";";
+                String cTargetNames = operationUtils.CreateTargetFromParentPath(sourceFile.getCanonicalPath()) + ";";
                 String[] names = cTargetNames.split(";");
                 for(String n: names) {
                     File targetFile = new File(targetFilePath + "\\" + n);
-                    utils.CreateParentFile(targetFilePath, targetFile.getParent());
-                    Path sourcePath = FileSystems.getDefault().getPath(sourceFile.getParent(), sourceFile.getName());
-                    Path targetPath = FileSystems.getDefault().getPath(targetFile.getParent(), targetFile.getName());
-                    Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES);
-                    System.out.println("archivos copiados a: " + targetFile.getParent());
+                    busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
+                    Path sourcePath = sourceFile.toPath();
+                    Path targetPath = targetFile.toPath();
+                    System.out.println( Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES));
                 }
             }
         } catch(Exception e) {

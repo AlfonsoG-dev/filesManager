@@ -28,16 +28,12 @@ public final class OperationUtils {
     /**
      * verifica si existen opciones separadas por ","
      * @return un string con las opciones
-     * TODO: utilizar las opciones para realizar las opreaciones
      */
-    public String VerifySecuence() {
-        String res = "";
-        for(String s: options) {
-            if(s.contains(",")) {
-                String[] comas = s.split(",");
-                for(String c: comas) {
-                    res += c + "\n";
-                }
+    public boolean VerifySecuence() {
+        boolean res = false;
+        for(int j=1; j<options.length; ++i) {
+            if(options[j].equals(",")) {
+                res = true;
             }
         }
         return res;
@@ -80,7 +76,7 @@ public final class OperationUtils {
      * realiza la operacion de listar los directorios
      */
     public void ChangeDirectoryOperation() {
-        if(VerifySecuence().isEmpty() && verifyFirstFile().isEmpty() == false) {
+        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false) {
             fileOperations.ChangeDirectory(verifyFirstFile());
             fileOperations.ListFiles();
         }
@@ -89,7 +85,7 @@ public final class OperationUtils {
      * realiza la opreacion de mover los directorios
      */
     public void MoveDirectoryOperation() {
-        if(VerifySecuence().isEmpty() && verifyFirstFile().isEmpty() == false &&
+        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false &&
                 verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
             fileOperations.MoveFilesFromSourceToTarget(verifyFirstFile(), verifySecondFile());
         }
@@ -98,7 +94,7 @@ public final class OperationUtils {
      * realiza la operacion de crear un directorio
      */
     public void CreateDirectoryOperation() {
-        if(VerifySecuence().isEmpty() && verifyFirstFile().isEmpty() == false) {
+        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false) {
             fileOperations.CreateDirectories(verifyFirstFile());
         }
     }
@@ -106,7 +102,7 @@ public final class OperationUtils {
      * realiza la opreacion de eliminar el directorio
      */
     public void DeleteDirectoryOperation() {
-        if(VerifySecuence().isEmpty() && verifyFirstFile().isEmpty() == false &&
+        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false &&
                 VerifyAssign() == true) {
             fileOperations.DeleteDirectories(verifyFirstFile(), "--y");
         }
@@ -115,8 +111,7 @@ public final class OperationUtils {
      * realiza la operacion de copiar source en target
      */
     public void CopySourceDirectoryToTargetOperation() {
-
-        if(VerifySecuence().isEmpty() && verifyFirstFile().isEmpty() == false &&
+        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false &&
                 verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
             fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(verifyFirstFile(), verifySecondFile());
         }

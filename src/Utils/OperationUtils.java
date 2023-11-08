@@ -26,19 +26,6 @@ public final class OperationUtils {
         i = nI;
     }
     /**
-     * verifica si existen opciones separadas por ","
-     * @return un string con las opciones
-     */
-    public boolean VerifySecuence() {
-        boolean res = false;
-        for(int j=1; j<options.length; ++i) {
-            if(options[j].equals(",")) {
-                res = true;
-            }
-        }
-        return res;
-    }
-    /**
      * verifica si se asigna el archivo
      * @return el archivo
      */
@@ -76,7 +63,7 @@ public final class OperationUtils {
      * realiza la operacion de listar los directorios
      */
     public void ChangeDirectoryOperation() {
-        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false) {
+        if(verifyFirstFile().isEmpty() == false) {
             fileOperations.ChangeDirectory(verifyFirstFile());
             fileOperations.ListFiles();
         }
@@ -85,7 +72,7 @@ public final class OperationUtils {
      * realiza la opreacion de mover los directorios
      */
     public void MoveDirectoryOperation() {
-        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false &&
+        if(verifyFirstFile().isEmpty() == false &&
                 verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
             fileOperations.MoveFilesFromSourceToTarget(verifyFirstFile(), verifySecondFile());
         }
@@ -94,24 +81,28 @@ public final class OperationUtils {
      * realiza la operacion de crear un directorio
      */
     public void CreateDirectoryOperation() {
-        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false) {
+        if(verifyFirstFile().isEmpty() == false && verifyFirstFile().contains(",") == false) {
             fileOperations.CreateDirectories(verifyFirstFile());
+        } else {
+            System.out.println("not implemented yet");
         }
     }
     /**
      * realiza la opreacion de eliminar el directorio
      */
     public void DeleteDirectoryOperation() {
-        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false &&
-                VerifyAssign() == true) {
+        if(verifyFirstFile().isEmpty() == false &&
+                VerifyAssign() == true && verifyFirstFile().contains(",") == false) {
             fileOperations.DeleteDirectories(verifyFirstFile(), "--y");
+        } else {
+            System.out.println("not implemented yet");
         }
     }
     /**
      * realiza la operacion de copiar source en target
      */
     public void CopySourceDirectoryToTargetOperation() {
-        if(VerifySecuence() == false && verifyFirstFile().isEmpty() == false &&
+        if(verifyFirstFile().isEmpty() == false &&
                 verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
             fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(verifyFirstFile(), verifySecondFile());
         }

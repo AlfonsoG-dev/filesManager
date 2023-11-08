@@ -69,10 +69,13 @@ public class FileOperations {
      */
     public void CreateDirectories(String directoryNames) {
         try {
-            String cDirectory = "";
+            System.out.println(directoryNames);
+            /*String cDirectory = "";
             File localFile = new File(localFilePath);
             if(directoryNames.startsWith(".")) {
                 cDirectory = textUtils.GetCleanPath(directoryNames);
+            } else {
+                cDirectory = directoryNames;
             }
             int count = textUtils.CountFilesInDirectory(cDirectory);
             if(count <= 1) {
@@ -86,6 +89,7 @@ public class FileOperations {
             } else if(count > 1) {
                 busquedaUtils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
             }
+            */
         } catch (Exception e) {
             System.err.println(e);
         }

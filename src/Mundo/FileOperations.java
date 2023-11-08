@@ -69,8 +69,7 @@ public class FileOperations {
      */
     public void CreateDirectories(String directoryNames) {
         try {
-            System.out.println(directoryNames);
-            /*String cDirectory = "";
+            String cDirectory = "";
             File localFile = new File(localFilePath);
             if(directoryNames.startsWith(".")) {
                 cDirectory = textUtils.GetCleanPath(directoryNames);
@@ -89,7 +88,6 @@ public class FileOperations {
             } else if(count > 1) {
                 busquedaUtils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
             }
-            */
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -102,14 +100,14 @@ public class FileOperations {
     public void DeleteDirectories(String filePath, String permiso) {
         try {
             File localFile = new File(localFilePath);
-            String cFile = textUtils.GetCleanPath(filePath);
+            String cFile = filePath;
             File miFile = new File(localFile.getCanonicalPath() + "\\" + cFile);
+            System.out.println(miFile.getPath());
             if(miFile.isFile()) {
                 if(miFile.delete() == true) {
                     System.out.println("se elimino el archivo: " + miFile.getName());
                 }
-            }
-            if(miFile.isDirectory() && miFile.listFiles().length >0) {
+            } else if(miFile.isDirectory() && miFile.listFiles().length >0) {
                 boolean b = false;
                 File[] files = miFile.listFiles();
                 for(File f: files) {
@@ -167,8 +165,21 @@ public class FileOperations {
      */
     public void RenameDirectory(String oldName, String newName) {
         try {
-            // TODO: crear la funcionalidad para renombrar un directorio
-            throw new Exception("not implemented yet");
+            if(oldName.equals(newName)) {
+                throw new Exception("no se puede realizar la operacion en archivos del mismo nombre");
+            }
+            File sourceFile = new File(oldName);
+            File targetFile = new File(newName);
+            if(targetFile.exists() == false) {
+                targetFile.mkdir();
+            }
+            if(sourceFile.exists() && targetFile.exists()) {
+                Path sourcePath = sourceFile.toPath();
+                Path targetPath = targetFile.toPath();
+                Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                sourceFile.deleteOnExit();
+                System.out.println("el archivo: " + oldName + " se renombra por: " + newName);
+            }
         } catch(Exception e) {
             System.err.println(e);
         }

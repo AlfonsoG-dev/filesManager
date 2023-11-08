@@ -78,6 +78,16 @@ public final class OperationUtils {
         }
     }
     /**
+     * realiza la operacion de renombrar un archivo
+     * <br> pre: </br> en realidad es mover el archivo pero en este caso crea el target
+     */
+    public void RenameDirectory() {
+        if(verifyFirstFile().isEmpty() == false &&
+                verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
+            fileOperations.RenameDirectory(verifyFirstFile(), verifySecondFile());
+        }
+    }
+    /**
      * realiza la operacion de crear un directorio
      */
     public void CreateDirectoryOperation() {

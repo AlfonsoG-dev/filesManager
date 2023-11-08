@@ -32,6 +32,9 @@ public class Operaciones {
                     case "-mv":
                         op.MoveDirectoryOperation();
                         break;
+                    case "-rn":
+                        op.RenameDirectory();
+                        break;
                     case "-md":
                         op.CreateDirectoryOperation();
                         break;
@@ -39,9 +42,13 @@ public class Operaciones {
                         op.DeleteDirectoryOperation();
                         break;
                     case "--h":
-                        System.out.println("utiliza -lc para listar los elementos de un directorio");
+                        System.out.println("utiliza -ls para listar los elementos de un directorio");
                         System.out.println("utiliza -cp para copiar los archivos del directorio source");
                         System.out.println("\t\tpara copiarlos en el directorio target");
+                        System.out.println("utiliza -mv para mover los archivos de source a target");
+                        System.out.println("utiliza -rn para renombrar a source como target");
+                        System.out.println("utiliza -md para crear directorios");
+                        System.out.println("utiliza -df para eliminar directorios y archivos");
                         break;
                     default: 
                         System.out.println("utiliza --h para mas informacion");

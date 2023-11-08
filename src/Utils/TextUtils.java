@@ -7,7 +7,8 @@ public class TextUtils {
      * @return the clean file path
      */
     public String GetCleanPath(String filePath) {
-        String build = filePath.replace(".", "").replace("/", "\\").replace("\\\\", "\\");
+        String build = "";
+        build = filePath.replace(".", "").replace("/", "\\").replace("\\\\", "\\");
         return build;
     }
     

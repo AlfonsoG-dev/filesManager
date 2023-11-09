@@ -3,10 +3,11 @@
 >>- for basic operations like: delete, create, copy and move files or directories
 
 ## Features
-- [x] delete directory and it content
+- [x] delete file or directory and it's content
 - [x] make a directory and nested directories
 - [x] move the content of the source directory to the target directory
-- [x] copy the directory to another
+- [x] rename the directory with the given name
+- [x] copy a file or directory to target
 
 -------
 
@@ -28,6 +29,11 @@ java -jar app.jar operation
 >- `-mv`: move the content of source to target
 >>- `java -jar app.jar -mv .\source to .\target`
 
+>- `-rn`: rename the directory
+>>- `java -jar app.jar -rn oldName to newName`
+>>>- it's the same as move but this creates the newName directory in runtime
+>>>- move need the directory to be created before execute
+
 >- `-cp`: copy a source directory into target directory
 >>- `java -jar app.jar -cp source to target`
 >>- only copy directories and their content into another directory
@@ -40,8 +46,6 @@ java -jar app.jar operation
 
 ## TODO'S
 - [ ] delete, create using the separator: ","
-- [ ] copy only the files and not the entire directory
-- [ ] rename directory
 
 -------
 

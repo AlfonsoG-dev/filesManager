@@ -29,8 +29,14 @@ public class Operaciones {
                     case "-cp":
                         op.CopySourceDirectoryToTargetOperation();
                         break;
+                    case "-cf":
+                        op.CopyFilesSourceToTarget();
+                        break;
                     case "-mv":
                         op.MoveDirectoryOperation();
+                        break;
+                    case "-mf":
+                        op.MoveSourceFilesToTarget();
                         break;
                     case "-rn":
                         op.RenameDirectory();

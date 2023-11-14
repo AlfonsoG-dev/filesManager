@@ -134,7 +134,7 @@ public class FileOperations {
      * @param sourceFilePath: direccion source de archivos
      * @param targetFilePath: direccion target para los archivos
      */
-    public void MoveFilesFromSourceToTarget(String sourceFilePath, String targetFilePath) {
+    public void MoveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(sourceFilePath.equals(targetFilePath)) {
                 throw new Exception("no se puede mover un archivo del mismo nombre");
@@ -186,20 +186,26 @@ public class FileOperations {
      * @param sourceFilePath: ruta del directorio source
      * @param targetFilePath: ruta del directorio target
      */
-    public void CopyFilesfromSourceDirectoryToTargetDirectory(String sourceFilePath, String targetFilePath) {
+    public void CopyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             String[] fileNames = busquedaUtils.listFilesFromPath(sourceFilePath).split("\n");
 
             for(String fn: fileNames) {
                 File sourceFile = new File(fn);
-                String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFile.getCanonicalPath()) + ";";
-                String[] names = cTargetNames.split(";");
-                for(String n: names) {
-                    File targetFile = new File(targetFilePath + "\\" + n);
-                    busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
-                    Path sourcePath = sourceFile.toPath();
-                    Path targetPath = targetFile.toPath();
-                    System.out.println( Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES));
+                if(new File(sourceFilePath).isFile()) {
+                    Path fileSource = sourceFile.toPath();
+                    Path target = new File(targetFilePath).toPath();
+                    System.out.println( Files.copy(fileSource, target.resolve(fileSource.getFileName()), StandardCopyOption.COPY_ATTRIBUTES));
+                } else {
+                    String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFile.getCanonicalPath()) + ";";
+                    String[] names = cTargetNames.split(";");
+                    for(String n: names) {
+                        File targetFile = new File(targetFilePath + "\\" + n);
+                        busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
+                        Path sourcePath = sourceFile.toPath();
+                        Path targetPath = targetFile.toPath();
+                        System.out.println(Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES));
+                    }
                 }
             }
         } catch(Exception e) {

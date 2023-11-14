@@ -90,7 +90,7 @@ public final class OperationUtils {
     public void MoveDirectoryOperation() throws Exception {
         if(!verifyFirstFile().isEmpty() && !verifyFirstFile().contains(",") &&
                 !verifySecondFile().contains(",") &&!verifySecondFile().isEmpty() && VerifyAssign() == true) { 
-            fileOperations.MoveFilesFromSourceToTarget(verifyFirstFile(), verifySecondFile());
+            fileOperations.MoveFromSourceToTarget(verifyFirstFile(), verifySecondFile());
         }
         /** 
         * copy 1 source to more than 1 target
@@ -105,7 +105,24 @@ public final class OperationUtils {
         if(verifyFirstFile().contains(",") && options[options.length-2].contains(",") == false) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
-                fileOperations.MoveFilesFromSourceToTarget(sFile, options[options.length-1]);
+                fileOperations.MoveFromSourceToTarget(sFile, options[options.length-1]);
+            }
+        }
+    }
+    /**
+     * move the source files to target
+     */
+    public void MoveSourceFilesToTarget() {
+        if(!verifyFirstFile().isEmpty() && !verifyFirstFile().contains(",") && !verifySecondFile().isEmpty() &&
+                !verifySecondFile().contains(",") && options.length < 4) {
+            fileOperations.MoveFromSourceToTarget(verifyFirstFile(), verifySecondFile());
+        }
+        /**
+         * move all files of 1 or more sources in 1 target
+         */
+        if(!options[i+1].contains(",")) {
+            for(int j=i+1; j<GetAssignIndex(); ++j) {
+                fileOperations.MoveFromSourceToTarget(options[j], options[options.length-1]);
             }
         }
     }
@@ -153,7 +170,7 @@ public final class OperationUtils {
         //require assignation "source to target"
         if(!verifyFirstFile().isEmpty() && verifyFirstFile().contains(",") == false &&
                 verifySecondFile().contains(",") == false &&!verifySecondFile().isEmpty() && VerifyAssign()) {
-            fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(verifyFirstFile(), verifySecondFile());
+            fileOperations.CopyFromSourceToTarget(verifyFirstFile(), verifySecondFile());
         }
         /** 
         * copy 1 source to more than 1 target
@@ -162,7 +179,7 @@ public final class OperationUtils {
         if(!verifyFirstFile().contains(",") && verifySecondFile().contains(",")) {
             for(int j=i+3; j<options.length; ++j) {
                 String sFile = options[j].replace(",", "");
-                fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(verifyFirstFile(), sFile);
+                fileOperations.CopyFromSourceToTarget(verifyFirstFile(), sFile);
             }
         }
         /**
@@ -171,7 +188,7 @@ public final class OperationUtils {
         if(verifyFirstFile().contains(",") && options[options.length-2].contains(",") == false) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
-                fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(sFile, options[options.length-1]);
+                fileOperations.CopyFromSourceToTarget(sFile, options[options.length-1]);
             }
         }
         /**
@@ -183,7 +200,35 @@ public final class OperationUtils {
                 for(int s=GetAssignIndex()+1; s<options.length; ++s) {
                     String fFile = options[f].replace(",", "");
                     String sFile = options[s].replace(",", "");
-                    fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(fFile, sFile);
+                    fileOperations.CopyFromSourceToTarget(fFile, sFile);
+                }
+            }
+        }
+    }
+    /**
+     * copy files from source to target
+     */
+    public void CopyFilesSourceToTarget() {
+        if(!verifyFirstFile().isEmpty() && !verifyFirstFile().contains(",") && !verifySecondFile().isEmpty() &&
+                !verifySecondFile().contains(",") && options.length < 4) {
+            fileOperations.CopyFromSourceToTarget(verifyFirstFile(), verifySecondFile());
+        }
+        /**
+         * copy all files of 1 or more sources in 1 target
+         */
+        if(!options[i+1].contains(",")) {
+            for(int j=i+1; j<GetAssignIndex(); ++j) {
+                fileOperations.CopyFromSourceToTarget(options[j], options[options.length-1]);
+            }
+        }
+        /**
+         * copy all files of source in more than 1 target
+         */
+        if(!options[i+1].contains(",") && options[options.length-2].contains(",")) {
+            for(int f=i+1; f<GetAssignIndex(); ++f) {
+                for(int t=GetAssignIndex()+1; t<options.length; ++t) {
+                    String tFile = options[t].replace(",", "");
+                    fileOperations.CopyFromSourceToTarget(options[f], tFile);
                 }
             }
         }

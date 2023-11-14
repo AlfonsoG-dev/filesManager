@@ -144,14 +144,10 @@ public class FileOperations {
             if(sourceFile.exists() && targetFile.exists()) {
                 Path sourcePath = sourceFile.toPath();
                 Path targetPath = targetFile.toPath();
-                Path movePath = Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-                    for(File f: sourceFile.listFiles()) {
-                        if(movePath.toFile().getName().isEmpty() == false &&
-                                f.delete() == true) {
-                            f.deleteOnExit();
-                            System.out.println("archivos se movieron de: " + sourceFilePath + " to: " + targetFilePath);
-                        }
-                    }
+                Path movePath = Files.move(sourcePath, targetPath.resolve(sourcePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                if(movePath.toFile().getName().isEmpty() == false) {
+                    System.out.println("archivos se movieron de: " + sourceFilePath + " to: " + targetFilePath);
+                }
             }
         } catch(Exception e) {
             System.err.println(e);

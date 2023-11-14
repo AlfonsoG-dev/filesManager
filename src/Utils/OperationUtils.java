@@ -87,10 +87,26 @@ public final class OperationUtils {
     /**
      * realiza la opreacion de mover los directorios
      */
-    public void MoveDirectoryOperation() {
-        if(verifyFirstFile().isEmpty() == false &&
-                verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
+    public void MoveDirectoryOperation() throws Exception {
+        if(!verifyFirstFile().isEmpty() && !verifyFirstFile().contains(",") &&
+                !verifySecondFile().contains(",") &&!verifySecondFile().isEmpty() && VerifyAssign() == true) { 
             fileOperations.MoveFilesFromSourceToTarget(verifyFirstFile(), verifySecondFile());
+        }
+        /** 
+        * copy 1 source to more than 1 target
+        * not require assignation
+        */
+        if(!verifyFirstFile().contains(",") && verifySecondFile().contains(",")) {
+            throw new Exception("move to more than 1 target is not possible");
+        }
+        /**
+         * copy more than 1 source to 1 target
+         */
+        if(verifyFirstFile().contains(",") && options[options.length-2].contains(",") == false) {
+            for(int j=i+1; j<options.length-2; ++j) {
+                String  sFile = options[j].replace(",", "");
+                fileOperations.MoveFilesFromSourceToTarget(sFile, options[options.length-1]);
+            }
         }
     }
     /**

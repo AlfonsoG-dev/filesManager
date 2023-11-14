@@ -94,7 +94,10 @@ public final class OperationUtils {
         if(verifyFirstFile().isEmpty() == false && verifyFirstFile().contains(",") == false) {
             fileOperations.CreateDirectories(verifyFirstFile());
         } else {
-            System.out.println("not implemented yet");
+            for(int j = i+1; j<options.length; ++j) {
+                String fFile = options[j].replace(",", "");
+                fileOperations.CreateDirectories(fFile);
+            }
         }
     }
     /**
@@ -105,7 +108,10 @@ public final class OperationUtils {
                 VerifyAssign() == true && verifyFirstFile().contains(",") == false) {
             fileOperations.DeleteDirectories(verifyFirstFile(), "--y");
         } else {
-            System.out.println("not implemented yet");
+            for(int j = i+1; j<options.length; ++j) {
+                String fFile = options[j].replace(",", "");
+                fileOperations.DeleteDirectories(fFile, "--y");
+            }
         }
     }
     /**

@@ -42,9 +42,25 @@ public final class OperationUtils {
      */
     public boolean VerifyAssign() {
         boolean res = false;
-        if((i+2) < options.length && options[i+2].equals("to") ||
-                options[i+2].equals("--y")) {
-            res = true;
+        for(int j=0; j<options.length; ++j) {
+            int assignation = options[j].indexOf("to");
+            int permision = options[j].indexOf("--y");
+            if(assignation == 0 || permision == 0) {
+                res = true;
+            }
+        }
+        return res;
+    }
+    /**
+     * da el indice de la asignacion
+     */
+    private int GetAssignIndex() {
+        int  res =0;
+        for(int j=0; j<options.length; ++j) {
+            int assignation = options[j].indexOf("to");
+            if(assignation == 0) {
+                res = j;
+            }
         }
         return res;
     }
@@ -118,9 +134,42 @@ public final class OperationUtils {
      * realiza la operacion de copiar source en target
      */
     public void CopySourceDirectoryToTargetOperation() {
-        if(verifyFirstFile().isEmpty() == false &&
-                verifySecondFile().isEmpty() == false && VerifyAssign() == true) {
+        //require assignation "source to target"
+        if(!verifyFirstFile().isEmpty() && verifyFirstFile().contains(",") == false &&
+                verifySecondFile().contains(",") == false &&!verifySecondFile().isEmpty() && VerifyAssign()) {
             fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(verifyFirstFile(), verifySecondFile());
+        }
+        /** 
+        * copy 1 source to more than 1 target
+        * not require assignation
+        */
+        if(!verifyFirstFile().contains(",") && verifySecondFile().contains(",")) {
+            for(int j=i+3; j<options.length; ++j) {
+                String sFile = options[j].replace(",", "");
+                fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(verifyFirstFile(), sFile);
+            }
+        }
+        /**
+         * copy more than 1 source to 1 target
+         */
+        if(verifyFirstFile().contains(",") && options[options.length-2].contains(",") == false) {
+            for(int j=i+1; j<options.length-2; ++j) {
+                String  sFile = options[j].replace(",", "");
+                fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(sFile, options[options.length-1]);
+            }
+        }
+        /**
+         * copy from more than 1 source to more than 1 target
+         * assignation is in the middle
+         */
+        if(verifyFirstFile().contains(",") && options[options.length-2].contains(",")) {
+            for(int f=i+1; f<GetAssignIndex(); ++f) {
+                for(int s=GetAssignIndex()+1; s<options.length; ++s) {
+                    String fFile = options[f].replace(",", "");
+                    String sFile = options[s].replace(",", "");
+                    fileOperations.CopyFilesfromSourceDirectoryToTargetDirectory(fFile, sFile);
+                }
+            }
         }
     }
 }

@@ -93,6 +93,30 @@ public class FileOperations {
         }
     }
     /**
+     * create a file with the given path
+     * @param fileName: path or name of the file
+     */
+    public void CreateFiles(String fileName) {
+        try {
+            String cfileName = "";
+            File localFile = new File(localFilePath);
+            if(fileName.startsWith(".")) {
+                cfileName = textUtils.GetCleanPath(fileName);
+            } else {
+                cfileName = fileName;
+            }
+            String nFile = localFile.getCanonicalPath() + "\\" + cfileName;
+            File miFile = new File(nFile);
+            if(miFile.exists() == false) {
+                if(miFile.createNewFile() == true){
+                    System.out.println(String.format("file: %s has been created", miFile.getName()));
+                }
+            }
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
      * elimina un directorio deseado o varios directorios
      * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
      * @param directoryPath: direccion del directorio(s) a eliminar

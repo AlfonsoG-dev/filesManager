@@ -149,6 +149,19 @@ public final class OperationUtils {
             }
         }
     }
+    /*
+     * creates a file wihtin the CLI options
+     */
+    public void CreateFileOperation() {
+        if(verifyFirstFile().isEmpty() == false && verifyFirstFile().contains(",") == false) {
+            fileOperations.CreateFiles(verifyFirstFile());
+        } else {
+            for(int j = i+1; j<options.length; ++j) {
+                String fileName = options[j].replace(",", "");
+                fileOperations.CreateFiles(fileName);
+            }
+        }
+    }
     /**
      * realiza la opreacion de eliminar el directorio
      */

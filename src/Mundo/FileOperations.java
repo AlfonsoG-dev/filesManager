@@ -165,7 +165,7 @@ public class FileOperations {
             }
             File sourceFile = new File(sourceFilePath);
             File targetFile = new File(targetFilePath);
-            if(sourceFile.exists() && targetFile.exists() && sourceFile.getPath().contains(".git") == false) {
+            if(sourceFile.exists() && targetFile.exists() && sourceFile.getPath().contains("git") == false) {
                 Path sourcePath = sourceFile.toPath();
                 Path targetPath = targetFile.toPath();
                 Path movePath = Files.move(sourcePath, targetPath.resolve(sourcePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
@@ -220,7 +220,7 @@ public class FileOperations {
                     Path fileSource = sourceFile.toPath();
                     Path target = new File(targetFilePath).toPath();
                     System.out.println( Files.copy(fileSource, target.resolve(fileSource.getFileName()), StandardCopyOption.COPY_ATTRIBUTES));
-                } else if(new File(sourceFilePath).isDirectory() && new File(sourceFilePath).getPath().contains(".git") == false) {
+                } else if(new File(sourceFilePath).isDirectory() && new File(sourceFilePath).getPath().contains("git") == false) {
                     String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFile.getCanonicalPath()) + ";";
                     String[] names = cTargetNames.split(";");
                     for(String n: names) {

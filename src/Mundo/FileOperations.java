@@ -220,15 +220,17 @@ public class FileOperations {
                     Path fileSource = sourceFile.toPath();
                     Path target = new File(targetFilePath).toPath();
                     System.out.println( Files.copy(fileSource, target.resolve(fileSource.getFileName()), StandardCopyOption.COPY_ATTRIBUTES));
-                } else if(new File(sourceFilePath).isDirectory() && new File(sourceFilePath).getPath().contains("git") == false) {
+                } else if(new File(sourceFilePath).isDirectory()) {
                     String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFile.getCanonicalPath()) + ";";
                     String[] names = cTargetNames.split(";");
                     for(String n: names) {
-                        File targetFile = new File(targetFilePath + "\\" + n);
-                        busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
-                        Path sourcePath = sourceFile.toPath();
-                        Path targetPath = targetFile.toPath();
-                        System.out.println(Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES));
+                        if(n.contains(".git") == false) {
+                            File targetFile = new File(targetFilePath + "\\" + n);
+                            busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
+                            Path sourcePath = sourceFile.toPath();
+                            Path targetPath = targetFile.toPath();
+                            System.out.println(Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES));
+                        }
                     }
                 }
             }

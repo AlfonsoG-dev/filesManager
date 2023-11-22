@@ -213,7 +213,6 @@ public class FileOperations {
     public void CopyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             String[] fileNames = busquedaUtils.listFilesFromPath(sourceFilePath).split("\n");
-
             for(String fn: fileNames) {
                 File sourceFile = new File(fn);
                 if(new File(sourceFilePath).isFile()) {
@@ -221,7 +220,7 @@ public class FileOperations {
                     Path target = new File(targetFilePath).toPath();
                     System.out.println( Files.copy(fileSource, target.resolve(fileSource.getFileName()), StandardCopyOption.COPY_ATTRIBUTES));
                 } else if(new File(sourceFilePath).isDirectory()) {
-                    String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFile.getCanonicalPath()) + ";";
+                    String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFilePath, sourceFile.getCanonicalPath()) + ";";
                     String[] names = cTargetNames.split(";");
                     for(String n: names) {
                         if(n.contains(".git") == false) {

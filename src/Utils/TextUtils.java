@@ -1,5 +1,7 @@
 package Utils;
 
+import java.io.File;
+
 public class TextUtils {
     /**
      * create a clean string with the file path
@@ -17,12 +19,9 @@ public class TextUtils {
      * @param parentFile: file path to the parent
      * @return the target file path from parent
      */
-    public String CreateTargetFromParentPath(String parentFile) {
-        String[] parentName = parentFile.split("\\\\");
-        String targetNames = "";
-        for(int i=6; i<parentName.length; ++i) {
-            targetNames += parentName[i] + "\\";
-        }
+    public String CreateTargetFromParentPath(String parentFile, String dirs) {
+        String parentName = new File(parentFile).getParent();
+        String targetNames = dirs.replace(parentName, "");
         return targetNames;
     }
     /**

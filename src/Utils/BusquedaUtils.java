@@ -71,9 +71,9 @@ public class BusquedaUtils {
                 File mio = new File(pn);
                 int fileLenght = nFileName.split("\\\\").length;
                 if(mio.exists() == false && fileLenght > 1) {
-                    mio.mkdirs();
+                    //mio.mkdirs();
                 } else if(mio.exists() == false && fileLenght <= 1) {
-                    mio.mkdir();
+                    //mio.mkdir();
                 }
                 System.out.println("directorio creado: " + mio.getName());
             }

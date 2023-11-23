@@ -10,7 +10,11 @@ public class TextUtils {
      */
     public String GetCleanPath(String filePath) {
         String build = "";
-        build = filePath.replace(".", "").replace("/", "\\").replace("\\\\", "\\");
+        if(filePath.startsWith("\\.")) {
+            build = filePath.replace(".", "").replace("/", "\\").replace("\\\\", "\\");
+        } else {
+            build = filePath.replace("/", "\\").replace("\\\\", "\\");
+        }
         return build;
     }
     

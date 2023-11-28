@@ -22,6 +22,10 @@ java -jar app.jar operation
 >- `-ls`: list all files of the given directory
 >>- `java -jar app.jar -ls .\src\`
 
+### read lines
+>- `-rl`: read file lines of the given file
+>>- `java -jar app.jar -rl README.md`
+
 ### make
 
 >- `-md`: create a directory
@@ -82,6 +86,8 @@ java -jar app.jar operation
 >>- to delete with: ","
 >>- `-df test1, test2`
 
+## TODO'S
+- [ ] create file info option
 
 -------
 

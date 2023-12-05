@@ -85,6 +85,14 @@ public final class OperationUtils {
         }
     }
     /**
+     * read file lines
+     */
+    public void ReadFileLinesOperation() {
+        if(verifyFirstFile().isEmpty() == false) {
+            fileOperations.ReadFileLines(verifyFirstFile());
+        }
+    }
+    /**
      * realiza la opreacion de mover los directorios
      */
     public void MoveDirectoryOperation() throws Exception {

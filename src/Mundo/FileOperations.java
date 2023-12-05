@@ -1,6 +1,8 @@
 package Mundo;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -60,6 +62,39 @@ public class FileOperations {
             }
         } catch(Exception e) {
             System.err.println(e);
+        }
+    }
+    /**
+     * read the file lines like the cat command
+     */
+    public void ReadFileLines(String fileName) {
+        BufferedReader mibuBufferedReader = null;
+        try {
+            String cPath = "";
+            if(fileName.startsWith(".")) {
+                cPath = textUtils.GetCleanPath(fileName);
+            } else {
+                cPath = fileName;
+            }
+            if(new File(cPath).isFile()) {
+                mibuBufferedReader = new BufferedReader(new FileReader(new File(cPath)));
+                while(mibuBufferedReader.read() != -1) {
+                    System.out.println(mibuBufferedReader.readLine());
+                }
+            } else if(new File(cPath).isDirectory()) {
+                ListFiles();
+            }
+        } catch(Exception e) {
+            System.err.println(e);
+        } finally {
+            if(mibuBufferedReader != null) {
+                try {
+                    mibuBufferedReader.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                }
+                mibuBufferedReader = null;
+            }
         }
     }
     /**

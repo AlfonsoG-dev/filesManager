@@ -26,6 +26,9 @@ public class Operaciones {
                     case "-ls": 
                         op.ChangeDirectoryOperation();
                         break;
+                    case "-rl":
+                        op.ReadFileLinesOperation();
+                        break;
                     case "-cp":
                         op.CopySourceDirectoryToTargetOperation();
                         break;
@@ -52,13 +55,14 @@ public class Operaciones {
                         break;
                     case "--h":
                         System.out.println("use -ls to list dir elements");
+                        System.out.println("\tuse -rl to read file lines");
                         System.out.println("use -cp copy to source dir to target");
-                        System.out.println("\t\tuse -cf to copy source file to target");
+                        System.out.println("\tuse -cf to copy source file to target");
                         System.out.println("use -mv to move source dir to target");
-                        System.out.println("\t\tuse -mf to move source file to target");
+                        System.out.println("\tuse -mf to move source file to target");
                         System.out.println("use -rn to rename file or dir");
                         System.out.println("use -md to creates a dir");
-                        System.out.println("\t\tuse -ni to create file");
+                        System.out.println("\tuse -ni to create file");
                         System.out.println("use -df to delete a dir");
                         break;
                     default: 

@@ -26,17 +26,6 @@ public final class OperationUtils {
         i = nI;
     }
     /**
-     * verifica si se asigna el archivo
-     * @return el archivo
-     */
-    public String verifyFirstFile() {
-        String res = "";
-        if((i+1) < options.length) {
-            res = options[i+1];
-        }
-        return res;
-    }
-    /**
      * verifica si existe asignación
      * @return true si existe, false de lo contrario
      */
@@ -58,9 +47,21 @@ public final class OperationUtils {
         int  res =0;
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
-            if(assignation == 0) {
+            int otherAssignation = options[j].indexOf("--y");
+            if(assignation == 0 || otherAssignation == 0) {
                 res = j;
             }
+        }
+        return res;
+    }
+    /**
+     * verifica si se asigna el archivo
+     * @return el archivo
+     */
+    public String verifyFirstFile() {
+        String res = "";
+        if((GetAssignIndex()-1) > 0) {
+            res = options[GetAssignIndex()-1];
         }
         return res;
     }
@@ -70,8 +71,8 @@ public final class OperationUtils {
      */
     public String verifySecondFile() {
         String res = "";
-        if((i+3) < options.length) {
-            res = options[i+3];
+        if((GetAssignIndex()+1) < options.length) {
+            res = options[GetAssignIndex()+1];
         }
         return res;
     }
@@ -101,16 +102,17 @@ public final class OperationUtils {
             fileOperations.MoveFromSourceToTarget(verifyFirstFile(), verifySecondFile());
         }
         /** 
-        * copy 1 source to more than 1 target
+        * move 1 source to more than 1 target
         * not require assignation
         */
         if(!verifyFirstFile().contains(",") && verifySecondFile().contains(",")) {
             throw new Exception("move to more than 1 target is not possible");
         }
         /**
-         * copy more than 1 source to 1 target
+         * move more than 1 source to 1 target
          */
-        if(verifyFirstFile().contains(",") && options[options.length-2].contains(",") == false) {
+        if(verifyFirstFile().contains(",") == true && options[options.length-2].contains(",") == false &&
+                VerifyAssign() == true) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
                 fileOperations.MoveFromSourceToTarget(sFile, options[options.length-1]);
@@ -128,7 +130,7 @@ public final class OperationUtils {
         /**
          * move all files of 1 or more sources in 1 target
          */
-        if(!options[i+1].contains(",")) {
+        if(!options[i+1].contains(",") && VerifyAssign() == true) {
             for(int j=i+1; j<GetAssignIndex(); ++j) {
                 fileOperations.MoveFromSourceToTarget(options[j], options[options.length-1]);
             }
@@ -177,7 +179,7 @@ public final class OperationUtils {
         if(verifyFirstFile().isEmpty() == false &&
                 VerifyAssign() == true && verifyFirstFile().contains(",") == false) {
             fileOperations.DeleteDirectories(verifyFirstFile(), "--y");
-        } else {
+        } else if(verifyFirstFile().contains(",") == true && VerifyAssign() == true) {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
                 fileOperations.DeleteDirectories(fFile, "--y");
@@ -237,7 +239,7 @@ public final class OperationUtils {
         /**
          * copy all files of 1 or more sources in 1 target
          */
-        if(!options[i+1].contains(",")) {
+        if(!options[i+1].contains(",") && VerifyAssign() == true) {
             for(int j=i+1; j<GetAssignIndex(); ++j) {
                 fileOperations.CopyFromSourceToTarget(options[j], options[options.length-1]);
             }
@@ -245,7 +247,7 @@ public final class OperationUtils {
         /**
          * copy all files of source in more than 1 target
          */
-        if(!options[i+1].contains(",") && options[options.length-2].contains(",")) {
+        if(!options[i+1].contains(",") && options[options.length-2].contains(",") && VerifyAssign() == true) {
             for(int f=i+1; f<GetAssignIndex(); ++f) {
                 for(int t=GetAssignIndex()+1; t<options.length; ++t) {
                     String tFile = options[t].replace(",", "");

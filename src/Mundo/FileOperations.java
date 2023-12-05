@@ -126,12 +126,11 @@ public class FileOperations {
             File localFile = new File(localFilePath);
             String cFile = filePath;
             File miFile = new File(localFile.getCanonicalPath() + "\\" + cFile);
-            System.out.println(miFile.getPath());
             if(miFile.isFile()) {
                 if(miFile.delete() == true) {
                     System.out.println("se elimino el archivo: " + miFile.getName());
                 }
-            } else if(miFile.isDirectory() && miFile.listFiles().length >0) {
+            } else if(miFile.isDirectory() && miFile.listFiles() != null) {
                 boolean b = false;
                 File[] files = miFile.listFiles();
                 for(File f: files) {
@@ -143,7 +142,11 @@ public class FileOperations {
                 if(b == true && miFile.delete() == true) {
                     System.out.println("se elimino el directorio: " + miFile);
                 }
-            } else if(miFile.listFiles().length == 0) {
+            } else if(miFile.listFiles() == null) {
+                if(miFile.delete() == true) {
+                    System.out.println("se elimino el directorio: " + miFile);
+                }
+            } else {
                 if(miFile.delete() == true) {
                     System.out.println("se elimino el directorio: " + miFile);
                 }

@@ -176,10 +176,10 @@ public final class OperationUtils {
      * realiza la opreacion de eliminar el directorio
      */
     public void DeleteDirectoryOperation() {
-        if(verifyFirstFile().isEmpty() == false &&
-                VerifyAssign() == true && verifyFirstFile().contains(",") == false) {
-            fileOperations.DeleteDirectories(verifyFirstFile(), "--y");
-        } else if(verifyFirstFile().contains(",") == true && VerifyAssign() == true) {
+        if(options[i+1].isEmpty() == false &&
+                VerifyAssign() == true && options[i+1].contains(",") == false) {
+            fileOperations.DeleteDirectories(options[i+1], "--y");
+        } else if(options[i+1].contains(",") == true && VerifyAssign() == true) {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
                 fileOperations.DeleteDirectories(fFile, "--y");

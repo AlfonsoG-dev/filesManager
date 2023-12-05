@@ -135,11 +135,7 @@ public class FileOperations {
         try {
             String cfileName = "";
             File localFile = new File(localFilePath);
-            if(fileName.startsWith(".")) {
-                cfileName = textUtils.GetCleanPath(fileName);
-            } else {
-                cfileName = fileName;
-            }
+            cfileName = textUtils.GetCleanPath(fileName);
             String nFile = localFile.getCanonicalPath() + "\\" + cfileName;
             File miFile = new File(nFile);
             if(miFile.exists() == false) {
@@ -159,7 +155,7 @@ public class FileOperations {
     public void DeleteDirectories(String filePath, String permiso) {
         try {
             File localFile = new File(localFilePath);
-            String cFile = filePath;
+            String cFile = textUtils.GetCleanPath(filePath);
             File miFile = new File(localFile.getCanonicalPath() + "\\" + cFile);
             if(miFile.isFile()) {
                 if(miFile.delete() == true) {

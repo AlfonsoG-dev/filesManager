@@ -50,6 +50,9 @@ public class Operaciones {
                     case "-ni":
                         op.CreateFileOperation();
                         break;
+                    case "-cm":
+                        op.CreateCompressionOperation();
+                        break;
                     case "-df":
                         op.DeleteDirectoryOperation();
                         break;
@@ -63,6 +66,7 @@ public class Operaciones {
                         System.out.println("use -rn to rename file or dir");
                         System.out.println("use -md to creates a dir");
                         System.out.println("\tuse -ni to create file");
+                        System.out.println("\tuse -cm to compress the file(s) or folder(s)");
                         System.out.println("use -df to delete a dir");
                         break;
                     default: 

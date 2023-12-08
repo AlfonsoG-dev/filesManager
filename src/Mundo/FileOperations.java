@@ -2,6 +2,7 @@ package Mundo;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -141,6 +142,33 @@ public class FileOperations {
             if(miFile.exists() == false) {
                 if(miFile.createNewFile() == true){
                     System.out.println(String.format("file: %s has been created", miFile.getName()));
+                }
+            }
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
+     * compress the files of the given path into a zip file
+     * @param givenPath: path of the files to compress
+     * @param excludeFiles: files or names or patters to exlude in the compression
+     */
+    public void CompressFilesInPath(String givenPath, String excludeFiles) {
+        try {
+            File miFile = new File(givenPath);
+            if(miFile.exists() == false) {
+                throw new IOException("file not found");
+            }
+            if(excludeFiles.contains(",")) {
+                throw new Exception("{,} currently is not supported");
+            }
+            if(miFile.isDirectory()) {
+                String[] fileNames = busquedaUtils.listFilesFromPath(miFile.getPath()).split("\n");
+                for(String fn: fileNames) {
+                    if(fn.contains(excludeFiles) == false) {
+                        System.out.println(fn);
+                        // TODO: implement the compress method for the (fn) files
+                    }
                 }
             }
         } catch(Exception e) {

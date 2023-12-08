@@ -131,11 +131,18 @@ public final class OperationUtils {
     /**
      * create a compression CLI option for the operation
      */
-    public void CreateCompressionOperation() {
-        // -i include only this files
+    public void CreateCompressionOperation() throws Exception {
+        // -i include only this files not implemented
         // -x exclude this files
-        int includeIndex = 0;
-        int excludeIndex = 0;
+        int excludeIndex = optionVerification.GetIndexOfOption("-x");
+        String compressPath = "", excludeOption = "";
+        if(options[i+1].isEmpty() == false && excludeIndex != -1 && (i+3) < options.length) {
+            compressPath = options[i+1];
+            excludeOption = options[i+3];
+            fileOperations.CompressFilesInPath(compressPath, excludeOption);
+        } else {
+            throw new Exception("the CLI options doesn't fullfill the need of the compression operation");
+        }
     }
     /**
      * realiza la opreacion de eliminar el directorio

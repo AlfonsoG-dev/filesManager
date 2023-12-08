@@ -87,8 +87,6 @@ java -jar app.jar operation
 >>- `-df test1, test2`
 
 ## TODO'S
-- [ ] create file or folder compression operation.
-- [ ] start or open file(s) or folder(s).
 - [ ] find file(s) or folder(s) in the given or current path 
 >- find by
 >>- pattern

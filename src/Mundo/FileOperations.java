@@ -183,23 +183,8 @@ public class FileOperations {
             if(miFile.exists() == false) {
                 throw new IOException("file not found");
             }
-            String[] fileNames = busquedaUtils.listFilesFromPath(givenPath).split("\n");
-            if(includeFiles.contains(",")) {
-                String[] include = includeFiles.split(",");
-                for(String ic: include) {
-                    for(String fn: fileNames) {
-                        if(fn.contains(ic.trim()) == true) {
-                            System.out.println(fn);
-                        }
-                    }
-                }
-            } else {
-                for(String fn: fileNames) {
-                    if(fn.contains(includeFiles) == true) {
-                        System.out.println(fn);
-                    }
-                }
-            }
+            String localName = busquedaUtils.getLocalName(localFilePath);
+            busquedaUtils.CreateZipFile(miFile, new File(localName + ".zip"));
         } catch(Exception e) {
             System.err.println(e);
         }

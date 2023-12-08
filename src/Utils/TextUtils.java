@@ -17,7 +17,6 @@ public class TextUtils {
         }
         return build;
     }
-    
     /**
      * create a clean path for the target using the parent file path
      * @param parentFile: file path to the parent

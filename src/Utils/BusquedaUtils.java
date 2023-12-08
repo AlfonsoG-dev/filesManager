@@ -1,6 +1,26 @@
 package Utils;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 public class BusquedaUtils {
+    /**
+     */
+    public String getLocalName(String localPath) {
+        String name = "";
+        try {
+            File local = new File(localPath);
+            if(local.exists()) {
+                String path = local.getCanonicalPath(); 
+                name = new File(path).getName();
+            }
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+        return name;
+    }
     /**
      * ayuda a generar la ruta de los elementos del directorio
      * @param miFiles: elementos del directorio
@@ -79,6 +99,71 @@ public class BusquedaUtils {
             }
         } catch(Exception e) {
             System.err.println(e);
+        }
+    }
+    /**
+     * @throws IOException
+     */
+    private void AddFilesToZip(File source, String base, ZipOutputStream zop) {
+        if(source.isDirectory() && source.listFiles() != null) {
+            File[] sourceFiles = source.listFiles();
+            for(File sf: sourceFiles) {
+                AddFilesToZip(sf, base + File.separator + sf.getName(), zop);
+            }
+        } else {
+            FileInputStream fileInput = null;
+            try {
+                fileInput = new FileInputStream(source);
+                ZipEntry zEntry = new ZipEntry(base);
+                zop.putNextEntry(zEntry);
+
+                byte[] buffer = new byte[1024];
+                int lenght;
+                while((lenght = fileInput.read(buffer)) > 0) {
+                    zop.write(buffer, 0, lenght);
+                }
+            } catch (Exception e) {
+                System.err.println(e);
+            } finally {
+                if(fileInput != null) {
+                    try {
+                        fileInput.close();
+                    } catch(Exception e) {
+                        System.err.println(e);
+                    }
+                    fileInput = null;
+                }
+            }
+        }
+    }
+    /**
+     */
+    public void CreateZipFile(File source, File destination) {
+        FileOutputStream fileOutput = null;
+        ZipOutputStream zipOutput = null;
+        try {
+            fileOutput = new FileOutputStream(destination);
+            zipOutput = new ZipOutputStream(fileOutput);
+            AddFilesToZip(source, source.getName(), zipOutput);
+        } catch(Exception e) {
+            System.err.println(e);
+        } finally {
+            if(zipOutput != null) {
+                try {
+                    zipOutput.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                }
+                zipOutput = null;
+            }
+            if(fileOutput != null) {
+                try {
+                    fileOutput.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                }
+                fileOutput = null;
+            }
         }
     }
 }

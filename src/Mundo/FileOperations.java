@@ -184,7 +184,7 @@ public class FileOperations {
                 throw new IOException("file not found");
             }
             String localName = busquedaUtils.getLocalName(localFilePath);
-            busquedaUtils.CreateZipFile(miFile, new File(localName + ".zip"));
+            busquedaUtils.CreateZipFile(miFile, new File(localName + ".zip"), includeFiles);
         } catch(Exception e) {
             System.err.println(e);
         }

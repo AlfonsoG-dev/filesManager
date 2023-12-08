@@ -2,11 +2,13 @@ package Utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 public class BusquedaUtils {
     /**
+     * get the local name
+     * @param localPath: local path
+     * @return the name of the given path
      */
     public String getLocalName(String localPath) {
         String name = "";
@@ -102,13 +104,29 @@ public class BusquedaUtils {
         }
     }
     /**
-     * @throws IOException
+     * recursive add file to the zip 
+     * @param source: source of the files
+     * @param base: name of the file
+     * @param zop: {@link ZipOutputStream}
      */
-    private void AddFilesToZip(File source, String base, ZipOutputStream zop) {
+    private void AddFilesToZip(File source, String base, ZipOutputStream zop, String includeFiles) {
         if(source.isDirectory() && source.listFiles() != null) {
             File[] sourceFiles = source.listFiles();
-            for(File sf: sourceFiles) {
-                AddFilesToZip(sf, base + File.separator + sf.getName(), zop);
+            if(includeFiles.contains(",")) {
+                String[] includes = includeFiles.split(",");
+                for(File sf: sourceFiles) {
+                    for(String ic: includes) {
+                        if(sf.getPath().contains(ic.trim()) == true) {
+                            AddFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
+                        }
+                    }
+                }
+            } else {
+                for(File sf: sourceFiles) {
+                    if(sf.getPath().contains(includeFiles) == true) {
+                        AddFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
+                    }
+                }
             }
         } else {
             FileInputStream fileInput = null;
@@ -137,14 +155,17 @@ public class BusquedaUtils {
         }
     }
     /**
+     * create the zip destination with the source file
+     * @param source: source file
+     * @param destination: destination file
      */
-    public void CreateZipFile(File source, File destination) {
+    public void CreateZipFile(File source, File destination, String includeFiles) {
         FileOutputStream fileOutput = null;
         ZipOutputStream zipOutput = null;
         try {
             fileOutput = new FileOutputStream(destination);
             zipOutput = new ZipOutputStream(fileOutput);
-            AddFilesToZip(source, source.getName(), zipOutput);
+            AddFilesToZip(source, source.getName(), zipOutput, includeFiles);
         } catch(Exception e) {
             System.err.println(e);
         } finally {

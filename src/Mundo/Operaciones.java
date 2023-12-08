@@ -64,7 +64,7 @@ public class Operaciones {
                     case "--h":
                         System.out.println("use -ls to list dir elements");
                         System.out.println("use -st to start or open an element");
-                        System.out.println("\tuse -rl to read file lines");
+                        System.out.println("use -rl to read file lines");
                         System.out.println("use -cp copy to source dir to target");
                         System.out.println("\tuse -cf to copy source file to target");
                         System.out.println("use -mv to move source dir to target");
@@ -72,7 +72,8 @@ public class Operaciones {
                         System.out.println("use -rn to rename file or dir");
                         System.out.println("use -md to creates a dir");
                         System.out.println("\tuse -ni to create file");
-                        System.out.println("\tuse -cm to compress the file(s) or folder(s)");
+                        System.out.println("use -cm to compress the folder(s)");
+                        System.out.println("\tuse -i to list the folder(s) or file(s) to compress");
                         System.out.println("use -df to delete a dir");
                         break;
                     default: 

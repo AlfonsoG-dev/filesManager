@@ -47,6 +47,7 @@ public final class OperationUtils {
         String file = "";
         if((i+1) < options.length) {
             file = options[i+1];
+            fileOperations.StartOrOpenFile(file);
         }
     }
     /**
@@ -147,7 +148,6 @@ public final class OperationUtils {
      */
     public void CreateCompressionOperation() throws Exception {
         // -i include only this files not implemented
-        // -x exclude this files
         int includeIndex = optionVerification.GetIndexOfOption("-i");
         String compressPath = "", includeOption = "";
         if(options[i+1].isEmpty() == false && includeIndex != -1 && (i+3) < options.length) {

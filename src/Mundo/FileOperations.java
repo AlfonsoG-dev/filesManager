@@ -71,8 +71,10 @@ public class FileOperations {
      */
     public void StartOrOpenFile(String filePath) {
         try {
-            // TODO: implement the start or open file method
-            throw new Exception("not implemented yet");
+            File miFile = new File(filePath);
+            if(miFile.exists()) {
+                Runtime.getRuntime().exec("pwsh -NoProfile -Command start " + miFile.getPath());
+            }
         } catch(Exception e) {
             System.err.println(e);
         }

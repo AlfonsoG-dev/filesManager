@@ -98,9 +98,12 @@ java -jar app.jar operation
 
 ### Compression
 
->- `-cm`: compress the given path to a zip file
->- you need to give the files or names to include with: `-i`
+>- `-cm`: compress the element of the given path
+>>- `java -jar app.jar -cm .\bin\`
+
+>- if you want to control the elements to include in the zip use: `-i`
 >>- `java -jar app.jar -cm .\localPath -i "src, bin, .jar`
+
 
 ## TODO'S
 - [ ] find file(s) or folder(s) in the given or current path 

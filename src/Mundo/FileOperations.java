@@ -175,23 +175,28 @@ public class FileOperations {
     /**
      * compress the files of the given path into a zip file
      * @param givenPath: path of the files to compress
-     * @param excludeFiles: files or names or patters to exlude in the compression
+     * @param includeFiles: files or names or patters to exlude in the compression
      */
-    public void CompressFilesInPath(String givenPath, String excludeFiles) {
+    public void CompressFilesInPath(String givenPath, String includeFiles) {
         try {
             File miFile = new File(givenPath);
             if(miFile.exists() == false) {
                 throw new IOException("file not found");
             }
-            if(excludeFiles.contains(",")) {
-                throw new Exception("{,} currently is not supported");
-            }
-            if(miFile.isDirectory()) {
-                String[] fileNames = busquedaUtils.listFilesFromPath(miFile.getPath()).split("\n");
+            String[] fileNames = busquedaUtils.listFilesFromPath(givenPath).split("\n");
+            if(includeFiles.contains(",")) {
+                String[] include = includeFiles.split(",");
+                for(String ic: include) {
+                    for(String fn: fileNames) {
+                        if(fn.contains(ic.trim()) == true) {
+                            System.out.println(fn);
+                        }
+                    }
+                }
+            } else {
                 for(String fn: fileNames) {
-                    if(fn.contains(excludeFiles) == false) {
+                    if(fn.contains(includeFiles) == true) {
                         System.out.println(fn);
-                        // TODO: implement the compress method for the (fn) files
                     }
                 }
             }

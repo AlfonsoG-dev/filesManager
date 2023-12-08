@@ -148,12 +148,12 @@ public final class OperationUtils {
     public void CreateCompressionOperation() throws Exception {
         // -i include only this files not implemented
         // -x exclude this files
-        int excludeIndex = optionVerification.GetIndexOfOption("-x");
-        String compressPath = "", excludeOption = "";
-        if(options[i+1].isEmpty() == false && excludeIndex != -1 && (i+3) < options.length) {
+        int includeIndex = optionVerification.GetIndexOfOption("-i");
+        String compressPath = "", includeOption = "";
+        if(options[i+1].isEmpty() == false && includeIndex != -1 && (i+3) < options.length) {
             compressPath = options[i+1];
-            excludeOption = options[i+3];
-            fileOperations.CompressFilesInPath(compressPath, excludeOption);
+            includeOption = options[i+3];
+            fileOperations.CompressFilesInPath(compressPath, includeOption);
         } else {
             throw new Exception("the CLI options doesn't fullfill the need of the compression operation");
         }

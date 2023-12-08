@@ -89,7 +89,6 @@ java -jar app.jar operation
 ## TODO'S
 - [ ] create file or folder compression operation.
 - [ ] start or open file(s) or folder(s).
-- [ ] select a bunch of files or folders and apply a fileManager operation to them.
 - [ ] find file(s) or folder(s) in the given or current path 
 >- find by
 >>- pattern

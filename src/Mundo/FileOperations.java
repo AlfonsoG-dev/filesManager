@@ -66,6 +66,18 @@ public class FileOperations {
         }
     }
     /**
+     * start or open a file
+     * @param filePath: path of the file to open
+     */
+    public void StartOrOpenFile(String filePath) {
+        try {
+            // TODO: implement the start or open file method
+            throw new Exception("not implemented yet");
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
      * read the file lines like the cat command
      */
     public void ReadFileLines(String fileName) {
@@ -96,6 +108,18 @@ public class FileOperations {
                 }
                 mibuBufferedReader = null;
             }
+        }
+    }
+    /**
+     * search for a file or folder
+     *
+     */
+    public void SearchFileOrFolder() {
+        try {
+            // TODO: implement the search method
+            throw new Exception("not implemented yet");
+        } catch(Exception e) {
+            System.err.println(e);
         }
     }
     /**

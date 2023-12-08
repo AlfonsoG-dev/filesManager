@@ -26,8 +26,13 @@ public class Operaciones {
                     case "-ls": 
                         op.ChangeDirectoryOperation();
                         break;
+                    case "-st":
+                        op.StartOrOpenOperation();
+                        break;
                     case "-rl":
                         op.ReadFileLinesOperation();
+                        break;
+                    case "-ff":
                         break;
                     case "-cp":
                         op.CopySourceDirectoryToTargetOperation();
@@ -58,6 +63,7 @@ public class Operaciones {
                         break;
                     case "--h":
                         System.out.println("use -ls to list dir elements");
+                        System.out.println("use -st to start or open an element");
                         System.out.println("\tuse -rl to read file lines");
                         System.out.println("use -cp copy to source dir to target");
                         System.out.println("\tuse -cf to copy source file to target");

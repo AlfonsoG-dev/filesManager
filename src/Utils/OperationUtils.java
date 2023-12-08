@@ -41,12 +41,26 @@ public final class OperationUtils {
         }
     }
     /**
+     * start or open the file or folder
+     */
+    public void StartOrOpenOperation() {
+        String file = "";
+        if((i+1) < options.length) {
+            file = options[i+1];
+        }
+    }
+    /**
      * read file lines
      */
     public void ReadFileLinesOperation() {
         if(optionVerification.verifyFirstFile().isEmpty() == false) {
             fileOperations.ReadFileLines(optionVerification.verifyFirstFile());
         }
+    }
+    /**
+     * search for a file or folder with certain options
+     */
+    public void SearchFileOrFolderOperation() {
     }
     /**
      * realiza la opreacion de mover los directorios

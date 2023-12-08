@@ -154,8 +154,10 @@ public final class OperationUtils {
             compressPath = options[i+1];
             includeOption = options[i+3];
             fileOperations.CompressFilesInPath(compressPath, includeOption);
-        } else {
-            throw new Exception("the CLI options doesn't fullfill the need of the compression operation");
+        }
+        if(includeIndex == -1) {
+            compressPath = options[i+1];
+            fileOperations.CompressFilesInPath(compressPath, null);
         }
     }
     /**

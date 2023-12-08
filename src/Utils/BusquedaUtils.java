@@ -112,7 +112,12 @@ public class BusquedaUtils {
     private void AddFilesToZip(File source, String base, ZipOutputStream zop, String includeFiles) {
         if(source.isDirectory() && source.listFiles() != null) {
             File[] sourceFiles = source.listFiles();
-            if(includeFiles.contains(",")) {
+            if(includeFiles == null) {
+                for(File sf: sourceFiles) {
+                    AddFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
+                }
+            }
+            if(includeFiles != null && includeFiles.contains(",")) {
                 String[] includes = includeFiles.split(",");
                 for(File sf: sourceFiles) {
                     for(String ic: includes) {
@@ -121,12 +126,13 @@ public class BusquedaUtils {
                         }
                     }
                 }
-            } else {
+            } else if(includeFiles != null && includeFiles.contains(",") == false) {
                 for(File sf: sourceFiles) {
                     if(sf.getPath().contains(includeFiles) == true) {
                         AddFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
                     }
                 }
+
             }
         } else {
             FileInputStream fileInput = null;

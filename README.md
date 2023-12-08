@@ -34,6 +34,16 @@ java -jar app.jar operation
 >- to create folders with: ","
 >>- `java -jar app.jar -md folder1, directory2, ...n`
 
+>- `-ni`: create a file
+>>- `java -jar app.jar -ni main.py`
+
+>>- supports creation using: ","
+>>- `java -jar app.jar -ni main.py, main.java`
+
+### start or open
+
+>- `-st`: start or open
+>>- `java -jar app.jar -st .\bin\`
 
 ### move
 
@@ -85,6 +95,12 @@ java -jar app.jar operation
 >>- you need to give consent: `-df test_file --y`
 >>- to delete with: ","
 >>- `-df test1, test2`
+
+### Compression
+
+>- `-cm`: compress the given path to a zip file
+>- you need to give the files or names to include with: `-i`
+>>- `java -jar app.jar -cm .\localPath -i "src, bin, .jar`
 
 ## TODO'S
 - [ ] find file(s) or folder(s) in the given or current path 

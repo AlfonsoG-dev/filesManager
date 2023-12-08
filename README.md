@@ -1,13 +1,13 @@
 # FilesManager
 >- a basic file system operator
->>- for basic operations like: delete, create, copy and move files or directories
+>>- for basic operations like: delete, create, copy and move files or folders
 
 ## Features
-- [x] delete files or directories
-- [x] make directories or nested directories
-- [x] move directories or files
-- [x] rename directories or files
-- [x] copy directories or files
+- [x] delete files or folders
+- [x] make folders or nested directories
+- [x] move folders or files
+- [x] rename folders or files
+- [x] copy folders or files
 
 -------
 
@@ -19,7 +19,7 @@ java -jar app.jar operation
 ```
 ### list
 
->- `-ls`: list all files of the given directory
+>- `-ls`: list all files of the given folder
 >>- `java -jar app.jar -ls .\src\`
 
 ### read lines
@@ -28,11 +28,11 @@ java -jar app.jar operation
 
 ### make
 
->- `-md`: create a directory
->>- `java -jar app.jar -md directory_name`
+>- `-md`: create a folder
+>>- `java -jar app.jar -md folder_name`
 
->- to create directories with: ","
->>- `java -jar app.jar -md directory1, directory2, ...n`
+>- to create folders with: ","
+>>- `java -jar app.jar -md folder1, directory2, ...n`
 
 
 ### move
@@ -52,13 +52,13 @@ java -jar app.jar operation
 
 ### rename
 
->- `-rn`: rename the directory
+>- `-rn`: rename the folder
 >>- `java -jar app.jar -rn oldName to newName`
->>>- it's the same as move but this creates the newName directory in runtime and deletes the old directory
+>>>- it's the same as move but this creates the newName folder in runtime and deletes the old directory
 
 ### Copy
 
->- `-cp`: copy a source directory into target directory
+>- `-cp`: copy a source folder into target directory
 >>- `java -jar app.jar -cp source to target`
 
 >- `-cf`: to copy files with: `*`
@@ -70,7 +70,7 @@ java -jar app.jar operation
 >>- supports copy from more than 1 source to 1 or more targets
 >>- `-cf source1/* source2/* to target1, target2`
 
->- to copy directories with: ","
+>- to copy folders with: ","
 >>- `java -jar app.jar -cp source1, source2 to target`
 
 >>- supports copy from 1 source to more than 1 target
@@ -81,13 +81,22 @@ java -jar app.jar operation
 
 ### Delete
 
->- `-df`: delete a directory and the content inside
+>- `-df`: delete a folder and the content inside
 >>- you need to give consent: `-df test_file --y`
 >>- to delete with: ","
 >>- `-df test1, test2`
 
 ## TODO'S
-- [ ] create file info option
+- [ ] create file or folder compression operation.
+- [ ] start or open file(s) or folder(s).
+- [ ] select a bunch of files or folders and apply a fileManager operation to them.
+- [ ] find file(s) or folder(s) in the given or current path 
+>- find by
+>>- pattern
+>>- extension
+>>- name of file or folder
+>>- exclude certain names or folders
+>>- apply an operation to the finded file or folder
 
 -------
 

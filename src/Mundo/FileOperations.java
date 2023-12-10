@@ -219,32 +219,20 @@ public class FileOperations {
      */
     public void DeleteDirectories(String filePath, String permiso) {
         try {
-            File localFile = new File(localFilePath);
-            String cFile = textUtils.GetCleanPath(filePath);
-            File miFile = new File(localFile.getCanonicalPath() + "\\" + cFile);
-            if(miFile.isFile()) {
-                if(miFile.delete() == true) {
-                    System.out.println("se elimino el archivo: " + miFile.getName());
-                }
-            } else if(miFile.isDirectory() && miFile.listFiles() != null) {
-                boolean b = false;
-                File[] files = miFile.listFiles();
-                for(File f: files) {
-                    b = f.delete();
-                    if(b == true) {
-                        System.out.println("se elimino el elemento: " + f);
+            File miFile = new File(filePath);
+            if(miFile.exists()) {
+                if(miFile.isDirectory() && miFile.listFiles() != null) {
+                    for(File mf: miFile.listFiles()) {
+                        DeleteDirectories(mf.getPath(), permiso);
                     }
+                } 
+                if(miFile.isDirectory() && miFile.delete() == true) {
+                    System.out.println(String.format("File: %s \thas been deleted.", miFile.getPath()));
                 }
-                if(b == true && miFile.delete() == true) {
-                    System.out.println("se elimino el directorio: " + miFile);
-                }
-            } else if(miFile.listFiles() == null) {
-                if(miFile.delete() == true) {
-                    System.out.println("se elimino el directorio: " + miFile);
-                }
-            } else {
-                if(miFile.delete() == true) {
-                    System.out.println("se elimino el directorio: " + miFile);
+                if(miFile.isFile() && miFile.delete() == true) {
+                    System.out.println(String.format("File: %s \thas been deleted.", miFile.getPath()));
+                } else {
+                    DeleteDirectories(miFile.getPath(), permiso);
                 }
             }
         } catch(Exception e) {

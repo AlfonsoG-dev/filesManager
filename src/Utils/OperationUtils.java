@@ -171,15 +171,16 @@ public final class OperationUtils {
      * realiza la opreacion de eliminar el directorio
      */
     public void DeleteDirectoryOperation() {
-        if(options[i+1].isEmpty() == false &&
-                optionVerification.VerifyAssign() == true && options[i+1].contains(",") == false) {
+        if(options[i+1].isEmpty() == false && optionVerification.VerifyAssign() == true &&
+                options[i+1].contains(",") == false && options.length < 4) {
             fileOperations.DeleteDirectories(options[i+1], "--y");
-        } else if(options[i+1].contains(",") == true && optionVerification.VerifyAssign() == true) {
+        }
+        if(options[i+1].contains(",") == true && optionVerification.VerifyAssign() == true) {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
                 fileOperations.DeleteDirectories(fFile, "--y");
             }
-        }
+        } 
     }
     /**
      * realiza la operacion de copiar source en target

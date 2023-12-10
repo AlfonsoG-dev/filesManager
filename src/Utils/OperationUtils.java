@@ -62,6 +62,13 @@ public final class OperationUtils {
      * search for a file or folder with certain options
      */
     public void SearchFileOrFolderOperation() {
+        if((i+1) < options.length || (i+2) < options.length) {
+            String filePath = options[i+1];
+            int cliOption = optionVerification.GetIndexOfOption(options[i+2]);
+            if(cliOption != -1 && (i+3) < options.length) {
+                fileOperations.SearchFileOrFolder(filePath, options[cliOption], options[cliOption+1]);
+            }
+        }
     }
     /**
      * realiza la opreacion de mover los directorios

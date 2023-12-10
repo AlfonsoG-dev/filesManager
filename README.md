@@ -26,6 +26,15 @@ java -jar app.jar operation
 >- `-rl`: read file lines of the given file
 >>- `java -jar app.jar -rl README.md`
 
+### Search
+
+>- `-ff`: to search in the given path by:
+>- only use to search in folders, it doesn't work with files
+>>- extension: `-e ".java"`
+>>>- `java -jar app.jar -ff .\bin\ -e ".class"`
+>>- name: `-n "textutils"`
+>>>- `java -jar app.jar -ff .\bin\ -n "textutils"`
+
 ### make
 
 >- `-md`: create a folder
@@ -104,15 +113,6 @@ java -jar app.jar operation
 >- if you want to control the elements to include in the zip use: `-i`
 >>- `java -jar app.jar -cm .\localPath -i "src, bin, .jar`
 
-
-## TODO'S
-- [ ] find file(s) or folder(s) in the given or current path 
->- find by
->>- pattern
->>- extension
->>- name of file or folder
->>- exclude certain names or folders
->>- apply an operation to the finded file or folder
 
 -------
 

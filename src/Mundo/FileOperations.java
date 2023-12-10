@@ -113,15 +113,36 @@ public class FileOperations {
         }
     }
     /**
-     * search for a file or folder
+     * search for a file or folder according to Cli option
+     * @param filePath: path to search for the cli context
+     * @param cliOption: option to make the search
+     * @param cliContext: context to search in the given path
      *
      */
-    public void SearchFileOrFolder() {
+    public void SearchFileOrFolder(String filePath, String cliOption, String cliContext) {
+        String methodResult = "";
         try {
-            // TODO: implement the search method
-            throw new Exception("not implemented yet");
+            File miFile = new File(filePath);
+            if(miFile.exists() && miFile.isDirectory()) {
+                String[] fileNames = busquedaUtils.listFilesFromPath(filePath).split("\n");
+                if(fileNames.length > 0) {
+                    for(String fn: fileNames) {
+                        if(busquedaUtils.CompareFiles(cliOption, fn, cliContext) == true) {
+                            methodResult += fn  + "\n";
+                        }
+                    }
+                }
+            } else {
+                throw new Exception("cannot operate with files only with folders");
+            }
         } catch(Exception e) {
             System.err.println(e);
+        }
+        if(methodResult != "") {
+            String[] files = methodResult.split("\n");
+            for(String f: files) {
+                System.out.println(String.format("File: %s", f));
+            }
         }
     }
     /**

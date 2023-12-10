@@ -80,6 +80,37 @@ public class BusquedaUtils {
         return fileNames;
     }
     /**
+     * compare 2 files or folders with CLIOption
+     * @param cliOption: Cli options -e or -n
+     * @param first: first file
+     * @param second: second file
+     * @return true if the file have similarities, false otherwise
+     */
+    public boolean CompareFiles(String cliOption, String first, String second) {
+        boolean iguales = false;
+        File firstFile = new File(first);
+        String secondFile = second.contains(".") == true ? second.split("\\.")[1] : second;
+        switch(cliOption) {
+            case "-e":
+                if(firstFile.isFile()) {
+                    String eSecondFile = secondFile;
+                    if(firstFile.getName().split("\\.")[1].equals(eSecondFile)) {
+                        iguales = true;
+                    }
+                } else {
+                    iguales = false;
+                    System.err.println("folders dont contain extension");
+                }
+                break;
+            case "-n":
+                if(firstFile.getName().toLowerCase().contains(secondFile.toLowerCase())) {
+                    iguales = true;
+                }
+                break;
+        }
+        return iguales;
+    }
+    /**
      * si en la ruta target no existe el directorio se crea
      * <br> pre: </br> si la ruta tiene más de 1 directorio como padre entonces se crea con mkdirs
      * @param targetFilePath: ruta del directorio target

@@ -33,6 +33,7 @@ public class Operaciones {
                         op.ReadFileLinesOperation();
                         break;
                     case "-ff":
+                        op.SearchFileOrFolderOperation();
                         break;
                     case "-cp":
                         op.CopySourceDirectoryToTargetOperation();
@@ -65,6 +66,9 @@ public class Operaciones {
                         System.out.println("use -ls to list dir elements");
                         System.out.println("use -st to start or open an element");
                         System.out.println("use -rl to read file lines");
+                        System.out.println("use -ff to search in the given path for:");
+                        System.out.println("\tuse -e search by extension");
+                        System.out.println("\tuse -n search by name");
                         System.out.println("use -cp copy to source dir to target");
                         System.out.println("\tuse -cf to copy source file to target");
                         System.out.println("use -mv to move source dir to target");

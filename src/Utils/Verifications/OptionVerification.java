@@ -60,10 +60,10 @@ public class OptionVerification {
      * verifica si se asigna el archivo
      * @return el archivo
      */
-    public String verifyFirstFile() {
+    public String verifyFirstFile(int i) {
         String res = "";
-        if((GetAssignIndex()-1) > 0) {
-            res = options[GetAssignIndex()-1];
+        if((i+1) < options.length && options[i+1].isEmpty() == false) {
+            res = options[i+1];
         }
         return res;
     }

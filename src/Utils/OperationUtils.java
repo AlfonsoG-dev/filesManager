@@ -35,8 +35,8 @@ public final class OperationUtils {
      * realiza la operacion de listar los directorios
      */
     public void ChangeDirectoryOperation() {
-        if(optionVerification.verifyFirstFile().isEmpty() == false) {
-            fileOperations.ChangeDirectory(optionVerification.verifyFirstFile());
+        if(optionVerification.verifyFirstFile(i).isEmpty() == false) {
+            fileOperations.ChangeDirectory(optionVerification.verifyFirstFile(i));
             fileOperations.ListFiles();
         }
     }
@@ -54,8 +54,8 @@ public final class OperationUtils {
      * read file lines
      */
     public void ReadFileLinesOperation() {
-        if(optionVerification.verifyFirstFile().isEmpty() == false) {
-            fileOperations.ReadFileLines(optionVerification.verifyFirstFile());
+        if(optionVerification.verifyFirstFile(i).isEmpty() == false) {
+            fileOperations.ReadFileLines(optionVerification.verifyFirstFile(i));
         }
     }
     /**
@@ -74,21 +74,21 @@ public final class OperationUtils {
      * realiza la opreacion de mover los directorios
      */
     public void MoveDirectoryOperation() throws Exception {
-        if(!optionVerification.verifyFirstFile().isEmpty() && !optionVerification.verifyFirstFile().contains(",") &&
+        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") &&
                 !optionVerification.verifySecondFile().contains(",") &&!optionVerification.verifySecondFile().isEmpty() && optionVerification.VerifyAssign() == true) { 
-            fileOperations.MoveFromSourceToTarget(optionVerification.verifyFirstFile(), optionVerification.verifySecondFile());
+            fileOperations.MoveFromSourceToTarget(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
         }
         /** 
         * move 1 source to more than 1 target
         * not require assignation
         */
-        if(!optionVerification.verifyFirstFile().contains(",") && optionVerification.verifySecondFile().contains(",")) {
+        if(!optionVerification.verifyFirstFile(i).contains(",") && optionVerification.verifySecondFile().contains(",")) {
             throw new Exception("move to more than 1 target is not possible");
         }
         /**
          * move more than 1 source to 1 target
          */
-        if(optionVerification.verifyFirstFile().contains(",") == true && options[options.length-2].contains(",") == false &&
+        if(optionVerification.verifyFirstFile(i).contains(",") == true && options[options.length-2].contains(",") == false &&
                 optionVerification.VerifyAssign() == true) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
@@ -100,10 +100,10 @@ public final class OperationUtils {
      * move the source files to target
      */
     public void MoveSourceFilesToTarget() {
-        if(!optionVerification.verifyFirstFile().isEmpty() && !optionVerification.verifyFirstFile().contains(",") &&
+        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") &&
                 !optionVerification.verifySecondFile().isEmpty() &&
                 !optionVerification.verifySecondFile().contains(",") && options.length < 4) {
-            fileOperations.MoveFromSourceToTarget(optionVerification.verifyFirstFile(), optionVerification.verifySecondFile());
+            fileOperations.MoveFromSourceToTarget(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
         }
         /**
          * move all files of 1 or more sources in 1 target
@@ -119,17 +119,17 @@ public final class OperationUtils {
      * <br> pre: </br> en realidad es mover el archivo pero en este caso crea el target
      */
     public void RenameDirectory() {
-        if(optionVerification.verifyFirstFile().isEmpty() == false &&
+        if(optionVerification.verifyFirstFile(i).isEmpty() == false &&
                 optionVerification.verifySecondFile().isEmpty() == false && optionVerification.VerifyAssign() == true) {
-            fileOperations.RenameDirectory(optionVerification.verifyFirstFile(), optionVerification.verifySecondFile());
+            fileOperations.RenameDirectory(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
         }
     }
     /**
      * realiza la operacion de crear un directorio
      */
     public void CreateDirectoryOperation() {
-        if(optionVerification.verifyFirstFile().isEmpty() == false && optionVerification.verifyFirstFile().contains(",") == false) {
-            fileOperations.CreateDirectories(optionVerification.verifyFirstFile());
+        if(optionVerification.verifyFirstFile(i).isEmpty() == false && optionVerification.verifyFirstFile(i).contains(",") == false) {
+            fileOperations.CreateDirectories(optionVerification.verifyFirstFile(i));
         } else {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
@@ -141,8 +141,8 @@ public final class OperationUtils {
      * creates a file wihtin the CLI options
      */
     public void CreateFileOperation() {
-        if(optionVerification.verifyFirstFile().isEmpty() == false && optionVerification.verifyFirstFile().contains(",") == false) {
-            fileOperations.CreateFiles(optionVerification.verifyFirstFile());
+        if(optionVerification.verifyFirstFile(i).isEmpty() == false && optionVerification.verifyFirstFile(i).contains(",") == false) {
+            fileOperations.CreateFiles(optionVerification.verifyFirstFile(i));
         } else {
             for(int j = i+1; j<options.length; ++j) {
                 String fileName = options[j].replace(",", "");
@@ -187,24 +187,24 @@ public final class OperationUtils {
      */
     public void CopySourceDirectoryToTargetOperation() {
         //require assignation "source to target"
-        if(!optionVerification.verifyFirstFile().isEmpty() && optionVerification.verifyFirstFile().contains(",") == false &&
+        if(!optionVerification.verifyFirstFile(i).isEmpty() && optionVerification.verifyFirstFile(i).contains(",") == false &&
                 optionVerification.verifySecondFile().contains(",") == false &&!optionVerification.verifySecondFile().isEmpty() && optionVerification.VerifyAssign()) {
-            fileOperations.CopyFromSourceToTarget(optionVerification.verifyFirstFile(), optionVerification.verifySecondFile());
+            fileOperations.CopyFromSourceToTarget(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
         }
         /** 
         * copy 1 source to more than 1 target
         * not require assignation
         */
-        if(!optionVerification.verifyFirstFile().contains(",") && optionVerification.verifySecondFile().contains(",")) {
+        if(!optionVerification.verifyFirstFile(i).contains(",") && optionVerification.verifySecondFile().contains(",")) {
             for(int j=i+3; j<options.length; ++j) {
                 String sFile = options[j].replace(",", "");
-                fileOperations.CopyFromSourceToTarget(optionVerification.verifyFirstFile(), sFile);
+                fileOperations.CopyFromSourceToTarget(optionVerification.verifyFirstFile(i), sFile);
             }
         }
         /**
          * copy more than 1 source to 1 target
          */
-        if(optionVerification.verifyFirstFile().contains(",") && options[options.length-2].contains(",") == false) {
+        if(optionVerification.verifyFirstFile(i).contains(",") && options[options.length-2].contains(",") == false) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
                 fileOperations.CopyFromSourceToTarget(sFile, options[options.length-1]);
@@ -214,7 +214,7 @@ public final class OperationUtils {
          * copy from more than 1 source to more than 1 target
          * assignation is in the middle
          */
-        if(optionVerification.verifyFirstFile().contains(",") && options[options.length-2].contains(",")) {
+        if(optionVerification.verifyFirstFile(i).contains(",") && options[options.length-2].contains(",")) {
             for(int f=i+1; f<optionVerification.GetAssignIndex(); ++f) {
                 for(int s=optionVerification.GetAssignIndex()+1; s<options.length; ++s) {
                     String fFile = options[f].replace(",", "");
@@ -228,9 +228,9 @@ public final class OperationUtils {
      * copy files from source to target
      */
     public void CopyFilesSourceToTarget() {
-        if(!optionVerification.verifyFirstFile().isEmpty() && !optionVerification.verifyFirstFile().contains(",") && !optionVerification.verifySecondFile().isEmpty() &&
+        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") && !optionVerification.verifySecondFile().isEmpty() &&
                 !optionVerification.verifySecondFile().contains(",") && options.length < 4) {
-            fileOperations.CopyFromSourceToTarget(optionVerification.verifyFirstFile(), optionVerification.verifySecondFile());
+            fileOperations.CopyFromSourceToTarget(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
         }
         /**
          * copy all files of 1 or more sources in 1 target

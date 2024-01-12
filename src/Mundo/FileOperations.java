@@ -213,6 +213,18 @@ public class FileOperations {
         }
     }
     /**
+     * TODO: add de-compress method and implementation
+     * de-compre all the files inside the compressed archive
+     * -l list the files inside the compressed archive
+     */
+    public void DeCompressFilesInPath(String givenPath, String listOption) {
+        try {
+            throw new Exception("not implemented yet");
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+    /**
      * elimina un directorio deseado o varios directorios
      * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
      * @param directoryPath: direccion del directorio(s) a eliminar

@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 public class BusquedaUtils {
     /**
@@ -224,4 +225,60 @@ public class BusquedaUtils {
             }
         }
     }
+    /**
+     * de-compress files from a zip file 
+     * @param zipIn: {@link java.io.InputStream} to read the {@link ZipEntry}
+     * @param path: filePath of the zip file
+     */
+    public void ExtractZipFiles(ZipInputStream zipIn, String path) {
+        FileOutputStream myFileOutputStream = null;
+        try {
+            myFileOutputStream = new FileOutputStream(path);
+            byte[] buffer = new byte[1024];
+            int readBytes;
+            while((readBytes = zipIn.read(buffer)) != -1) {
+                myFileOutputStream.write(buffer, 0, readBytes);
+            }
+        } catch(Exception e) {
+            System.err.println(e);
+        } finally {
+            if(myFileOutputStream != null) {
+                try {
+                    myFileOutputStream.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                }
+                myFileOutputStream = null;
+            }
+        }
+    }
+    /**
+     * create the file destination for the unzipped files
+     */
+    public void CreateUnZipFile(String zipFilePath, String directoryPath) {
+        File directory = new File(directoryPath);
+
+        if(!directory.exists()) { directory.mkdir(); } 
+
+        try {
+            ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
+            ZipEntry entry = zipIn.getNextEntry();
+
+            while(entry != null) {
+                String filePath = directoryPath + File.separator + entry.getName();
+                if(!entry.isDirectory()) {
+                    ExtractZipFiles(zipIn, filePath);
+                } else {
+                    File dir = new File(filePath);
+                    dir.mkdir();
+                }
+                zipIn.closeEntry();
+                entry = zipIn.getNextEntry();
+            }
+
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+
 }

@@ -213,13 +213,19 @@ public class FileOperations {
         }
     }
     /**
-     * TODO: add de-compress method and implementation
      * de-compre all the files inside the compressed archive
      * -l list the files inside the compressed archive
      */
     public void DeCompressFilesInPath(String givenPath, String listOption) {
         try {
-            throw new Exception("not implemented yet");
+            File miFile = new File(givenPath);
+            if(!miFile.exists()) { throw new Exception("file not found"); }
+            if(listOption != null) { 
+                throw new Exception("not implemented yet");
+            } else {
+                String destination = new File(givenPath).getParent();
+                busquedaUtils.CreateUnZipFile(givenPath, localFilePath + "\\" + new File(destination).getName());
+            }
         } catch(Exception e) {
             System.err.println(e);
         }

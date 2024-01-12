@@ -181,7 +181,7 @@ public final class OperationUtils {
         }
         if(includeIndex == -1) {
             deCompressPath = options[i+1];
-            fileOperations.CompressFilesInPath(deCompressPath, null);
+            fileOperations.DeCompressFilesInPath(deCompressPath, null);
         }
     }
     /**

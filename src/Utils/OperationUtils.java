@@ -168,6 +168,23 @@ public final class OperationUtils {
         }
     }
     /**
+     * create a de-compression CLI option for the operation
+     */
+    public void CreateDeCompressOperation() throws Exception {
+        // -l list the files inside the compressed archive
+        int includeIndex = optionVerification.GetIndexOfOption("-l");
+        String deCompressPath = "", includeOption = "";
+        if(options[i+1].isEmpty() == false && includeIndex != -1 && (i+3) < options.length) {
+            deCompressPath = options[i+1];
+            includeOption = options[i+3];
+            fileOperations.DeCompressFilesInPath(deCompressPath, includeOption);
+        }
+        if(includeIndex == -1) {
+            deCompressPath = options[i+1];
+            fileOperations.CompressFilesInPath(deCompressPath, null);
+        }
+    }
+    /**
      * realiza la opreacion de eliminar el directorio
      */
     public void DeleteDirectoryOperation() {

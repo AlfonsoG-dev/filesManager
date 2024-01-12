@@ -113,6 +113,8 @@ java -jar app.jar operation
 >- if you want to control the elements to include in the zip use: `-i`
 >>- `java -jar app.jar -cm .\localPath -i "src, bin, .jar`
 
+# TODO's 
+- [ ] unzip or de-compress files
 
 -------
 

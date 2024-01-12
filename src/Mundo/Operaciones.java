@@ -59,6 +59,9 @@ public class Operaciones {
                     case "-cm":
                         op.CreateCompressionOperation();
                         break;
+                    case "-dc":
+                        op.CreateDeCompressOperation();
+                        break;
                     case "-df":
                         op.DeleteDirectoryOperation();
                         break;
@@ -78,6 +81,8 @@ public class Operaciones {
                         System.out.println("\tuse -ni to create file");
                         System.out.println("use -cm to compress the folder(s)");
                         System.out.println("\tuse -i to list the folder(s) or file(s) to compress");
+                        System.out.println("use -dc to compress the folder(s)");
+                        System.out.println("\tuse -l to list the file(s) inside the compressed archive");
                         System.out.println("use -df to delete a dir");
                         break;
                     default: 

@@ -190,14 +190,29 @@ public final class OperationUtils {
     public void DeleteDirectoryOperation() {
         if(options[i+1].isEmpty() == false && optionVerification.VerifyAssign() == true &&
                 options[i+1].contains(",") == false && options.length < 4) {
-            fileOperations.DeleteDirectories(options[i+1], "--y");
+            fileOperations.DeleteDirectories(options[i+1]);
         }
         if(options[i+1].contains(",") == true && optionVerification.VerifyAssign() == true) {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
-                fileOperations.DeleteDirectories(fFile, "--y");
+                fileOperations.DeleteDirectories(fFile);
             }
         } 
+    }
+    /**
+     * delete files from path but not the folder that contains the files
+     */
+    public void DeleteFilesOperation() {
+        if(options[i+1].isEmpty() == false && optionVerification.VerifyAssign() == true && 
+                options[i+1].contains(",") == false && options.length < 4) {
+            fileOperations.DeleteFilesFromPath(options[i+1]);
+        }
+        if(options[i+1].contains(",") == true && optionVerification.VerifyAssign() == true) {
+            for(int j=i+1; j<options.length; ++j) {
+                String fFile = options[j].replace(",", "");
+                fileOperations.DeleteFilesFromPath(fFile);
+            }
+        }
     }
     /**
      * realiza la operacion de copiar source en target

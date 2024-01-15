@@ -235,13 +235,13 @@ public class FileOperations {
      * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
      * @param directoryPath: direccion del directorio(s) a eliminar
      */
-    public void DeleteDirectories(String filePath, String permiso) {
+    public void DeleteDirectories(String filePath) {
         try {
             File miFile = new File(filePath);
             if(miFile.exists()) {
                 if(miFile.isDirectory() && miFile.listFiles() != null) {
                     for(File mf: miFile.listFiles()) {
-                        DeleteDirectories(mf.getPath(), permiso);
+                        DeleteDirectories(mf.getPath());
                     }
                 } 
                 if(miFile.isDirectory() && miFile.delete() == true) {
@@ -250,7 +250,29 @@ public class FileOperations {
                 if(miFile.isFile() && miFile.delete() == true) {
                     System.out.println(String.format("File: %s \thas been deleted.", miFile.getPath()));
                 } else {
-                    DeleteDirectories(miFile.getPath(), permiso);
+                    DeleteDirectories(miFile.getPath());
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * delete files from folder given by path
+     * <br> pre: </br> if the path is directory delete files leave directory, if its file delete the file
+     * <br> post: </br> the files are deted not the folder
+     * @param deletePath: path of the files or folders to delete
+     */
+    public void DeleteFilesFromPath(String deletePath) {
+        try {
+            File miFile = new File(deletePath);
+            if(miFile.exists() && miFile.isFile()) {
+                String deleteMessage = miFile.delete() == true ?
+                    String.format("File: %s\thas been deleted", miFile.getPath()) : "";
+                 System.out.println(deleteMessage);
+            } else if(miFile.isDirectory() && miFile.listFiles() != null) {
+                for(File f: miFile.listFiles()) {
+                    DeleteFilesFromPath(f.getPath());
                 }
             }
         } catch(Exception e) {

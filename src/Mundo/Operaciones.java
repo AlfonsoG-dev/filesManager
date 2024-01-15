@@ -62,8 +62,11 @@ public class Operaciones {
                     case "-dc":
                         op.CreateDeCompressOperation();
                         break;
-                    case "-df":
+                    case "-dd":
                         op.DeleteDirectoryOperation();
+                        break;
+                    case "-df":
+                        op.DeleteFilesOperation();
                         break;
                     case "--h":
                         System.out.println("use -ls to list dir elements");
@@ -83,7 +86,8 @@ public class Operaciones {
                         System.out.println("\tuse -i to list the folder(s) or file(s) to compress");
                         System.out.println("use -dc to compress the folder(s)");
                         System.out.println("\tuse -l to list the file(s) inside the compressed archive");
-                        System.out.println("use -df to delete a dir");
+                        System.out.println("use -dd to delete a folder(s)");
+                        System.out.println("\tuse -df to delete a file(s) of folder(s)");
                         break;
                     default: 
                         System.out.println("utiliza --h para mas informacion");

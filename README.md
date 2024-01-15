@@ -1,4 +1,4 @@
-# FilesManager
+# Files Manager
 >- a basic file system operator
 >>- for basic operations like: delete, create, copy and move files or folders
 
@@ -13,7 +13,7 @@
 
 ## Usage
 
->- you can use the `.jar` file to execute the proyect
+>- you can use the `.jar` file to execute the project
 ```shell
 java -jar app.jar operation
 ```
@@ -59,7 +59,7 @@ java -jar app.jar operation
 >- `-mv`: move the content of source to target
 >>- `java -jar app.jar -mv .\source to .\target`
 
->- to move directries with : ","
+>- to move directories with : ","
 >>- `java -jar app.jar -mv source1, source2 to target`
 
 
@@ -73,7 +73,7 @@ java -jar app.jar operation
 
 >- `-rn`: rename the folder
 >>- `java -jar app.jar -rn oldName to newName`
->>>- it's the same as move but this creates the newName folder in runtime and deletes the old directory
+>>>- it's the same as move but this creates the new name folder in run time and deletes the old directory
 
 ### Copy
 
@@ -130,6 +130,6 @@ java -jar app.jar operation
 -------
 
 ## Disclaimer
->- this proyect is for educational purposes
+>- this project is for educational purposes
 >- it is not intended to create a fully functional program
->- securitty issues are not taken into account
+>- security issues are not taken into account

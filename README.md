@@ -100,10 +100,17 @@ java -jar app.jar operation
 
 ### Delete
 
->- `-df`: delete a folder and the content inside
->>- you need to give consent: `-df test_file --y`
+
+>- `-dd`: delete a folder and the content inside
+>>- you need to give consent: `-dd test_file --y`
 >>- to delete with: ","
->>- `-df test1, test2`
+>>- `-dd test1, test2 --y`
+
+>- `-df`: delete files
+>>- you need to give consent: `-df test_file.c --y`
+>>- to delete a file with: ","
+>>- `-df test1.c, test2.c --y`
+
 
 ### Compression
 

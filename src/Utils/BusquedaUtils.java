@@ -261,26 +261,20 @@ public class BusquedaUtils {
             ZipEntry entry = zipIn.getNextEntry();
             File miFile = null;
 
-            while(entry != null) {
+            outter: while(entry != null) {
                 String filePath = directoryPath + entry.getName();
                 String entryParent = new File(filePath).getParent();
                 miFile = new File(entryParent);
-                int countLevel = new TextUtils().CountFilesInDirectory(directoryPath);
-                if(!miFile.exists() && countLevel <= 1) {
-                    miFile.mkdir();
-                } else {
-                    miFile.mkdirs();
-                }
-                if(!entry.isDirectory()) {
+                if(!miFile.exists()) {
+                    System.out.println(String.format("THE FOLDER STRUCTURE: | %s | ARE NEDDED.", miFile.getPath()));
+                    break outter;
+                } else if(!entry.isDirectory()) {
                     ExtractZipFiles(zipIn, filePath);
-                } else {
-                    File dir = new File(filePath);
-                    CreateUnZipFile(zipFilePath, dir.getPath());
                 }
                 zipIn.closeEntry();
                 entry = zipIn.getNextEntry();
             }
-            System.out.println("¬°de-compress operation finished°¬");
+            System.out.println("de-compress operation finished");
 
         } catch(Exception e) {
             System.err.println(e);

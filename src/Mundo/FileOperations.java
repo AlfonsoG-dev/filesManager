@@ -25,6 +25,7 @@ public class FileOperations {
     /**
      * constructor de la clase
      * <br> post: </br> inicializa la intancia de {@link BusquedaUtils}
+     * TODO: create the no absolute path for files operation
      */
     public FileOperations(String nLocalFilePath) {
         busquedaUtils = new BusquedaUtils();
@@ -38,12 +39,8 @@ public class FileOperations {
     public void ChangeDirectory(String nPath) {
         File localFile = new File(localFilePath);
         try {
-            if(nPath.equals("./") == false || nPath.equals("..")) {
-                String cPath = textUtils.GetCleanPath(nPath);
-                localFilePath = localFile.getCanonicalPath().concat(cPath);
-            } else {
-                throw new Exception("not implemented yet");
-            }
+            String cPath = textUtils.GetCleanPath(nPath);
+            localFilePath = localFile.getPath().concat(cPath);
         } catch(Exception e) {
             System.err.println(e);
         }
@@ -59,7 +56,7 @@ public class FileOperations {
                 System.out.println("\n\t CARPETA SIN ARCHIVOS \n");
             }
             for(File f: files) {
-                System.out.println(f.getCanonicalPath());
+                System.out.println(f.getPath());
             }
         } catch(Exception e) {
             System.err.println(e);
@@ -117,7 +114,6 @@ public class FileOperations {
      * @param filePath: path to search for the cli context
      * @param cliOption: option to make the search
      * @param cliContext: context to search in the given path
-     *
      */
     public void SearchFileOrFolder(String filePath, String cliOption, String cliContext) {
         String methodResult = "";
@@ -161,7 +157,7 @@ public class FileOperations {
             }
             int count = textUtils.CountFilesInDirectory(cDirectory);
             if(count <= 1) {
-                String nDirectory = localFile.getCanonicalPath() + "\\"+ cDirectory;
+                String nDirectory = localFile.getPath() + "\\"+ cDirectory;
                 File miFile = new File(nDirectory);
                 if(miFile.exists() == false) {
                     if(miFile.mkdir() == true) {
@@ -169,7 +165,7 @@ public class FileOperations {
                     }
                 }
             } else if(count > 1) {
-                busquedaUtils.CreateParentFile(localFile.getCanonicalPath(), cDirectory);
+                busquedaUtils.CreateParentFile(localFile.getPath(), cDirectory);
             }
         } catch (Exception e) {
             System.err.println(e);
@@ -184,7 +180,7 @@ public class FileOperations {
             String cfileName = "";
             File localFile = new File(localFilePath);
             cfileName = textUtils.GetCleanPath(fileName);
-            String nFile = localFile.getCanonicalPath() + "\\" + cfileName;
+            String nFile = localFile.getPath() + "\\" + cfileName;
             File miFile = new File(nFile);
             if(miFile.exists() == false) {
                 if(miFile.createNewFile() == true){
@@ -347,7 +343,7 @@ public class FileOperations {
                     Path target = new File(targetFilePath).toPath();
                     System.out.println( Files.copy(fileSource, target.resolve(fileSource.getFileName()), StandardCopyOption.COPY_ATTRIBUTES));
                 } else if(new File(sourceFilePath).isDirectory()) {
-                    String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFilePath, sourceFile.getCanonicalPath()) + ";";
+                    String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFilePath, sourceFile.getPath()) + ";";
                     String[] names = cTargetNames.split(";");
                     for(String n: names) {
                         if(n.contains(".git") == false) {

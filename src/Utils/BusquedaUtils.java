@@ -16,7 +16,7 @@ public class BusquedaUtils {
         try {
             File local = new File(localPath);
             if(local.exists()) {
-                String path = local.getCanonicalPath(); 
+                String path = local.getPath(); 
                 name = new File(path).getName();
             }
         } catch(Exception e) {
@@ -51,7 +51,7 @@ public class BusquedaUtils {
         try {
             for(File f: miFiles) {
                 if(f.exists() && f.isFile()) {
-                    fileNames += f.getCanonicalPath() + "\n";
+                    fileNames += f.getPath() + "\n";
                 } else if(f.isDirectory()) {
                     fileNames += this.getDirectoryFiles(f.listFiles());
                 }
@@ -71,7 +71,7 @@ public class BusquedaUtils {
         try {
             File miFile = new File(filePath);
             if(miFile.exists() && miFile.isFile()) {
-                fileNames += miFile.getCanonicalPath() + "\n";
+                fileNames += miFile.getPath() + "\n";
             } else {
                 fileNames += getDirectoryFiles(miFile.listFiles());
             }

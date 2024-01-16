@@ -1,6 +1,7 @@
 package Utils;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class TextUtils {
     /**
@@ -10,10 +11,9 @@ public class TextUtils {
      */
     public String GetCleanPath(String filePath) {
         String build = "";
-        if(filePath.startsWith("\\.\\")) {
-            build = filePath.replace(".\\", "").replace("/", "\\").replace("\\\\", "\\");
-        } else {
-            build = filePath.replace("/", "\\").replace("\\\\", "\\");
+        if(filePath.startsWith(".")) {
+            Path mio = new File(filePath).toPath().normalize();
+            build = mio.toString();
         }
         return build;
     }

@@ -25,7 +25,6 @@ public class FileOperations {
     /**
      * constructor de la clase
      * <br> post: </br> inicializa la intancia de {@link BusquedaUtils}
-     * TODO: create the no absolute path for files operation
      */
     public FileOperations(String nLocalFilePath) {
         busquedaUtils = new BusquedaUtils();
@@ -40,7 +39,7 @@ public class FileOperations {
         File localFile = new File(localFilePath);
         try {
             String cPath = textUtils.GetCleanPath(nPath);
-            localFilePath = localFile.getPath().concat(cPath);
+            localFilePath = localFile.getPath().concat("\\" + cPath);
         } catch(Exception e) {
             System.err.println(e);
         }
@@ -50,13 +49,13 @@ public class FileOperations {
      */
     public void ListFiles() {
         try {
-            File miLocalFilePath = new File(localFilePath);
-            File[] files = miLocalFilePath.listFiles();
-            if(files.length == 0) {
+            File miFile = new File(localFilePath);
+            if(miFile.isDirectory() && miFile.listFiles() !=  null) {
+                for(File f: miFile.listFiles()) {
+                    System.out.println(f.getPath());
+                }
+            } else {
                 System.out.println("\n\t CARPETA SIN ARCHIVOS \n");
-            }
-            for(File f: files) {
-                System.out.println(f.getPath());
             }
         } catch(Exception e) {
             System.err.println(e);
@@ -137,7 +136,7 @@ public class FileOperations {
         if(methodResult != "") {
             String[] files = methodResult.split("\n");
             for(String f: files) {
-                System.out.println(String.format("File: %s", f));
+                System.out.println(String.format("| %s |", f));
             }
         }
     }
@@ -219,8 +218,7 @@ public class FileOperations {
             if(listOption != null) { 
                 throw new Exception("not implemented yet");
             } else {
-                String destination = new File(givenPath).getParent();
-                busquedaUtils.CreateUnZipFile(givenPath, localFilePath + "\\" + new File(destination).getName());
+                busquedaUtils.CreateUnZipFile(givenPath, localFilePath);
             }
         } catch(Exception e) {
             System.err.println(e);

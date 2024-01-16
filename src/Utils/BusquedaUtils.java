@@ -16,7 +16,7 @@ public class BusquedaUtils {
         try {
             File local = new File(localPath);
             if(local.exists()) {
-                String path = local.getPath(); 
+                String path = local.getCanonicalPath(); 
                 name = new File(path).getName();
             }
         } catch(Exception e) {
@@ -256,25 +256,31 @@ public class BusquedaUtils {
      * create the file destination for the unzipped files
      */
     public void CreateUnZipFile(String zipFilePath, String directoryPath) {
-        File directory = new File(directoryPath);
-
-        if(!directory.exists()) { directory.mkdir(); } 
-
         try {
             ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
             ZipEntry entry = zipIn.getNextEntry();
+            File miFile = null;
 
             while(entry != null) {
-                String filePath = directoryPath + File.separator + entry.getName();
+                String filePath = directoryPath + entry.getName();
+                String entryParent = new File(filePath).getParent();
+                miFile = new File(entryParent);
+                int countLevel = new TextUtils().CountFilesInDirectory(directoryPath);
+                if(!miFile.exists() && countLevel <= 1) {
+                    miFile.mkdir();
+                } else {
+                    miFile.mkdirs();
+                }
                 if(!entry.isDirectory()) {
                     ExtractZipFiles(zipIn, filePath);
                 } else {
                     File dir = new File(filePath);
-                    dir.mkdir();
+                    CreateUnZipFile(zipFilePath, dir.getPath());
                 }
                 zipIn.closeEntry();
                 entry = zipIn.getNextEntry();
             }
+            System.out.println("¬°de-compress operation finished°¬");
 
         } catch(Exception e) {
             System.err.println(e);

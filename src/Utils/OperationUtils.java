@@ -60,14 +60,18 @@ public final class OperationUtils {
     }
     /**
      * search for a file or folder with certain options
+     * -n search for name
+     * -e search for extension 
+     * -t search for type:
+     *  -td -> type directory
+     *  -tf -> type field
      */
     public void SearchFileOrFolderOperation() {
-        if((i+1) < options.length || (i+2) < options.length) {
-            String filePath = options[i+1];
-            int cliOption = optionVerification.GetIndexOfOption(options[i+2]);
-            if(cliOption != -1 && (i+3) < options.length) {
-                fileOperations.SearchFileOrFolder(filePath, options[cliOption], options[cliOption+1]);
-            }
+        String filePath = (i+1) < options.length ? options[i+1] : "";
+        String CLI_option = (i+2) < options.length ? options[i+2] : "";
+        if(filePath != "" && CLI_option != "") {
+            String cliContext = (i+3) < options.length ? options[i+3] : "";
+            fileOperations.SearchFileOrFolder(filePath, CLI_option, cliContext);
         }
     }
     /**

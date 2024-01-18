@@ -29,17 +29,22 @@ public class BusquedaUtils {
      * @param miFiles: elementos del directorio
      * @return string con la ruta de los elementos del directorio
      */
-    public String getFileElements(File[] miFiles) throws Exception {
-        String fileNames = "";
+    public String getDirectoryNames(File[] miFiles) {
+        String dirNames = "";
         try {
             for(File f: miFiles) {
-                fileNames += f.getPath() + "\n";
+                if(f.isDirectory()) {
+                    dirNames += f.getPath() + "\n";
+                    if(f.listFiles() != null) {
+                        getDirectoryFiles(f.listFiles());
+                    }
+                }
             }
         } catch(Exception e) {
             System.err.println(e);
         }
-        String cFiles = fileNames.substring(0, fileNames.length()-2);
-        return cFiles;
+        String cDirNames = dirNames.substring(0, dirNames.length()-2);
+        return cDirNames;
     }
     /**
      * ayuda a generar la ruta de los archivos dentro de cualquier directorio
@@ -95,7 +100,7 @@ public class BusquedaUtils {
             case "-e":
                 if(firstFile.isFile()) {
                     String eSecondFile = secondFile;
-                    if(firstFile.getName().split("\\.")[1].equals(eSecondFile)) {
+                    if(firstFile.getName().split("\\.")[1].toLowerCase().contains(eSecondFile.toLowerCase())) {
                         iguales = true;
                     }
                 } else {

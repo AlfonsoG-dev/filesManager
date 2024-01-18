@@ -118,7 +118,25 @@ public class FileOperations {
         String methodResult = "";
         try {
             File miFile = new File(filePath);
-            if(miFile.exists() && miFile.isDirectory()) {
+            if(cliOption.equals("-tf") || cliOption.equals("-td")) {
+                switch(cliOption) {
+                    case "-td":
+                        if(miFile.isDirectory() && miFile.listFiles() != null) {
+                            String[] dirNames = busquedaUtils.getDirectoryNames(miFile.listFiles()).split("\n");
+                            for(String dn: dirNames) {
+                                if(new File(dn).getName().toLowerCase().contains(cliContext.toLowerCase())) {
+                                    methodResult += dn + "\n";
+                                }
+                            }
+                        } else if(miFile.listFiles() == null && miFile.getName().toLowerCase().contains(cliContext.toLowerCase())) {
+                            methodResult += miFile.getPath() + "\n";
+                        }
+                        break;
+                    case "-tf":
+                        SearchFileOrFolder(miFile.getPath(), "-n", cliContext);
+                        break;
+                }
+            } else if(miFile.exists() && miFile.isDirectory()) {
                 String[] fileNames = busquedaUtils.listFilesFromPath(filePath).split("\n");
                 if(fileNames.length > 0) {
                     for(String fn: fileNames) {
@@ -160,7 +178,7 @@ public class FileOperations {
                 File miFile = new File(nDirectory);
                 if(miFile.exists() == false) {
                     if(miFile.mkdir() == true) {
-                        System.out.println("se creo: " + cDirectory);
+                        System.out.println("se creo: " + nDirectory);
                     }
                 }
             } else if(count > 1) {

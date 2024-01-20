@@ -124,6 +124,7 @@ java -jar app.jar operation
 
 >- `-dc`: de-compress the elements of the compressed file
 >>- `java -jar app.jar -dc .\compressedFile.zip`
+
 # TODO's 
 - [ ] list entries of the file to de-compress
 

@@ -213,9 +213,17 @@ public final class OperationUtils {
         if(!optionVerification.VerifyAssign()) {
             System.out.println("use --y to delete");
         }
-        if(options[i+1].isEmpty() == false && optionVerification.VerifyAssign() == true && 
+        if(!optionVerification.verifyFirstFile(i).isEmpty() && optionVerification.VerifyAssign() == true && 
                 options[i+1].contains(",") == false && options.length < 4) {
             fileOperations.DeleteFilesFromPath(options[i+1]);
+        }
+        /**
+         * copy all files of 1 or more sources in 1 target
+         */
+        if(!options[i+1].contains(",") && optionVerification.VerifyAssign() == true) {
+            for(int j=i+1; j<optionVerification.GetAssignIndex(); ++j) {
+                fileOperations.DeleteFilesFromPath(options[j]);
+            }
         }
         if(options[i+1].contains(",") == true && optionVerification.VerifyAssign() == true) {
             for(int j=i+1; j<options.length; ++j) {

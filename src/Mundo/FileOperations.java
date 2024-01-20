@@ -39,7 +39,7 @@ public class FileOperations {
         File localFile = new File(localFilePath);
         try {
             String cPath = textUtils.GetCleanPath(nPath);
-            localFilePath = localFile.getPath().concat("/" + cPath);
+            localFilePath = localFile.getPath().concat("\\" + cPath);
         } catch(Exception e) {
             System.err.println(e);
         }
@@ -167,14 +167,10 @@ public class FileOperations {
         try {
             String cDirectory = "";
             File localFile = new File(localFilePath);
-            if(directoryNames.startsWith(".")) {
-                cDirectory = textUtils.GetCleanPath(directoryNames);
-            } else {
-                cDirectory = directoryNames;
-            }
+            cDirectory = textUtils.GetCleanPath(directoryNames);
             int count = textUtils.CountFilesInDirectory(cDirectory);
             if(count <= 1) {
-                String nDirectory = localFile.getPath() + "/"+ cDirectory;
+                String nDirectory = localFile.getPath() + "\\"+ cDirectory;
                 File miFile = new File(nDirectory);
                 if(miFile.exists() == false) {
                     if(miFile.mkdir() == true) {
@@ -185,7 +181,7 @@ public class FileOperations {
                 busquedaUtils.CreateParentFile(localFile.getPath(), cDirectory);
             }
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -197,7 +193,7 @@ public class FileOperations {
             String cfileName = "";
             File localFile = new File(localFilePath);
             cfileName = textUtils.GetCleanPath(fileName);
-            String nFile = localFile.getPath() + "/" + cfileName;
+            String nFile = localFile.getPath() + "\\" + cfileName;
             File miFile = new File(nFile);
             if(miFile.exists() == false) {
                 if(miFile.createNewFile() == true){
@@ -351,25 +347,21 @@ public class FileOperations {
      */
     public void CopyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
-            String[] fileNames = busquedaUtils.listFilesFromPath(sourceFilePath).split("\n");
-            for(String fn: fileNames) {
-                File sourceFile = new File(fn);
-                if(new File(sourceFilePath).isFile()) {
-                    Path fileSource = sourceFile.toPath();
-                    Path target = new File(targetFilePath).toPath();
-                    System.out.println( Files.copy(fileSource, target.resolve(fileSource.getFileName()), StandardCopyOption.COPY_ATTRIBUTES));
-                } else if(new File(sourceFilePath).isDirectory()) {
-                    String cTargetNames = textUtils.CreateTargetFromParentPath(sourceFilePath, sourceFile.getPath()) + ";";
-                    String[] names = cTargetNames.split(";");
-                    for(String n: names) {
-                        if(n.contains(".git") == false) {
-                            File targetFile = new File(targetFilePath + "/" + n);
-                            busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
-                            Path sourcePath = sourceFile.toPath();
-                            Path targetPath = targetFile.toPath();
-                            System.out.println(Files.copy(sourcePath, targetPath, StandardCopyOption.COPY_ATTRIBUTES));
-                        }
-                    }
+            if(new File(sourceFilePath).isFile()) {
+                String sourceFileName = new File(sourceFilePath).getName();
+                String sourceParent = new File(sourceFilePath).getParent();
+                String sourceParentName = new File(sourceParent).getName();
+                File targetFile = new File(targetFilePath + "/" + sourceParentName + "/" + sourceFileName);
+                busquedaUtils.CreateParentFile(targetFile.getPath(), targetFile.getParent());
+                System.out.println(Files.copy(new File(sourceFilePath).toPath(), targetFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES));
+            } else if(new File(sourceFilePath).isDirectory()) {
+                String[] dirSourceFiles = busquedaUtils.listFilesFromPath(sourceFilePath).split("\n");
+                String sourceParent = new File(sourceFilePath).getParent();
+                for(String sourceFiles: dirSourceFiles) {
+                    String sourceWithoutParent = sourceFiles.replace(sourceParent, "");
+                    File targetFile = new File(targetFilePath + "/" + sourceWithoutParent);
+                    busquedaUtils.CreateParentFile(targetFile.getPath(), targetFile.getParent());
+                    System.out.println(Files.copy(new File(sourceFiles).toPath(), targetFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES));
                 }
             }
         } catch(Exception e) {

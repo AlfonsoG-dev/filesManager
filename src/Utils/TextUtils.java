@@ -11,7 +11,7 @@ public class TextUtils {
      */
     public String GetCleanPath(String filePath) {
         String build = "";
-        if(filePath.startsWith(".")) {
+        if(filePath.startsWith(".\\")) {
             Path mio = new File(filePath).toPath().normalize();
             build = mio.toString();
         } else {
@@ -36,7 +36,7 @@ public class TextUtils {
      */
     public int CountFilesInDirectory(String directory) {
         int count = 0;
-        String[] valores = directory.split("/");
+        String[] valores = directory.split("\\\\");
         for(String v: valores) {
             if(v.isEmpty() == false) {
                 ++count;

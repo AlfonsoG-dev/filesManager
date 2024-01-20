@@ -192,6 +192,9 @@ public final class OperationUtils {
      * realiza la opreacion de eliminar el directorio
      */
     public void DeleteDirectoryOperation() {
+        if(!optionVerification.VerifyAssign()) {
+            System.out.println("use --y to delete");
+        }
         if(options[i+1].isEmpty() == false && optionVerification.VerifyAssign() == true &&
                 options[i+1].contains(",") == false && options.length < 4) {
             fileOperations.DeleteDirectories(options[i+1]);
@@ -207,6 +210,9 @@ public final class OperationUtils {
      * delete files from path but not the folder that contains the files
      */
     public void DeleteFilesOperation() {
+        if(!optionVerification.VerifyAssign()) {
+            System.out.println("use --y to delete");
+        }
         if(options[i+1].isEmpty() == false && optionVerification.VerifyAssign() == true && 
                 options[i+1].contains(",") == false && options.length < 4) {
             fileOperations.DeleteFilesFromPath(options[i+1]);

@@ -39,7 +39,7 @@ public class FileOperations {
         File localFile = new File(localFilePath);
         try {
             String cPath = textUtils.GetCleanPath(nPath);
-            localFilePath = localFile.getPath().concat("\\" + cPath);
+            localFilePath = localFile.getPath().concat("/" + cPath);
         } catch(Exception e) {
             System.err.println(e);
         }
@@ -174,7 +174,7 @@ public class FileOperations {
             }
             int count = textUtils.CountFilesInDirectory(cDirectory);
             if(count <= 1) {
-                String nDirectory = localFile.getPath() + "\\"+ cDirectory;
+                String nDirectory = localFile.getPath() + "/"+ cDirectory;
                 File miFile = new File(nDirectory);
                 if(miFile.exists() == false) {
                     if(miFile.mkdir() == true) {
@@ -197,7 +197,7 @@ public class FileOperations {
             String cfileName = "";
             File localFile = new File(localFilePath);
             cfileName = textUtils.GetCleanPath(fileName);
-            String nFile = localFile.getPath() + "\\" + cfileName;
+            String nFile = localFile.getPath() + "/" + cfileName;
             File miFile = new File(nFile);
             if(miFile.exists() == false) {
                 if(miFile.createNewFile() == true){
@@ -363,7 +363,7 @@ public class FileOperations {
                     String[] names = cTargetNames.split(";");
                     for(String n: names) {
                         if(n.contains(".git") == false) {
-                            File targetFile = new File(targetFilePath + "\\" + n);
+                            File targetFile = new File(targetFilePath + "/" + n);
                             busquedaUtils.CreateParentFile(targetFilePath, targetFile.getParent());
                             Path sourcePath = sourceFile.toPath();
                             Path targetPath = targetFile.toPath();

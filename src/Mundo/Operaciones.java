@@ -21,7 +21,7 @@ public class Operaciones {
     public void OrganizeOptions(String[] args) {
         try {
             outter:for(int i=0; i<args.length; ++i) {
-                op = new OperationUtils(".\\", args, i);
+                op = new OperationUtils("./", args, i);
                 switch(args[i]) {
                     case "-ls": 
                         op.ChangeDirectoryOperation();

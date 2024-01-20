@@ -95,12 +95,12 @@ public class BusquedaUtils {
     public boolean CompareFiles(String cliOption, String first, String second) {
         boolean iguales = false;
         File firstFile = new File(first);
-        String secondFile = second.contains(".") == true ? second.split("\\.")[1] : second;
+        String secondFile = second.contains(".") == true ? second.split("/")[1] : second;
         switch(cliOption) {
             case "-e":
                 if(firstFile.isFile()) {
                     String eSecondFile = secondFile;
-                    if(firstFile.getName().split("\\.")[1].toLowerCase().contains(eSecondFile.toLowerCase())) {
+                    if(firstFile.getName().split("/")[1].toLowerCase().contains(eSecondFile.toLowerCase())) {
                         iguales = true;
                     }
                 } else {
@@ -126,9 +126,9 @@ public class BusquedaUtils {
         try {
             String[] parentNames = parentFileNames.split("\n");
             for(String pn: parentNames) {
-                String nFileName = pn.replace(targetFilePath.replace("/", "\\"), "");
+                String nFileName = pn.replace(targetFilePath, "");
                 File mio = new File(pn);
-                int fileLenght = nFileName.split("\\\\").length;
+                int fileLenght = nFileName.split("/").length;
                 if(mio.exists() == false && fileLenght > 1) {
                     mio.mkdirs();
                 } else if(mio.exists() == false && fileLenght <= 1) {

@@ -351,7 +351,7 @@ public class FileOperations {
                 String sourceFileName = new File(sourceFilePath).getName();
                 String sourceParent = new File(sourceFilePath).getParent();
                 String sourceParentName = new File(sourceParent).getName();
-                File targetFile = new File(targetFilePath + "/" + sourceParentName + "/" + sourceFileName);
+                File targetFile = new File(targetFilePath + "\\" + sourceParentName + "\\" + sourceFileName);
                 busquedaUtils.CreateParentFile(targetFile.getPath(), targetFile.getParent());
                 System.out.println(Files.copy(new File(sourceFilePath).toPath(), targetFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES));
             } else if(new File(sourceFilePath).isDirectory()) {
@@ -359,7 +359,7 @@ public class FileOperations {
                 String sourceParent = new File(sourceFilePath).getParent();
                 for(String sourceFiles: dirSourceFiles) {
                     String sourceWithoutParent = sourceFiles.replace(sourceParent, "");
-                    File targetFile = new File(targetFilePath + "/" + sourceWithoutParent);
+                    File targetFile = new File(targetFilePath + "\\" + sourceWithoutParent);
                     busquedaUtils.CreateParentFile(targetFile.getPath(), targetFile.getParent());
                     System.out.println(Files.copy(new File(sourceFiles).toPath(), targetFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES));
                 }

@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-public class BusquedaUtils {
+public class FileUtils {
     /**
      * get the local name
      * @param localPath: local path
@@ -92,10 +92,10 @@ public class BusquedaUtils {
      * @param second: second file
      * @return true if the file have similarities, false otherwise
      */
-    public boolean CompareFiles(String cliOption, String first, String second) {
+    public boolean areSimilar(String cliOption, String first, String second) {
         boolean iguales = false;
         File firstFile = new File(first);
-        String secondFile = second.contains(".") == true ? second.split("\\.")[1] : second;
+        String secondFile = second.contains(".") ? second.split("\\.")[1] : second;
         switch(cliOption) {
             case "-e":
                 if(firstFile.isFile()) {
@@ -129,9 +129,9 @@ public class BusquedaUtils {
                 String nFileName = pn.replace(targetFilePath, "");
                 File mio = new File(pn);
                 int fileLenght = nFileName.split("\\\\").length;
-                if(mio.exists() == false && fileLenght > 1) {
+                if(!mio.exists() && fileLenght > 1) {
                     mio.mkdirs();
-                } else if(mio.exists() == false && fileLenght <= 1) {
+                } else if(!mio.exists() && fileLenght <= 1) {
                     mio.mkdir();
                 }
                 System.out.println("directorio creado: " + mio.getName());
@@ -158,14 +158,14 @@ public class BusquedaUtils {
                 String[] includes = includeFiles.split(",");
                 for(File sf: sourceFiles) {
                     for(String ic: includes) {
-                        if(sf.getPath().contains(ic.trim()) == true) {
+                        if(sf.getPath().contains(ic.trim())) {
                             AddFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
                         }
                     }
                 }
-            } else if(includeFiles != null && includeFiles.contains(",") == false) {
+            } else if(includeFiles != null && !includeFiles.contains(",")) {
                 for(File sf: sourceFiles) {
-                    if(sf.getPath().contains(includeFiles) == true) {
+                    if(sf.getPath().contains(includeFiles)) {
                         AddFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
                     }
                 }

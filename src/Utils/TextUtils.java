@@ -38,7 +38,7 @@ public class TextUtils {
         int count = 0;
         String[] valores = directory.split("\\\\");
         for(String v: valores) {
-            if(v.isEmpty() == false) {
+            if(!v.isEmpty()) {
                 ++count;
             }
         }

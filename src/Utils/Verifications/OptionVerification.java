@@ -62,7 +62,7 @@ public class OptionVerification {
      */
     public String verifyFirstFile(int i) {
         String res = "";
-        if((i+1) < options.length && options[i+1].isEmpty() == false) {
+        if((i+1) < options.length && !options[i+1].isEmpty()) {
             res = options[i+1];
         }
         return res;

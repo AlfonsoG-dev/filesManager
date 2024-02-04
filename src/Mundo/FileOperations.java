@@ -83,9 +83,10 @@ public class FileOperations {
         BufferedReader mibuBufferedReader = null;
         try {
             String cPath = textUtils.GetCleanPath(fileName);
-            if(new File(cPath).isFile()) {
-                mibuBufferedReader = new BufferedReader(new FileReader(new File(cPath)));
-                while(mibuBufferedReader.read() != -1) {
+            File miFile = new File(cPath);
+            if(miFile.isFile()) {
+                mibuBufferedReader = new BufferedReader(new FileReader(miFile));
+                while(mibuBufferedReader.ready()) {
                     System.out.println(mibuBufferedReader.readLine());
                 }
             } else if(new File(cPath).isDirectory()) {
@@ -118,7 +119,8 @@ public class FileOperations {
                 switch(cliOption) {
                     case "-td":
                         if(miFile.isDirectory() && miFile.listFiles() != null) {
-                            String[] dirNames = fileUtils.getDirectoryNames(miFile.listFiles()).split("\n");
+                            String[] dirNames = fileUtils.getDirectoryNames(
+                                    Files.newDirectoryStream(miFile.toPath())).split("\n");
                             for(String dn: dirNames) {
                                 if(new File(dn).getName().toLowerCase().contains(cliContext.toLowerCase())) {
                                     methodResult += dn + "\n";

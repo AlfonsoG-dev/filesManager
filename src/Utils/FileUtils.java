@@ -2,6 +2,9 @@ package Utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -29,14 +32,15 @@ public class FileUtils {
      * @param miFiles: elementos del directorio
      * @return string con la ruta de los elementos del directorio
      */
-    public String getDirectoryNames(File[] miFiles) {
+    public String getDirectoryNames(DirectoryStream<Path> myFiles) {
         String dirNames = "";
         try {
-            for(File f: miFiles) {
+            for(Path p: myFiles) {
+                File f = p.toFile();
                 if(f.isDirectory()) {
-                    dirNames += f.getPath() + "\n";
+                    dirNames +=  f.getPath() + "\n";
                     if(f.listFiles() != null) {
-                        getDirectoryFiles(f.listFiles());
+                        getDirectoryFiles(Files.newDirectoryStream(f.toPath()));
                     }
                 }
             }
@@ -51,14 +55,15 @@ public class FileUtils {
      * @param miFiles: los archivos dentro de un directorio
      * @return la ruta de los archivos dentro de cualquier directorio
      */
-    public String getDirectoryFiles(File[] miFiles) {
+    public String getDirectoryFiles(DirectoryStream<Path> myFiles) {
         String fileNames = "";
         try {
-            for(File f: miFiles) {
+            for(Path p: myFiles) {
+                File f = p.toFile();
                 if(f.exists() && f.isFile()) {
                     fileNames += f.getPath() + "\n";
                 } else if(f.isDirectory()) {
-                    fileNames += this.getDirectoryFiles(f.listFiles());
+                    fileNames += this.getDirectoryFiles(Files.newDirectoryStream(f.toPath()));
                 }
             }
         } catch(Exception e) {
@@ -78,7 +83,7 @@ public class FileUtils {
             if(miFile.exists() && miFile.isFile()) {
                 fileNames += miFile.getPath() + "\n";
             } else {
-                fileNames += getDirectoryFiles(miFile.listFiles());
+                fileNames += getDirectoryFiles(Files.newDirectoryStream(miFile.toPath()));
             }
         } catch(Exception e) {
             System.err.println(e);

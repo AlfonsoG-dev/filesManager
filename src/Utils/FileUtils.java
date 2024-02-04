@@ -23,7 +23,7 @@ public class FileUtils {
                 name = new File(path).getName();
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return name;
     }
@@ -40,15 +40,14 @@ public class FileUtils {
                 if(f.isDirectory()) {
                     dirNames +=  f.getPath() + "\n";
                     if(f.listFiles() != null) {
-                        getDirectoryFiles(Files.newDirectoryStream(f.toPath()));
+                        dirNames += getDirectoryNames(Files.newDirectoryStream(f.toPath()));
                     }
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
-        String cDirNames = dirNames.substring(0, dirNames.length()-2);
-        return cDirNames;
+        return dirNames;
     }
     /**
      * ayuda a generar la ruta de los archivos dentro de cualquier directorio
@@ -67,7 +66,7 @@ public class FileUtils {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return fileNames;
     }
@@ -86,7 +85,7 @@ public class FileUtils {
                 fileNames += getDirectoryFiles(Files.newDirectoryStream(miFile.toPath()));
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return fileNames;
     }
@@ -142,7 +141,7 @@ public class FileUtils {
                 System.out.println("directorio creado: " + mio.getName());
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -189,13 +188,13 @@ public class FileUtils {
                     zop.write(buffer, 0, lenght);
                 }
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace();
             } finally {
                 if(fileInput != null) {
                     try {
                         fileInput.close();
                     } catch(Exception e) {
-                        System.err.println(e);
+                        e.printStackTrace();
                     }
                     fileInput = null;
                 }
@@ -215,13 +214,13 @@ public class FileUtils {
             zipOutput = new ZipOutputStream(fileOutput);
             AddFilesToZip(source, source.getName(), zipOutput, includeFiles);
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         } finally {
             if(zipOutput != null) {
                 try {
                     zipOutput.close();
                 } catch(Exception e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
                 zipOutput = null;
             }
@@ -229,7 +228,7 @@ public class FileUtils {
                 try {
                     fileOutput.close();
                 } catch(Exception e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
                 fileOutput = null;
             }
@@ -250,13 +249,13 @@ public class FileUtils {
                 myFileOutputStream.write(buffer, 0, readBytes);
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         } finally {
             if(myFileOutputStream != null) {
                 try {
                     myFileOutputStream.close();
                 } catch(Exception e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
                 myFileOutputStream = null;
             }
@@ -287,7 +286,7 @@ public class FileUtils {
             System.out.println("de-compress operation finished");
 
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 

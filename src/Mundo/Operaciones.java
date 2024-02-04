@@ -97,7 +97,7 @@ public class Operaciones {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }

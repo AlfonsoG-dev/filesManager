@@ -42,7 +42,7 @@ public class FileOperations {
             String cPath = textUtils.GetCleanPath(nPath);
             localFilePath = localFile.getPath().concat("\\" + cPath);
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -59,7 +59,7 @@ public class FileOperations {
                 System.out.println("\n\t CARPETA SIN ARCHIVOS \n");
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -73,7 +73,7 @@ public class FileOperations {
                 Runtime.getRuntime().exec("pwsh -NoProfile -Command start " + miFile.getPath());
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -93,13 +93,13 @@ public class FileOperations {
                 ListFiles();
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         } finally {
             if(mibuBufferedReader != null) {
                 try {
                     mibuBufferedReader.close();
                 } catch(Exception e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
                 mibuBufferedReader = null;
             }
@@ -119,8 +119,7 @@ public class FileOperations {
                 switch(cliOption) {
                     case "-td":
                         if(miFile.isDirectory() && miFile.listFiles() != null) {
-                            String[] dirNames = fileUtils.getDirectoryNames(
-                                    Files.newDirectoryStream(miFile.toPath())).split("\n");
+                            String[] dirNames = fileUtils.getDirectoryNames(Files.newDirectoryStream(miFile.toPath())).split("\n");
                             for(String dn: dirNames) {
                                 if(new File(dn).getName().toLowerCase().contains(cliContext.toLowerCase())) {
                                     methodResult += dn + "\n";
@@ -147,7 +146,7 @@ public class FileOperations {
                 throw new Exception("cannot operate with files only with folders");
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         if(methodResult != "") {
             String[] files = methodResult.split("\n");
@@ -198,7 +197,7 @@ public class FileOperations {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -215,7 +214,7 @@ public class FileOperations {
             String localName = fileUtils.getLocalName(localFilePath);
             fileUtils.CreateZipFile(miFile, new File(localName + ".zip"), includeFiles);
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -232,7 +231,7 @@ public class FileOperations {
                 fileUtils.CreateUnZipFile(givenPath, localFilePath);
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -291,7 +290,7 @@ public class FileOperations {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -325,7 +324,7 @@ public class FileOperations {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -356,7 +355,7 @@ public class FileOperations {
                 System.out.println("el archivo: " + oldName + " se renombra por: " + newName);
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     /**
@@ -400,7 +399,7 @@ public class FileOperations {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }

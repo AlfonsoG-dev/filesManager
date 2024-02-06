@@ -5,7 +5,7 @@ class filesManager {
         try {
             miThread.start();
             Operaciones misOperaciones = new Operaciones();
-            misOperaciones.OrganizeOptions(args);
+            misOperaciones.organizeOptions(args);
         } catch(Exception e) {
             miThread.interrupt();
             e.printStackTrace();

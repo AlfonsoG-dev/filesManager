@@ -18,55 +18,55 @@ public class Operaciones {
     /**
      * organiza las operaciones según la opcion designada en CLI
      */
-    public void OrganizeOptions(String[] args) {
+    public void organizeOptions(String[] args) {
         try {
             outter:for(int i=0; i<args.length; ++i) {
                 op = new OperationUtils(".\\", args, i);
                 switch(args[i]) {
                     case "-ls": 
-                        op.ChangeDirectoryOperation();
+                        op.changeDirectoryOperation();
                         break;
                     case "-st":
-                        op.StartOrOpenOperation();
+                        op.startOrOpenOperation();
                         break;
                     case "-rl":
-                        op.ReadFileLinesOperation();
+                        op.readFileLinesOperation();
                         break;
                     case "-ff":
-                        op.SearchFileOrFolderOperation();
+                        op.searchFileOrFolderOperation();
                         break;
                     case "-cp":
-                        op.CopySourceDirectoryToTargetOperation();
+                        op.copySourceDirectoryToTargetOperation();
                         break;
                     case "-cf":
-                        op.CopyFilesSourceToTarget();
+                        op.copyFilesSourceToTarget();
                         break;
                     case "-mv":
-                        op.MoveDirectoryOperation();
+                        op.moveDirectoryOperation();
                         break;
                     case "-mf":
-                        op.MoveSourceFilesToTarget();
+                        op.moveSourceFilesToTarget();
                         break;
                     case "-rn":
-                        op.RenameDirectory();
+                        op.renameDirectory();
                         break;
                     case "-md":
-                        op.CreateDirectoryOperation();
+                        op.createDirectoryOperation();
                         break;
                     case "-ni":
-                        op.CreateFileOperation();
+                        op.createFileOperation();
                         break;
                     case "-cm":
-                        op.CreateCompressionOperation();
+                        op.createCompressionOperation();
                         break;
                     case "-dc":
-                        op.CreateDeCompressOperation();
+                        op.createDeCompressOperation();
                         break;
                     case "-dd":
-                        op.DeleteDirectoryOperation();
+                        op.deleteDirectoryOperation();
                         break;
                     case "-df":
-                        op.DeleteFilesOperation();
+                        op.deleteFilesOperation();
                         break;
                     case "--h":
                         System.out.println("use -ls to list dir elements");

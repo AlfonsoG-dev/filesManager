@@ -9,7 +9,7 @@ public class TextUtils {
      * @param filePath: file path to clean
      * @return the clean file path
      */
-    public String GetCleanPath(String filePath) {
+    public String getCleanPath(String filePath) {
         String build = "";
         if(filePath.startsWith(".\\")) {
             Path mio = new File(filePath).toPath().normalize();
@@ -24,7 +24,7 @@ public class TextUtils {
      * @param parentFile: file path to the parent
      * @return the target file path from parent
      */
-    public String CreateTargetFromParentPath(String parentFile, String dirs) {
+    public String createTargetFromParentPath(String parentFile, String dirs) {
         String parentName = new File(parentFile).getParent();
         String targetNames = dirs.replace(parentName, "");
         return targetNames;
@@ -34,7 +34,7 @@ public class TextUtils {
      * @param directory: path of the directory
      * @return the number of files
      */
-    public int CountFilesInDirectory(String directory) {
+    public int countFilesInDirectory(String directory) {
         int count = 0;
         String[] valores = directory.split("\\\\");
         for(String v: valores) {

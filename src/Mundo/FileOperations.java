@@ -36,10 +36,10 @@ public class FileOperations {
      * busca los archivos y puede navegar entre directorios
      * @param nPath: dirección nueva a ver los archivos
      */
-    public void ChangeDirectory(String nPath) {
+    public void changeDirectory(String nPath) {
         File localFile = new File(localFilePath);
         try {
-            String cPath = textUtils.GetCleanPath(nPath);
+            String cPath = textUtils.getCleanPath(nPath);
             localFilePath = localFile.getPath().concat("\\" + cPath);
         } catch(Exception e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class FileOperations {
     /**
      * lista los archivos del directorio
      */
-    public void ListFiles() {
+    public void listFiles() {
         try {
             File miFile = new File(localFilePath);
             if(miFile.isDirectory() && miFile.listFiles() !=  null) {
@@ -66,7 +66,7 @@ public class FileOperations {
      * start or open a file
      * @param filePath: path of the file to open
      */
-    public void StartOrOpenFile(String filePath) {
+    public void startOrOpenFile(String filePath) {
         try {
             File miFile = new File(filePath);
             if(miFile.exists()) {
@@ -79,10 +79,10 @@ public class FileOperations {
     /**
      * read the file lines like the cat command
      */
-    public void ReadFileLines(String fileName) {
+    public void readFileLines(String fileName) {
         BufferedReader mibuBufferedReader = null;
         try {
-            String cPath = textUtils.GetCleanPath(fileName);
+            String cPath = textUtils.getCleanPath(fileName);
             File miFile = new File(cPath);
             if(miFile.isFile()) {
                 mibuBufferedReader = new BufferedReader(new FileReader(miFile));
@@ -90,7 +90,7 @@ public class FileOperations {
                     System.out.println(mibuBufferedReader.readLine());
                 }
             } else if(new File(cPath).isDirectory()) {
-                ListFiles();
+                listFiles();
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -111,7 +111,7 @@ public class FileOperations {
      * @param cliOption: option to make the search
      * @param cliContext: context to search in the given path
      */
-    public void SearchFileOrFolder(String filePath, String cliOption, String cliContext) {
+    public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
         String methodResult = "";
         try {
             File miFile = new File(filePath);
@@ -130,7 +130,7 @@ public class FileOperations {
                         }
                         break;
                     case "-tf":
-                        SearchFileOrFolder(miFile.getPath(), "-n", cliContext);
+                        searchFileOrFolder(miFile.getPath(), "-n", cliContext);
                         break;
                 }
             } else if(miFile.exists() && miFile.isDirectory()) {
@@ -160,12 +160,12 @@ public class FileOperations {
      * @param directoryNames: nombre del directorio a crear
      * @throws Execute no soporta crear varios directorios separados por ","
      */
-    public void CreateDirectories(String directoryNames) {
+    public void createDirectories(String directoryNames) {
         try {
             String cDirectory = "";
             File localFile = new File(localFilePath);
-            cDirectory = textUtils.GetCleanPath(directoryNames);
-            int count = textUtils.CountFilesInDirectory(cDirectory);
+            cDirectory = textUtils.getCleanPath(directoryNames);
+            int count = textUtils.countFilesInDirectory(cDirectory);
             if(count <= 1) {
                 String nDirectory = localFile.getPath() + "\\"+ cDirectory;
                 File miFile = new File(nDirectory);
@@ -175,7 +175,7 @@ public class FileOperations {
                     }
                 }
             } else if(count > 1) {
-                fileUtils.CreateParentFile(localFile.getPath(), cDirectory);
+                fileUtils.createParentFile(localFile.getPath(), cDirectory);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,10 +185,10 @@ public class FileOperations {
      * create a file with the given path
      * @param fileName: path or name of the file
      */
-    public void CreateFiles(String fileName) {
+    public void createFiles(String fileName) {
         try {
             File localFile = new File(localFilePath);
-            String cfileName = textUtils.GetCleanPath(fileName);
+            String cfileName = textUtils.getCleanPath(fileName);
             String nFile = localFile.getPath() + "\\" + cfileName;
             File miFile = new File(nFile);
             if(!miFile.exists()) {
@@ -205,14 +205,14 @@ public class FileOperations {
      * @param givenPath: path of the files to compress
      * @param includeFiles: files or names or patters to exlude in the compression
      */
-    public void CompressFilesInPath(String givenPath, String includeFiles) {
+    public void compressFilesInPath(String givenPath, String includeFiles) {
         try {
             File miFile = new File(givenPath);
             if(!miFile.exists()) {
                 throw new IOException("file not found");
             }
             String localName = fileUtils.getLocalName(localFilePath);
-            fileUtils.CreateZipFile(miFile, new File(localName + ".zip"), includeFiles);
+            fileUtils.createZipFile(miFile, new File(localName + ".zip"), includeFiles);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -221,14 +221,14 @@ public class FileOperations {
      * de-compre all the files inside the compressed archive
      * -l list the files inside the compressed archive
      */
-    public void DeCompressFilesInPath(String givenPath, String listOption) {
+    public void deCompressFilesInPath(String givenPath, String listOption) {
         try {
             File miFile = new File(givenPath);
             if(!miFile.exists()) { throw new Exception("file not found"); }
             if(listOption != null) { 
                 throw new Exception("not implemented yet");
             } else {
-                fileUtils.CreateUnZipFile(givenPath, localFilePath);
+                fileUtils.createUnZipFile(givenPath, localFilePath);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -239,13 +239,13 @@ public class FileOperations {
      * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
      * @param directoryPath: direccion del directorio(s) a eliminar
      */
-    public void DeleteDirectories(String filePath) {
+    public void deleteDirectories(String filePath) {
         try {
             File miFile = new File(filePath);
             if(miFile.exists()) {
                 if(miFile.isDirectory() && miFile.listFiles() != null) {
                     for(File mf: miFile.listFiles()) {
-                        DeleteDirectories(mf.getPath());
+                        deleteDirectories(mf.getPath());
                     }
                 } 
                 if(miFile.isDirectory() && miFile.delete()) {
@@ -264,7 +264,7 @@ public class FileOperations {
                             )
                     );
                 } else {
-                    DeleteDirectories(miFile.getPath());
+                    deleteDirectories(miFile.getPath());
                 }
             }
         } catch(Exception e) {
@@ -277,7 +277,7 @@ public class FileOperations {
      * <br> post: </br> the files are deted not the folder
      * @param deletePath: path of the files or folders to delete
      */
-    public void DeleteFilesFromPath(String deletePath) {
+    public void deleteFilesFromPath(String deletePath) {
         try {
             File miFile = new File(deletePath);
             if(miFile.exists() && miFile.isFile()) {
@@ -286,7 +286,7 @@ public class FileOperations {
                  System.out.println(deleteMessage);
             } else if(miFile.isDirectory() && miFile.listFiles() != null) {
                 for(File f: miFile.listFiles()) {
-                    DeleteFilesFromPath(f.getPath());
+                    deleteFilesFromPath(f.getPath());
                 }
             }
         } catch(Exception e) {
@@ -299,7 +299,7 @@ public class FileOperations {
      * @param sourceFilePath: direccion source de archivos
      * @param targetFilePath: direccion target para los archivos
      */
-    public void MoveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
+    public void moveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(sourceFilePath.equals(targetFilePath)) {
                 throw new Exception("no se puede mover un archivo del mismo nombre");
@@ -333,7 +333,7 @@ public class FileOperations {
      * @param oldName: nombre a cambiar
      * @param newName: nuevo nombre
      */
-    public void RenameDirectory(String oldName, String newName) {
+    public void renameDirectory(String oldName, String newName) {
         try {
             if(oldName.equals(newName)) {
                 throw new Exception("no se puede realizar la operacion en archivos del mismo nombre");
@@ -364,14 +364,14 @@ public class FileOperations {
      * @param sourceFilePath: ruta del directorio source
      * @param targetFilePath: ruta del directorio target
      */
-    public void CopyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
+    public void copyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(new File(sourceFilePath).isFile()) {
                 String sourceFileName = new File(sourceFilePath).getName();
                 String sourceParent = new File(sourceFilePath).getParent();
                 String sourceParentName = new File(sourceParent).getName();
                 File targetFile = new File(targetFilePath + "\\" + sourceParentName + "\\" + sourceFileName);
-                fileUtils.CreateParentFile(
+                fileUtils.createParentFile(
                         targetFile.getPath(),
                         targetFile.getParent()
                 );
@@ -388,7 +388,7 @@ public class FileOperations {
                 for(String sourceFiles: dirSourceFiles) {
                     String sourceWithoutParent = sourceFiles.replace(sourceParent, "");
                     File targetFile = new File(targetFilePath + "\\" + sourceWithoutParent);
-                    fileUtils.CreateParentFile(targetFile.getPath(), targetFile.getParent());
+                    fileUtils.createParentFile(targetFile.getPath(), targetFile.getParent());
                     System.out.println(
                             Files.copy(
                                 new File(sourceFiles).toPath(),

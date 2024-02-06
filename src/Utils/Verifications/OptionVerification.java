@@ -16,7 +16,7 @@ public class OptionVerification {
      * verifica si existe asignación
      * @return true si existe, false de lo contrario
      */
-    public boolean VerifyAssign() {
+    public boolean verifyAssign() {
         boolean res = false;
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
@@ -30,7 +30,7 @@ public class OptionVerification {
     /**
      * da el indice de la asignacion
      */
-    public int GetAssignIndex() {
+    public int getAssignIndex() {
         int  res =0;
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
@@ -46,7 +46,7 @@ public class OptionVerification {
      * @param mOption: the given option
      * @return the index of the given option
      */
-    public int GetIndexOfOption(String mOption) {
+    public int getIndexOfOption(String mOption) {
         int res = -1;
         for(int j=0; j<options.length; ++j) {
             int option = options[j].indexOf(mOption);
@@ -73,8 +73,8 @@ public class OptionVerification {
      */
     public String verifySecondFile() {
         String res = "";
-        if((GetAssignIndex()+1) < options.length) {
-            res = options[GetAssignIndex()+1];
+        if((getAssignIndex()+1) < options.length) {
+            res = options[getAssignIndex()+1];
         }
         return res;
     }

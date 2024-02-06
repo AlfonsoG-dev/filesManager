@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+
+import java.util.ArrayList;
 
 import Utils.FileUtils;
 import Utils.TextUtils;
@@ -53,9 +56,10 @@ public class FileOperations {
             File miFile = new File(localFilePath);
             if(miFile.isDirectory() && miFile.listFiles() !=  null) {
                 for(File f: miFile.listFiles()) {
-                    System.out.println(f.getPath());
+                    System.out.println(textUtils.getCleanPath(f.getPath()));
                 }
             } else {
+                System.out.println(miFile.getPath());
                 System.out.println("\n\t CARPETA SIN ARCHIVOS \n");
             }
         } catch(Exception e) {
@@ -119,7 +123,9 @@ public class FileOperations {
                 switch(cliOption) {
                     case "-td":
                         if(miFile.isDirectory() && miFile.listFiles() != null) {
-                            String[] dirNames = fileUtils.getDirectoryNames(Files.newDirectoryStream(miFile.toPath())).split("\n");
+                            ArrayList<String> dirNames = fileUtils.getDirectoryNames(
+                                    Files.newDirectoryStream(miFile.toPath())
+                            );
                             for(String dn: dirNames) {
                                 if(new File(dn).getName().toLowerCase().contains(cliContext.toLowerCase())) {
                                     methodResult += dn + "\n";
@@ -134,8 +140,8 @@ public class FileOperations {
                         break;
                 }
             } else if(miFile.exists() && miFile.isDirectory()) {
-                String[] fileNames = fileUtils.listFilesFromPath(filePath).split("\n");
-                if(fileNames.length > 0) {
+                ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
+                if(fileNames.size() > 0) {
                     for(String fn: fileNames) {
                         if(fileUtils.areSimilar(cliOption, fn, cliContext)) {
                             methodResult += fn  + "\n";
@@ -151,7 +157,7 @@ public class FileOperations {
         if(methodResult != "") {
             String[] files = methodResult.split("\n");
             for(String f: files) {
-                System.out.println(String.format("| %s |", f));
+                System.out.println(String.format("| %s |", textUtils.getCleanPath(f)));
             }
         }
     }
@@ -171,7 +177,7 @@ public class FileOperations {
                 File miFile = new File(nDirectory);
                 if(!miFile.exists()) {
                     if(miFile.mkdir()) {
-                        System.out.println("se creo: " + nDirectory);
+                        System.out.println("se creo: " + miFile.getPath());
                     }
                 }
             } else if(count > 1) {
@@ -383,7 +389,7 @@ public class FileOperations {
                         )
                 );
             } else if(new File(sourceFilePath).isDirectory()) {
-                String[] dirSourceFiles = fileUtils.listFilesFromPath(sourceFilePath).split("\n");
+                ArrayList<String> dirSourceFiles = fileUtils.listFilesFromPath(sourceFilePath);
                 String sourceParent = new File(sourceFilePath).getParent();
                 for(String sourceFiles: dirSourceFiles) {
                     String sourceWithoutParent = sourceFiles.replace(sourceParent, "");

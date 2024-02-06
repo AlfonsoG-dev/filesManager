@@ -2,9 +2,12 @@ package Utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -32,15 +35,19 @@ public class FileUtils {
      * @param miFiles: elementos del directorio
      * @return string con la ruta de los elementos del directorio
      */
-    public String getDirectoryNames(DirectoryStream<Path> myFiles) {
-        String dirNames = "";
+    public ArrayList<String> getDirectoryNames(DirectoryStream<Path> myFiles) {
+        ArrayList<String> dirNames = new ArrayList<>();
         try {
             for(Path p: myFiles) {
                 File f = p.toFile();
                 if(f.isDirectory()) {
-                    dirNames +=  f.getPath() + "\n";
+                    dirNames.add(f.getPath());
                     if(f.listFiles() != null) {
-                        dirNames += getDirectoryNames(Files.newDirectoryStream(f.toPath()));
+                        dirNames.addAll(
+                                getDirectoryNames(
+                                    Files.newDirectoryStream(f.toPath())
+                                )
+                        );
                     }
                 }
             }
@@ -54,15 +61,19 @@ public class FileUtils {
      * @param miFiles: los archivos dentro de un directorio
      * @return la ruta de los archivos dentro de cualquier directorio
      */
-    public String getDirectoryFiles(DirectoryStream<Path> myFiles) {
-        String fileNames = "";
+    public ArrayList<String> getDirectoryFiles(DirectoryStream<Path> myFiles) {
+        ArrayList<String> fileNames = new ArrayList<>();
         try {
             for(Path p: myFiles) {
                 File f = p.toFile();
                 if(f.exists() && f.isFile()) {
-                    fileNames += f.getPath() + "\n";
+                    fileNames.add(f.getPath());
                 } else if(f.isDirectory()) {
-                    fileNames += this.getDirectoryFiles(Files.newDirectoryStream(f.toPath()));
+                    fileNames.addAll(
+                            getDirectoryFiles(
+                                Files.newDirectoryStream(f.toPath())
+                            )
+                    );
                 }
             }
         } catch(Exception e) {
@@ -75,14 +86,18 @@ public class FileUtils {
      * @param filePath: ruta del directorio a buscar
      * @return un String con la ruta de todos los archivos
      */
-    public String listFilesFromPath(String filePath) {
-        String fileNames = "";
+    public ArrayList<String> listFilesFromPath(String filePath) {
+        ArrayList<String> fileNames = new ArrayList<>();
         try {
             File miFile = new File(filePath);
             if(miFile.exists() && miFile.isFile()) {
-                fileNames += miFile.getPath() + "\n";
+                fileNames.add(miFile.getPath());
             } else {
-                fileNames += getDirectoryFiles(Files.newDirectoryStream(miFile.toPath()));
+                fileNames.addAll(
+                    getDirectoryFiles(
+                        Files.newDirectoryStream(miFile.toPath())
+                    )
+                );
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -131,14 +146,14 @@ public class FileUtils {
             String[] parentNames = parentFileNames.split("\n");
             for(String pn: parentNames) {
                 String nFileName = pn.replace(targetFilePath, "");
-                File mio = new File(pn);
+                File miFile = new File(pn);
                 int fileLenght = nFileName.split("\\\\").length;
-                if(!mio.exists() && fileLenght > 1) {
-                    mio.mkdirs();
-                } else if(!mio.exists() && fileLenght <= 1) {
-                    mio.mkdir();
+                if(!miFile.exists() && fileLenght > 1) {
+                    miFile.mkdirs();
+                } else if(!miFile.exists() && fileLenght <= 1) {
+                    miFile.mkdir();
                 }
-                System.out.println("directorio creado: " + mio.getName());
+                System.out.println("directorio creado: " + miFile.getPath());
             }
         } catch(Exception e) {
             e.printStackTrace();

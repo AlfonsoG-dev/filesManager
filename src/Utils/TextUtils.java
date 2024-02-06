@@ -10,14 +10,7 @@ public class TextUtils {
      * @return the clean file path
      */
     public String getCleanPath(String filePath) {
-        String build = "";
-        if(filePath.startsWith(".\\")) {
-            Path mio = new File(filePath).toPath().normalize();
-            build = mio.toString();
-        } else {
-            build = filePath;
-        }
-        return build;
+        return new File(filePath).toPath().normalize().toString();
     }
     /**
      * create a clean path for the target using the parent file path

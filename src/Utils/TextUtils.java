@@ -34,14 +34,8 @@ public class TextUtils {
      * @param directory: path of the directory
      * @return the number of files
      */
-    public int countFilesInDirectory(String directory) {
-        int count = 0;
-        String[] valores = directory.split("\\\\");
-        for(String v: valores) {
-            if(!v.isEmpty()) {
-                ++count;
-            }
-        }
-        return count;
+    public int countNestedLevels(String directory) {
+        Path countNestLevel = new File(directory).toPath();
+        return countNestLevel.getNameCount();
     }
 }

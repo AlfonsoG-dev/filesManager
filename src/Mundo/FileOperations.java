@@ -165,7 +165,7 @@ public class FileOperations {
             String cDirectory = "";
             File localFile = new File(localFilePath);
             cDirectory = textUtils.getCleanPath(directoryNames);
-            int count = textUtils.countFilesInDirectory(cDirectory);
+            int count = textUtils.countNestedLevels(cDirectory);
             if(count <= 1) {
                 String nDirectory = localFile.getPath() + "\\"+ cDirectory;
                 File miFile = new File(nDirectory);

@@ -2,6 +2,12 @@
 >- a basic file system operator
 >>- for basic operations like: delete, create, copy and move files or folders
 
+# Dependencies
+- [java_jdk_17.0.8](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+
+# References 
+- [java 17 I/O docs](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/package-summary.html)
+
 ## Features
 - [x] delete files or folders
 - [x] make folders or nested directories

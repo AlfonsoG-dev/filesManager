@@ -22,6 +22,11 @@ java -jar app.jar operation
 >- `-ls`: list all files of the given folder
 >>- `java -jar app.jar -ls .\src\`
 
+### List zip entries
+
+>- `le`: list the entries of a compressed file
+>>- `java -jar app.jar -le file.zip`
+
 ### read lines
 >- `-rl`: read file lines of the given file
 >>- `java -jar app.jar -rl README.md`
@@ -124,9 +129,6 @@ java -jar app.jar operation
 
 >- `-dc`: de-compress the elements of the compressed file
 >>- `java -jar app.jar -dc .\compressedFile.zip`
-
-# TODO's 
-- [ ] list entries of the file to de-compress
 
 -------
 

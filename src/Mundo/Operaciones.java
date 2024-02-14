@@ -26,6 +26,9 @@ public class Operaciones {
                     case "-ls": 
                         op.changeDirectoryOperation();
                         break;
+                    case "-le":
+                        op.listZipEntriesOperation();
+                        break;
                     case "-st":
                         op.startOrOpenOperation();
                         break;
@@ -70,6 +73,7 @@ public class Operaciones {
                         break;
                     case "--h":
                         System.out.println("use -ls to list dir elements");
+                        System.out.println("use -le to list entries of zip file");
                         System.out.println("use -st to start or open an element");
                         System.out.println("use -rl to read file lines");
                         System.out.println("use -ff to search in the given path for:");

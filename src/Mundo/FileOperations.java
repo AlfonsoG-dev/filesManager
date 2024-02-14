@@ -67,6 +67,16 @@ public class FileOperations {
         }
     }
     /**
+     * lista los archivos de un zip
+     */
+    public void listZipEntries(String zipFilePath) {
+        try {
+            fileUtils.zipEntries(zipFilePath);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
      * start or open a file
      * @param filePath: path of the file to open
      */

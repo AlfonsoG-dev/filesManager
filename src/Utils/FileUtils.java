@@ -304,5 +304,44 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
-
+    /**
+     * list the zip entries given an option
+     * <br> pre: </br> the zip archive has entries
+     * @param 
+     */
+    public void zipEntries(String zipFilePath) {
+        ZipInputStream zipIn = null;
+        try {
+            zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
+            ZipEntry zEntry = zipIn.getNextEntry();
+            if(zEntry == null) {
+                System.out.println("EMPTY ZIP FILE");
+            } else {
+                int count = 1;
+                while(zEntry != null) {
+                    System.out.println(
+                            String.format(
+                                "%s: %s",
+                                count,
+                                zEntry.getName()
+                                )
+                            );
+                    ++count;
+                    zipIn.closeEntry();
+                    zEntry = zipIn.getNextEntry();
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(zipIn != null) {
+                try {
+                    zipIn.close();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                zipIn = null;
+            }
+        }
+    }
 }

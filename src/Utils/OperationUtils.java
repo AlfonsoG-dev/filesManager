@@ -41,6 +41,16 @@ public final class OperationUtils {
         }
     }
     /**
+     * list entries of zip file
+     */
+    public void listZipEntriesOperation() {
+        if(!optionVerification.verifyFirstFile(i).isEmpty()) {
+            fileOperations.listZipEntries(
+                    optionVerification.verifyFirstFile(i)
+            );
+        }
+    }
+    /**
      * start or open the file or folder
      */
     public void startOrOpenOperation() {

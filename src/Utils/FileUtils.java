@@ -69,22 +69,23 @@ public class FileUtils {
      */
     public ArrayList<String> getDirectoryFiles(DirectoryStream<Path> myFiles) {
         ArrayList<String> lf = new ArrayList<>();
-        try {
-            for(Path p: myFiles) {
-                File f = p.toFile();
+        myFiles
+            .forEach(e -> {
+                File f = e.toFile();
                 if(f.exists() && f.isFile()) {
                     lf.add(f.getPath());
                 } else if(f.isDirectory()) {
-                    lf.addAll(
-                            getDirectoryFiles(
-                                Files.newDirectoryStream(f.toPath())
-                            )
-                    );
+                    try {
+                        lf.addAll(
+                                getDirectoryFiles(
+                                    Files.newDirectoryStream(f.toPath())
+                                )
+                        );
+                    } catch(Exception err) {
+                        err.printStackTrace();
+                    }
                 }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+            });
         return lf;
     }
     /**
@@ -95,13 +96,13 @@ public class FileUtils {
     public ArrayList<String> listFilesFromPath(String filePath) {
         ArrayList<String> lf = new ArrayList<>();
         try {
-            File miFile = new File(filePath);
-            if(miFile.exists() && miFile.isFile()) {
-                lf.add(miFile.getPath());
+            File f = new File(filePath);
+            if(f.exists() && f.isFile()) {
+                lf.add(f.getPath());
             } else {
                 lf.addAll(
                     getDirectoryFiles(
-                        Files.newDirectoryStream(miFile.toPath())
+                        Files.newDirectoryStream(f.toPath())
                     )
                 );
             }

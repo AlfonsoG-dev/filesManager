@@ -126,8 +126,10 @@ public class FileOperations {
      * @param cliContext: context to search in the given path
      */
     public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
+        System.out.println("SEARCHING ...");
         String methodResult = "";
         try {
+            Thread.sleep(1000);
             File miFile = new File(filePath);
             if(cliOption.equals("-tf") || cliOption.equals("-td")) {
                 switch(cliOption) {

@@ -37,23 +37,24 @@ public class FileUtils {
      */
     public ArrayList<String> getDirectoryNames(DirectoryStream<Path> myFiles) {
         ArrayList<String> dirNames = new ArrayList<>();
-        try {
-            for(Path p: myFiles) {
-                File f = p.toFile();
+        myFiles
+            .forEach(e -> {
+                File f = e.toFile();
                 if(f.isDirectory()) {
                     dirNames.add(f.getPath());
                     if(f.listFiles() != null) {
-                        dirNames.addAll(
-                                getDirectoryNames(
-                                    Files.newDirectoryStream(f.toPath())
-                                )
-                        );
+                        try {
+                            dirNames.addAll(
+                                    getDirectoryNames(
+                                        Files.newDirectoryStream(f.toPath())
+                                    )
+                            );
+                        } catch(Exception err) {
+                            err.printStackTrace();
+                        }
                     }
                 }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+            });
         return dirNames;
     }
     /**

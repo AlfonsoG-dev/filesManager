@@ -12,23 +12,28 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 public class FileUtils {
+    private TextUtils textUtils;
+
+    public FileUtils() {
+        textUtils = new TextUtils();
+    }
     /**
      * get the local name
      * @param localPath: local path
      * @return the name of the given path
      */
     public String getLocalName(String localPath) {
-        String name = "";
+        String n = "", p = "";
         try {
             File local = new File(localPath);
             if(local.exists()) {
-                String path = local.getCanonicalPath(); 
-                name = new File(path).getName();
+                p = local.getCanonicalPath(); 
+                n = new File(p).getName();
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return name;
+        return n;
     }
     /**
      * ayuda a generar la ruta de los elementos del directorio
@@ -36,15 +41,15 @@ public class FileUtils {
      * @return string con la ruta de los elementos del directorio
      */
     public ArrayList<String> getDirectoryNames(DirectoryStream<Path> myFiles) {
-        ArrayList<String> dirNames = new ArrayList<>();
+        ArrayList<String> ld = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();
                 if(f.isDirectory()) {
-                    dirNames.add(f.getPath());
+                    ld.add(f.getPath());
                     if(f.listFiles() != null) {
                         try {
-                            dirNames.addAll(
+                            ld.addAll(
                                     getDirectoryNames(
                                         Files.newDirectoryStream(f.toPath())
                                     )
@@ -55,7 +60,7 @@ public class FileUtils {
                     }
                 }
             });
-        return dirNames;
+        return ld;
     }
     /**
      * ayuda a generar la ruta de los archivos dentro de cualquier directorio
@@ -63,14 +68,14 @@ public class FileUtils {
      * @return la ruta de los archivos dentro de cualquier directorio
      */
     public ArrayList<String> getDirectoryFiles(DirectoryStream<Path> myFiles) {
-        ArrayList<String> fileNames = new ArrayList<>();
+        ArrayList<String> lf = new ArrayList<>();
         try {
             for(Path p: myFiles) {
                 File f = p.toFile();
                 if(f.exists() && f.isFile()) {
-                    fileNames.add(f.getPath());
+                    lf.add(f.getPath());
                 } else if(f.isDirectory()) {
-                    fileNames.addAll(
+                    lf.addAll(
                             getDirectoryFiles(
                                 Files.newDirectoryStream(f.toPath())
                             )
@@ -80,7 +85,7 @@ public class FileUtils {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return fileNames;
+        return lf;
     }
     /**
      * litar la ruta de todos los archivos del directorio 
@@ -88,13 +93,13 @@ public class FileUtils {
      * @return un String con la ruta de todos los archivos
      */
     public ArrayList<String> listFilesFromPath(String filePath) {
-        ArrayList<String> fileNames = new ArrayList<>();
+        ArrayList<String> lf = new ArrayList<>();
         try {
             File miFile = new File(filePath);
             if(miFile.exists() && miFile.isFile()) {
-                fileNames.add(miFile.getPath());
+                lf.add(miFile.getPath());
             } else {
-                fileNames.addAll(
+                lf.addAll(
                     getDirectoryFiles(
                         Files.newDirectoryStream(miFile.toPath())
                     )
@@ -103,7 +108,7 @@ public class FileUtils {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return fileNames;
+        return lf;
     }
     /**
      * compare 2 files or folders with CLIOption
@@ -113,28 +118,33 @@ public class FileUtils {
      * @return true if the file have similarities, false otherwise
      */
     public boolean areSimilar(String cliOption, String first, String second) {
-        boolean iguales = false;
+        boolean similar = false;
         File firstFile = new File(first);
         String secondFile = second.contains(".") ? second.split("\\.")[1] : second;
         switch(cliOption) {
             case "-e":
                 if(firstFile.isFile()) {
-                    String eSecondFile = secondFile;
-                    if(firstFile.getName().split("\\.")[1].toLowerCase().contains(eSecondFile.toLowerCase())) {
-                        iguales = true;
+                    String 
+                        s = secondFile.toLowerCase(),
+                        f = firstFile.getName().split("\\.")[1].toLowerCase();
+                    if(f.contains(s)) {
+                        similar = true;
                     }
                 } else {
-                    iguales = false;
-                    System.err.println("folders dont contain extension");
+                    similar = false;
+                    System.err.println("FOLDERS DONT HAVE EXTENSION");
                 }
                 break;
             case "-n":
-                if(firstFile.getName().toLowerCase().contains(secondFile.toLowerCase())) {
-                    iguales = true;
+                    String 
+                        s = secondFile.toLowerCase(),
+                        f = firstFile.getName().toLowerCase();
+                if(f.contains(s)) {
+                    similar = true;
                 }
                 break;
         }
-        return iguales;
+        return similar;
     }
     /**
      * si en la ruta target no existe el directorio se crea
@@ -144,17 +154,17 @@ public class FileUtils {
      */
     public void createParentFile(String targetFilePath, String parentFileNames) {
         try {
-            String[] parentNames = parentFileNames.split("\n");
-            for(String pn: parentNames) {
-                String nFileName = pn.replace(targetFilePath, "");
-                File miFile = new File(pn);
-                int fileLenght = nFileName.split("\\\\").length;
-                if(!miFile.exists() && fileLenght > 1) {
+            String[] pn = parentFileNames.split("\n");
+            for(String p: pn) {
+                String fileName = p.replace(targetFilePath, "");
+                File miFile = new File(p);
+                int c = textUtils.countNestedLevels(fileName);
+                if(!miFile.exists() && c > 1) {
                     miFile.mkdirs();
-                } else if(!miFile.exists() && fileLenght <= 1) {
+                } else if(!miFile.exists() && c <= 1) {
                     miFile.mkdir();
                 }
-                System.out.println("directorio creado: " + miFile.getPath());
+                System.out.println("CREATED: " + miFile.getPath());
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -171,7 +181,12 @@ public class FileUtils {
             File[] sourceFiles = source.listFiles();
             if(includeFiles == null) {
                 for(File sf: sourceFiles) {
-                    addFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
+                    addFilesToZip(
+                            sf,
+                            base + File.separator + sf.getName(),
+                            zop,
+                            includeFiles
+                    );
                 }
             }
             if(includeFiles != null && includeFiles.contains(",")) {
@@ -179,14 +194,24 @@ public class FileUtils {
                 for(File sf: sourceFiles) {
                     for(String ic: includes) {
                         if(sf.getPath().contains(ic.trim())) {
-                            addFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
+                            addFilesToZip(
+                                    sf,
+                                    base + File.separator + sf.getName(),
+                                    zop,
+                                    includeFiles
+                            );
                         }
                     }
                 }
             } else if(includeFiles != null && !includeFiles.contains(",")) {
                 for(File sf: sourceFiles) {
                     if(sf.getPath().contains(includeFiles)) {
-                        addFilesToZip(sf, base + File.separator + sf.getName(), zop, includeFiles);
+                        addFilesToZip(
+                                sf,
+                                base + File.separator + sf.getName(),
+                                zop,
+                                includeFiles
+                        );
                     }
                 }
 
@@ -228,7 +253,12 @@ public class FileUtils {
         try {
             fileOutput = new FileOutputStream(destination);
             zipOutput = new ZipOutputStream(fileOutput);
-            addFilesToZip(source, source.getName(), zipOutput, includeFiles);
+            addFilesToZip(
+                    source,
+                    source.getName(),
+                    zipOutput,
+                    includeFiles
+            );
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -291,7 +321,12 @@ public class FileUtils {
                 String entryParent = new File(filePath).getParent();
                 miFile = new File(entryParent);
                 if(!miFile.exists()) {
-                    System.out.println(String.format("THE FOLDER STRUCTURE: | %s | ARE NEDDED.", miFile.getPath()));
+                    System.out.println(
+                            String.format(
+                                "THE FOLDER STRUCTURE: | %s | ARE NEDDED.",
+                                miFile.getPath()
+                            )
+                    );
                     break outter;
                 } else if(!entry.isDirectory()) {
                     extractZipFiles(zipIn, filePath);

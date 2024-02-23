@@ -40,10 +40,11 @@ public class FileOperations {
      * @param nPath: dirección nueva a ver los archivos
      */
     public void changeDirectory(String nPath) {
-        File localFile = new File(localFilePath);
+        File f = new File(localFilePath);
+        String p = "";
         try {
-            String cPath = textUtils.getCleanPath(nPath);
-            localFilePath = localFile.getPath().concat("\\" + cPath);
+            p = textUtils.getCleanPath(nPath);
+            localFilePath = f.getPath().concat("\\" + p);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -52,14 +53,15 @@ public class FileOperations {
      * lista los archivos del directorio
      */
     public void listFiles() {
+        File lf = null;
         try {
-            File miFile = new File(localFilePath);
-            if(miFile.isDirectory() && miFile.listFiles() !=  null) {
-                for(File f: miFile.listFiles()) {
+            lf = new File(localFilePath);
+            if(lf.isDirectory() && lf.listFiles() !=  null) {
+                for(File f: lf.listFiles()) {
                     System.out.println(textUtils.getCleanPath(f.getPath()));
                 }
             } else {
-                System.out.println(miFile.getPath());
+                System.out.println(lf.getPath());
                 System.out.println("\n\t CARPETA SIN ARCHIVOS \n");
             }
         } catch(Exception e) {
@@ -81,10 +83,14 @@ public class FileOperations {
      * @param filePath: path of the file to open
      */
     public void startOrOpenFile(String filePath) {
+        File f = null;
         try {
-            File miFile = new File(filePath);
-            if(miFile.exists()) {
-                Runtime.getRuntime().exec("pwsh -NoProfile -Command start " + miFile.getPath());
+            f = new File(filePath);
+            if(f.exists()) {
+                Runtime.getRuntime().exec(
+                        "pwsh -NoProfile -Command start " +
+                        f.getPath()
+                );
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -94,28 +100,30 @@ public class FileOperations {
      * read the file lines like the cat command
      */
     public void readFileLines(String fileName) {
-        BufferedReader mibuBufferedReader = null;
+        BufferedReader reader = null;
+        String p = "";
+        File f = null;
         try {
-            String cPath = textUtils.getCleanPath(fileName);
-            File miFile = new File(cPath);
-            if(miFile.isFile()) {
-                mibuBufferedReader = new BufferedReader(new FileReader(miFile));
-                while(mibuBufferedReader.ready()) {
-                    System.out.println(mibuBufferedReader.readLine());
+            p = textUtils.getCleanPath(fileName);
+            f = new File(p);
+            if(f.isFile()) {
+                reader = new BufferedReader(new FileReader(f));
+                while(reader.ready()) {
+                    System.out.println(reader.readLine());
                 }
-            } else if(new File(cPath).isDirectory()) {
+            } else if(f.isDirectory()) {
                 listFiles();
             }
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            if(mibuBufferedReader != null) {
+            if(reader != null) {
                 try {
-                    mibuBufferedReader.close();
+                    reader.close();
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
-                mibuBufferedReader = null;
+                reader = null;
             }
         }
     }
@@ -127,49 +135,53 @@ public class FileOperations {
      */
     public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
         System.out.println("SEARCHING ...");
-        String methodResult = "";
+        String r = "";
         try {
-            Thread.sleep(1000);
-            File miFile = new File(filePath);
+            File f = new File(filePath);
             if(cliOption.equals("-tf") || cliOption.equals("-td")) {
                 switch(cliOption) {
                     case "-td":
-                        if(miFile.isDirectory() && miFile.listFiles() != null) {
+                        if(f.isDirectory() && f.listFiles() != null) {
                             ArrayList<String> dirNames = fileUtils.getDirectoryNames(
-                                    Files.newDirectoryStream(miFile.toPath())
+                                    Files.newDirectoryStream(f.toPath())
                             );
                             for(String dn: dirNames) {
                                 if(new File(dn).getName().toLowerCase().contains(cliContext.toLowerCase())) {
-                                    methodResult += dn + "\n";
+                                    r += dn + "\n";
                                 }
                             }
-                        } else if(miFile.listFiles() == null && miFile.getName().toLowerCase().contains(cliContext.toLowerCase())) {
-                            methodResult += miFile.getPath() + "\n";
+                        } else if(f.listFiles() == null && f.getName().toLowerCase().contains(cliContext.toLowerCase())) {
+                            r += f.getPath() + "\n";
                         }
                         break;
                     case "-tf":
-                        searchFileOrFolder(miFile.getPath(), "-n", cliContext);
+                        searchFileOrFolder(f.getPath(), "-n", cliContext);
                         break;
                 }
-            } else if(miFile.exists() && miFile.isDirectory()) {
+            } else if(f.exists() && f.isDirectory()) {
                 ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
                 if(fileNames.size() > 0) {
                     for(String fn: fileNames) {
                         if(fileUtils.areSimilar(cliOption, fn, cliContext)) {
-                            methodResult += fn  + "\n";
+                            r += fn  + "\n";
                         }
                     }
                 }
             } else {
-                throw new Exception("cannot operate with files only with folders");
+                throw new Exception("CANNOT OPERATE WITH FILES, ONLY WITH FOLDERS");
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        if(methodResult != "") {
-            String[] files = methodResult.split("\n");
+        if(r != "") {
+            String[] files = r.split("\n");
             for(String f: files) {
-                System.out.println(String.format("| %s |", textUtils.getCleanPath(f)));
+                System.out.println(
+                        String.format(
+                            "| %s |",
+                            textUtils.getCleanPath(f)
+                        )
+                );
             }
         }
     }
@@ -180,20 +192,19 @@ public class FileOperations {
      */
     public void createDirectories(String directoryNames) {
         try {
-            String cDirectory = "";
-            File localFile = new File(localFilePath);
-            cDirectory = textUtils.getCleanPath(directoryNames);
-            int count = textUtils.countNestedLevels(cDirectory);
-            if(count <= 1) {
-                String nDirectory = localFile.getPath() + "\\"+ cDirectory;
-                File miFile = new File(nDirectory);
-                if(!miFile.exists()) {
-                    if(miFile.mkdir()) {
-                        System.out.println("se creo: " + miFile.getPath());
+            File lf = new File(localFilePath);
+            String d = textUtils.getCleanPath(directoryNames);
+            int c = textUtils.countNestedLevels(d);
+            if(c <= 1) {
+                String nd = lf.getPath() + "\\"+ d;
+                File f = new File(nd);
+                if(!f.exists()) {
+                    if(f.mkdir()) {
+                        System.out.println("CREATED: " + f.getPath());
                     }
                 }
-            } else if(count > 1) {
-                fileUtils.createParentFile(localFile.getPath(), cDirectory);
+            } else if(c > 1) {
+                fileUtils.createParentFile(lf.getPath(), d);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,13 +216,18 @@ public class FileOperations {
      */
     public void createFiles(String fileName) {
         try {
-            File localFile = new File(localFilePath);
-            String cfileName = textUtils.getCleanPath(fileName);
-            String nFile = localFile.getPath() + "\\" + cfileName;
-            File miFile = new File(nFile);
-            if(!miFile.exists()) {
-                if(miFile.createNewFile()){
-                    System.out.println(String.format("file: %s has been created", miFile.getName()));
+            File lf = new File(localFilePath);
+            String cf = textUtils.getCleanPath(fileName);
+            String nFile = lf.getPath() + "\\" + cf;
+            File f = new File(nFile);
+            if(!f.exists()) {
+                if(f.createNewFile()){
+                    System.out.println(
+                            String.format(
+                                "FILE: %S HAS BEEN CREATED",
+                                f.getName()
+                            )
+                    );
                 }
             }
         } catch(Exception e) {
@@ -225,12 +241,16 @@ public class FileOperations {
      */
     public void compressFilesInPath(String givenPath, String includeFiles) {
         try {
-            File miFile = new File(givenPath);
-            if(!miFile.exists()) {
-                throw new IOException("file not found");
+            File f = new File(givenPath);
+            if(!f.exists()) {
+                throw new IOException("FILE NOT FOUND");
             }
-            String localName = fileUtils.getLocalName(localFilePath);
-            fileUtils.createZipFile(miFile, new File(localName + ".zip"), includeFiles);
+            String ln = fileUtils.getLocalName(localFilePath);
+            fileUtils.createZipFile(
+                    f,
+                    new File(ln + ".zip"),
+                    includeFiles
+            );
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -241,8 +261,8 @@ public class FileOperations {
      */
     public void deCompressFilesInPath(String givenPath, String listOption) {
         try {
-            File miFile = new File(givenPath);
-            if(!miFile.exists()) { throw new Exception("file not found"); }
+            File f = new File(givenPath);
+            if(!f.exists()) { throw new Exception("file not found"); }
             if(listOption != null) { 
                 throw new Exception("not implemented yet");
             } else {
@@ -259,30 +279,30 @@ public class FileOperations {
      */
     public void deleteDirectories(String filePath) {
         try {
-            File miFile = new File(filePath);
-            if(miFile.exists()) {
-                if(miFile.isDirectory() && miFile.listFiles() != null) {
-                    for(File mf: miFile.listFiles()) {
+            File f = new File(filePath);
+            if(f.exists()) {
+                if(f.isDirectory() && f.listFiles() != null) {
+                    for(File mf: f.listFiles()) {
                         deleteDirectories(mf.getPath());
                     }
                 } 
-                if(miFile.isDirectory() && miFile.delete()) {
+                if(f.isDirectory() && f.delete()) {
                     System.out.println(
                             String.format(
                                 "File: %s \thas been deleted.",
-                                miFile.getPath()
+                                f.getPath()
                             )
                     );
                 }
-                if(miFile.isFile() && miFile.delete()) {
+                if(f.isFile() && f.delete()) {
                     System.out.println(
                             String.format(
                                 "File: %s \thas been deleted.",
-                                miFile.getPath()
+                                f.getPath()
                             )
                     );
                 } else {
-                    deleteDirectories(miFile.getPath());
+                    deleteDirectories(f.getPath());
                 }
             }
         } catch(Exception e) {
@@ -297,14 +317,15 @@ public class FileOperations {
      */
     public void deleteFilesFromPath(String deletePath) {
         try {
-            File miFile = new File(deletePath);
-            if(miFile.exists() && miFile.isFile()) {
-                String deleteMessage = miFile.delete() ?
-                    String.format("File: %s\thas been deleted", miFile.getPath()) : "";
-                 System.out.println(deleteMessage);
-            } else if(miFile.isDirectory() && miFile.listFiles() != null) {
-                for(File f: miFile.listFiles()) {
-                    deleteFilesFromPath(f.getPath());
+            File f = new File(deletePath);
+            if(f.exists() && f.isFile()) {
+                 System.out.println(
+                         f.delete() ?
+                         String.format("File: %s\thas been deleted", f.getPath()) : ""
+                 );
+            } else if(f.isDirectory() && f.listFiles() != null) {
+                for(File mf: f.listFiles()) {
+                    deleteFilesFromPath(mf.getPath());
                 }
             }
         } catch(Exception e) {
@@ -320,23 +341,23 @@ public class FileOperations {
     public void moveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(sourceFilePath.equals(targetFilePath)) {
-                throw new Exception("no se puede mover un archivo del mismo nombre");
+                throw new Exception("CANNOT MOVE SOURCE FILE TO TARGET FILE");
             }
-            File sourceFile = new File(sourceFilePath);
-            File targetFile = new File(targetFilePath);
-            if(sourceFile.exists() && targetFile.exists() && !sourceFile.getPath().contains("git")) {
-                Path sourcePath = sourceFile.toPath();
-                Path targetPath = targetFile.toPath();
-                Path movePath = Files.move(
-                        sourcePath,
-                        targetPath.resolve(sourcePath.getFileName()),
+            File sf = new File(sourceFilePath);
+            File tf = new File(targetFilePath);
+            if(sf.exists() && tf.exists() && !sf.getPath().contains("git")) {
+                Path sp = sf.toPath();
+                Path tp = tf.toPath();
+                Path mp = Files.move(
+                        sp,
+                        tp.resolve(sp.getFileName()),
                         StandardCopyOption.REPLACE_EXISTING
                 );
-                if(!movePath.toFile().getName().isEmpty()) {
+                if(!mp.toFile().getName().isEmpty()) {
                     System.out.println(
-                            "archivos se movieron de: " +
+                            "MOVED: " +
                             sourceFilePath +
-                            " to: " +
+                            " TO: " +
                             targetFilePath
                     );
                 }
@@ -354,23 +375,28 @@ public class FileOperations {
     public void renameDirectory(String oldName, String newName) {
         try {
             if(oldName.equals(newName)) {
-                throw new Exception("no se puede realizar la operacion en archivos del mismo nombre");
+                throw new Exception("CANNOT RENAME");
             }
-            File sourceFile = new File(oldName);
-            File targetFile = new File(newName);
-            if(!targetFile.exists()) {
-                targetFile.mkdir();
+            File sf = new File(oldName);
+            File tf = new File(newName);
+            if(!tf.exists()) {
+                tf.mkdir();
             }
-            if(sourceFile.exists() && targetFile.exists()) {
-                Path sourcePath = sourceFile.toPath();
-                Path targetPath = targetFile.toPath();
+            if(sf.exists() && tf.exists()) {
+                Path sp = sf.toPath();
+                Path tp = tf.toPath();
                 Files.move(
-                        sourcePath,
-                        targetPath,
+                        sp,
+                        tp,
                         StandardCopyOption.REPLACE_EXISTING
                 );
-                sourceFile.deleteOnExit();
-                System.out.println("el archivo: " + oldName + " se renombra por: " + newName);
+                if(sf.delete()) {
+                    System.out.println(
+                            "File: " +
+                            oldName + " now is: " +
+                            newName
+                    );
+                }
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -384,33 +410,31 @@ public class FileOperations {
      */
     public void copyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
-            if(new File(sourceFilePath).isFile()) {
-                String sourceFileName = new File(sourceFilePath).getName();
-                String sourceParent = new File(sourceFilePath).getParent();
-                String sourceParentName = new File(sourceParent).getName();
-                File targetFile = new File(targetFilePath + "\\" + sourceParentName + "\\" + sourceFileName);
-                fileUtils.createParentFile(
-                        targetFile.getPath(),
-                        targetFile.getParent()
+            File sf = new File(sourceFilePath);
+            if(sf.isFile()) {
+                String sfn = sf.getName();
+                File tf = new File(
+                        targetFilePath + "\\" +
+                        sfn
                 );
                 System.out.println(
                         Files.copy(
-                            new File(sourceFilePath).toPath(),
-                            targetFile.toPath(),
+                            new File(sf.getPath()).toPath(),
+                            tf.toPath(),
                             StandardCopyOption.COPY_ATTRIBUTES
                         )
                 );
-            } else if(new File(sourceFilePath).isDirectory()) {
-                ArrayList<String> dirSourceFiles = fileUtils.listFilesFromPath(sourceFilePath);
-                String sourceParent = new File(sourceFilePath).getParent();
-                for(String sourceFiles: dirSourceFiles) {
-                    String sourceWithoutParent = sourceFiles.replace(sourceParent, "");
-                    File targetFile = new File(targetFilePath + "\\" + sourceWithoutParent);
-                    fileUtils.createParentFile(targetFile.getPath(), targetFile.getParent());
+            } else if(sf.isDirectory()) {
+                ArrayList<String> files = fileUtils.listFilesFromPath(sourceFilePath);
+                String source = new File(sf.getCanonicalPath()).getParent();
+                for(String sourceFiles: files) {
+                    String sourceWithoutParent = sourceFiles.replace(source, "");
+                    File target = new File(targetFilePath + "\\" + sourceWithoutParent);
+                    fileUtils.createParentFile(target.getPath(), target.getParent());
                     System.out.println(
                             Files.copy(
                                 new File(sourceFiles).toPath(),
-                                targetFile.toPath(),
+                                target.toPath(),
                                 StandardCopyOption.COPY_ATTRIBUTES
                             )
                     );

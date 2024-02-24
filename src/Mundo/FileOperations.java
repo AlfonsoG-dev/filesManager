@@ -135,7 +135,7 @@ public class FileOperations {
      */
     public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
         System.out.println("SEARCHING ...");
-        String r = "";
+        ArrayList<String> searchFiles = new ArrayList<>();
         try {
             File f = new File(filePath);
             if(cliOption.equals("-tf") || cliOption.equals("-td")) {
@@ -145,13 +145,16 @@ public class FileOperations {
                             ArrayList<String> dirNames = fileUtils.getDirectoryNames(
                                     Files.newDirectoryStream(f.toPath())
                             );
-                            for(String dn: dirNames) {
-                                if(new File(dn).getName().toLowerCase().contains(cliContext.toLowerCase())) {
-                                    r += dn + "\n";
-                                }
-                            }
+                            dirNames
+                                .parallelStream()
+                                .forEach(e -> {
+                                    File myFile = new File(e);
+                                    if(myFile.getName().toLowerCase().contains(cliContext.toLowerCase())) {
+                                        searchFiles.add(e);
+                                    }
+                                });
                         } else if(f.listFiles() == null && f.getName().toLowerCase().contains(cliContext.toLowerCase())) {
-                            r += f.getPath() + "\n";
+                            searchFiles.add(f.getPath());
                         }
                         break;
                     case "-tf":
@@ -160,29 +163,30 @@ public class FileOperations {
                 }
             } else if(f.exists() && f.isDirectory()) {
                 ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
-                if(fileNames.size() > 0) {
-                    for(String fn: fileNames) {
-                        if(fileUtils.areSimilar(cliOption, fn, cliContext)) {
-                            r += fn  + "\n";
+                fileNames
+                    .parallelStream()
+                    .forEach(e -> {
+                        if(fileUtils.areSimilar(cliOption, e, cliContext)) {
+                            searchFiles.add(e);
                         }
-                    }
-                }
+                    });
             } else {
                 throw new Exception("CANNOT OPERATE WITH FILES, ONLY WITH FOLDERS");
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        if(r != "") {
-            String[] files = r.split("\n");
-            for(String f: files) {
-                System.out.println(
-                        String.format(
-                            "| %s |",
-                            textUtils.getCleanPath(f)
-                        )
-                );
-            }
+        if(searchFiles.size() > 0) {
+            searchFiles
+                .parallelStream()
+                .forEach(e -> {
+                    System.out.println(
+                            String.format(
+                                "| %s |",
+                                textUtils.getCleanPath(e)
+                            )
+                    );
+                });
         }
     }
     /**
@@ -426,19 +430,26 @@ public class FileOperations {
                 );
             } else if(sf.isDirectory()) {
                 ArrayList<String> files = fileUtils.listFilesFromPath(sourceFilePath);
-                String source = new File(sf.getCanonicalPath()).getParent();
-                for(String sourceFiles: files) {
-                    String sourceWithoutParent = sourceFiles.replace(source, "");
-                    File target = new File(targetFilePath + "\\" + sourceWithoutParent);
-                    fileUtils.createParentFile(target.getPath(), target.getParent());
-                    System.out.println(
-                            Files.copy(
-                                new File(sourceFiles).toPath(),
-                                target.toPath(),
-                                StandardCopyOption.COPY_ATTRIBUTES
-                            )
-                    );
-                }
+                files
+                    .parallelStream()
+                    .forEach(e -> {
+                        try {
+                            String
+                                source              = new File(sf.getCanonicalPath()).getParent(),
+                                sourceWithoutParent = e.replace(source, "");
+                            File target = new File(targetFilePath + "\\" + sourceWithoutParent);
+                            fileUtils.createParentFile(target.getPath(), target.getParent());
+                            System.out.println(
+                                    Files.copy(
+                                        new File(e).toPath(),
+                                        target.toPath(),
+                                        StandardCopyOption.COPY_ATTRIBUTES
+                                    )
+                            );
+                        } catch(Exception err) {
+                            err.printStackTrace();
+                        }
+                    });
             }
         } catch(Exception e) {
             e.printStackTrace();

@@ -118,28 +118,25 @@ public class FileUtils {
      * @param second: second file
      * @return true if the file have similarities, false otherwise
      */
-    public boolean areSimilar(String cliOption, String first, String second) {
+    public boolean areSimilar(String cliOption, File first, String second) {
         boolean similar = false;
-        File firstFile = new File(first);
-        String secondFile = second.contains(".") ? second.split("\\.")[1] : second;
+        String s = "";
+        if(second.contains(".")) {
+            s = second.split("\\.")[1].toLowerCase();
+        } else {
+            s = second.toLowerCase();
+        }
         switch(cliOption) {
             case "-e":
-                if(firstFile.isFile()) {
-                    String 
-                        s = secondFile.toLowerCase(),
-                        f = firstFile.getName().split("\\.")[1].toLowerCase();
-                    if(f.contains(s)) {
+                if(first.isFile() && first.getName().contains(".")) {
+                    String f = first.getName().split("\\.")[1].toLowerCase();
+                    if(f.equals(s)) {
                         similar = true;
                     }
-                } else {
-                    similar = false;
-                    System.err.println("FOLDERS DONT HAVE EXTENSION");
                 }
                 break;
             case "-n":
-                    String 
-                        s = secondFile.toLowerCase(),
-                        f = firstFile.getName().toLowerCase();
+                String f = first.getName().toLowerCase();
                 if(f.contains(s)) {
                     similar = true;
                 }

@@ -147,11 +147,10 @@ public class FileOperations {
                             );
                             dirNames
                                 .parallelStream()
+                                .map(e -> new File(e))
+                                .filter(e -> e.getName().toLowerCase().contains(cliContext.toLowerCase()))
                                 .forEach(e -> {
-                                    File myFile = new File(e);
-                                    if(myFile.getName().toLowerCase().contains(cliContext.toLowerCase())) {
-                                        searchFiles.add(e);
-                                    }
+                                    searchFiles.add(e.getPath());
                                 });
                         } else if(f.listFiles() == null && f.getName().toLowerCase().contains(cliContext.toLowerCase())) {
                             searchFiles.add(f.getPath());
@@ -165,10 +164,10 @@ public class FileOperations {
                 ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
                 fileNames
                     .parallelStream()
+                    .map(e -> new File(e))
+                    .filter(e -> fileUtils.areSimilar(cliOption, e, cliContext))
                     .forEach(e -> {
-                        if(fileUtils.areSimilar(cliOption, e, cliContext)) {
-                            searchFiles.add(e);
-                        }
+                        searchFiles.add(e.getPath());
                     });
             } else {
                 throw new Exception("CANNOT OPERATE WITH FILES, ONLY WITH FOLDERS");
@@ -179,11 +178,12 @@ public class FileOperations {
         if(searchFiles.size() > 0) {
             searchFiles
                 .parallelStream()
+                .map(e -> textUtils.getCleanPath(e))
                 .forEach(e -> {
                     System.out.println(
                             String.format(
                                 "| %s |",
-                                textUtils.getCleanPath(e)
+                                e
                             )
                     );
                 });
@@ -221,18 +221,17 @@ public class FileOperations {
     public void createFiles(String fileName) {
         try {
             File lf = new File(localFilePath);
-            String cf = textUtils.getCleanPath(fileName);
-            String nFile = lf.getPath() + "\\" + cf;
+            String 
+                cf    = textUtils.getCleanPath(fileName),
+                nFile = lf.getPath() + "\\" + cf;
             File f = new File(nFile);
-            if(!f.exists()) {
-                if(f.createNewFile()){
-                    System.out.println(
-                            String.format(
-                                "FILE: %S HAS BEEN CREATED",
-                                f.getName()
-                            )
-                    );
-                }
+            if(!f.exists() && f.createNewFile()) {
+                System.out.println(
+                        String.format(
+                            "FILE: %S HAS BEEN CREATED",
+                            f.getName()
+                        )
+                );
             }
         } catch(Exception e) {
             e.printStackTrace();

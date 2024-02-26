@@ -99,9 +99,11 @@ public class FileOperations {
     /**
      * read the file lines like the cat command
      */
-    public void readFileLines(String fileName) {
+    public String readFileLines(String fileName) {
         BufferedReader reader = null;
-        String p = "";
+        String 
+            p = "",
+            b = "";
         File f = null;
         try {
             p = textUtils.getCleanPath(fileName);
@@ -109,7 +111,7 @@ public class FileOperations {
             if(f.isFile()) {
                 reader = new BufferedReader(new FileReader(f));
                 while(reader.ready()) {
-                    System.out.println(reader.readLine());
+                    b += reader.readLine() + "\n";
                 }
             } else if(f.isDirectory()) {
                 listFiles();
@@ -126,6 +128,8 @@ public class FileOperations {
                 reader = null;
             }
         }
+        System.out.println(b);
+        return b;
     }
     /**
      * search for a file or folder according to Cli option
@@ -137,23 +141,24 @@ public class FileOperations {
         System.out.println("SEARCHING ...");
         try {
             File f = new File(filePath);
-            if(cliOption.equals("-td")) {
-                fileUtils.areSimilarDirs(
-                        f,
-                        cliOption,
-                        cliContext
-                );
-            } else if(f.exists() && f.isDirectory()) {
-                ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
-                fileNames
-                    .parallelStream()
-                    .map(e -> new File(e))
-                    .filter(e -> fileUtils.areSimilar(cliOption, e, cliContext))
-                    .forEach(e -> {
-                        fileUtils.printFilePath(e);
-                    });
-            } else {
-                throw new Exception("CANNOT OPERATE WITH FILES, ONLY WITH FOLDERS");
+            switch(cliOption) {
+                case "-td":
+                    fileUtils.areSimilarDirs(
+                            f,
+                            cliOption,
+                            cliContext
+                    );
+                    break;
+                default:
+                    ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
+                    fileNames
+                        .parallelStream()
+                        .map(e -> new File(e))
+                        .filter(e -> fileUtils.areSimilar(cliOption, e, cliContext))
+                        .forEach(e -> {
+                            fileUtils.printFilePath(e);
+                        });
+                    break;
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -167,7 +172,11 @@ public class FileOperations {
      */
     public void searchFileLine(String filePath, String cliOption, String cliContext) {
         System.out.println("SEARCHING ...");
-        ArrayList<String> searchFiles = new ArrayList<>();
+        try {
+            File f = new File(filePath);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     /**
      * crea un directorio en el directorio local

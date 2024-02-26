@@ -135,31 +135,14 @@ public class FileOperations {
      */
     public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
         System.out.println("SEARCHING ...");
-        ArrayList<String> searchFiles = new ArrayList<>();
         try {
             File f = new File(filePath);
-            if(cliOption.equals("-tf") || cliOption.equals("-td")) {
-                switch(cliOption) {
-                    case "-td":
-                        if(f.isDirectory() && f.listFiles() != null) {
-                            ArrayList<String> dirNames = fileUtils.getDirectoryNames(
-                                    Files.newDirectoryStream(f.toPath())
-                            );
-                            dirNames
-                                .parallelStream()
-                                .map(e -> new File(e))
-                                .filter(e -> e.getName().toLowerCase().contains(cliContext.toLowerCase()))
-                                .forEach(e -> {
-                                    searchFiles.add(e.getPath());
-                                });
-                        } else if(f.listFiles() == null && f.getName().toLowerCase().contains(cliContext.toLowerCase())) {
-                            searchFiles.add(f.getPath());
-                        }
-                        break;
-                    case "-tf":
-                        searchFileOrFolder(f.getPath(), "-n", cliContext);
-                        break;
-                }
+            if(cliOption.equals("-td")) {
+                fileUtils.areSimilarDirs(
+                        f,
+                        cliOption,
+                        cliContext
+                );
             } else if(f.exists() && f.isDirectory()) {
                 ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
                 fileNames
@@ -167,7 +150,7 @@ public class FileOperations {
                     .map(e -> new File(e))
                     .filter(e -> fileUtils.areSimilar(cliOption, e, cliContext))
                     .forEach(e -> {
-                        searchFiles.add(e.getPath());
+                        fileUtils.printFilePath(e);
                     });
             } else {
                 throw new Exception("CANNOT OPERATE WITH FILES, ONLY WITH FOLDERS");
@@ -175,19 +158,16 @@ public class FileOperations {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        if(searchFiles.size() > 0) {
-            searchFiles
-                .parallelStream()
-                .map(e -> textUtils.getCleanPath(e))
-                .forEach(e -> {
-                    System.out.println(
-                            String.format(
-                                "| %s |",
-                                e
-                            )
-                    );
-                });
-        }
+    }
+    /**
+     * search for a pattern or line inside files according to the CLI options
+     * @param filePath: path to search for the cli context
+     * @param cliOption: option to make the search
+     * @param cliContext: context to search in the given path
+     */
+    public void searchFileLine(String filePath, String cliOption, String cliContext) {
+        System.out.println("SEARCHING ...");
+        ArrayList<String> searchFiles = new ArrayList<>();
     }
     /**
      * crea un directorio en el directorio local

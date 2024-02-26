@@ -2,6 +2,7 @@ package Utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -111,6 +112,38 @@ public class FileUtils {
         }
         return lf;
     }
+
+    public void printFilePath(File f) {
+        System.out.println(
+                String.format(
+                    "| %s |",
+                    f.getPath()
+                )
+        );
+    }
+    public boolean areSimilarDirs(File f, String cliOption, String cliContext) throws IOException {
+        boolean similar = false;
+        String contextLowerCase = cliContext.toLowerCase();
+        switch(cliOption) {
+            case "-td":
+                if(f.isDirectory() && f.listFiles() != null) {
+                    ArrayList<String> dirNames = getDirectoryNames(
+                            Files.newDirectoryStream(f.toPath())
+                    );
+                    dirNames
+                        .parallelStream()
+                        .map(e -> new File(e))
+                        .filter(e -> e.getName().toLowerCase().contains(contextLowerCase))
+                        .forEach(e -> {
+                            printFilePath(e);
+                        });
+                } else if(f.getName().toLowerCase().contains(contextLowerCase)) {
+                    printFilePath(f);
+                }
+            break;
+        }
+        return similar;
+    }
     /**
      * compare 2 files or folders with CLIOption
      * @param cliOption: Cli options -e or -n
@@ -135,6 +168,7 @@ public class FileUtils {
                     }
                 }
                 break;
+            case "-tf":
             case "-n":
                 String f = first.getName().toLowerCase();
                 if(f.contains(s)) {

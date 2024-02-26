@@ -38,6 +38,9 @@ public class Operaciones {
                     case "-ff":
                         op.searchFileOrFolderOperation();
                         break;
+                    case "-fl":
+                        op.searchFileLineOperation();
+                        break;
                     case "-cp":
                         op.copySourceDirectoryToTargetOperation();
                         break;

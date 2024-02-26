@@ -85,6 +85,10 @@ public final class OperationUtils {
         }
     }
     /**
+     */
+    public void searchFileLineOperation() {
+    }
+    /**
      * realiza la opreacion de mover los directorios
      */
     public void moveDirectoryOperation() throws Exception {

@@ -178,6 +178,24 @@ public class FileUtils {
         }
         return similar;
     }
+    public boolean areSimilarLines(String cliOption, String first, String cliContext) {
+        boolean isSimilar = false;
+        switch(cliOption) {
+            // ignore case
+            case "-i":
+                if(first.compareToIgnoreCase(cliContext) == 0) {
+                    isSimilar = true;
+                }
+                break;
+            // smart case
+            case "-s":
+                if(first.toLowerCase().contains(cliContext.toLowerCase())) {
+                    isSimilar = true;
+                }
+                break;
+        }
+        return isSimilar;
+    }
     /**
      * si en la ruta target no existe el directorio se crea
      * <br> pre: </br> si la ruta tiene más de 1 directorio como padre entonces se crea con mkdirs

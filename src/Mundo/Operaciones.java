@@ -84,6 +84,9 @@ public class Operaciones {
                         System.out.println("\tuse -n search by file name");
                         System.out.println("\tuse -tf search by file");
                         System.out.println("\tuse -td search by directory name");
+                        System.out.println("use -fl to search in the given path for:");
+                        System.out.println("\tuse -s search file line using smartIgnoreCase");
+                        System.out.println("\tuse -i search file line using ignore case");
                         System.out.println("use -cp copy to source dir to target");
                         System.out.println("\tuse -cf to copy source file to target");
                         System.out.println("use -mv to move source dir to target");

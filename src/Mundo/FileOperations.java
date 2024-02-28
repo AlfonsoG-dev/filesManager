@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import Utils.FileUtils;
 import Utils.TextUtils;
@@ -102,19 +104,16 @@ public class FileOperations {
     public String readFileLines(String fileName) {
         BufferedReader reader = null;
         String 
-            p = "",
+            p = textUtils.getCleanPath(fileName),
             b = "";
-        File f = null;
+        File f = new File(p);
         try {
-            p = textUtils.getCleanPath(fileName);
-            f = new File(p);
-            if(f.isFile()) {
-                reader = new BufferedReader(new FileReader(f));
-                while(reader.ready()) {
-                    b += reader.readLine() + "\n";
-                }
-            } else if(f.isDirectory()) {
-                listFiles();
+            if(f.isDirectory()) {
+                throw new Exception("ONLY FILES ARE SUPPORTED");
+            }
+            reader = new BufferedReader(new FileReader(f));
+            while(reader.ready()) {
+                b += reader.readLine() + "\n";
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -128,7 +127,6 @@ public class FileOperations {
                 reader = null;
             }
         }
-        System.out.println(b);
         return b;
     }
     /**
@@ -172,8 +170,18 @@ public class FileOperations {
      */
     public void searchFileLine(String filePath, String cliOption, String cliContext) {
         System.out.println("SEARCHING ...");
+        // TODO: message format must include fileLines & filePath
         try {
-            File f = new File(filePath);
+            String[] lines = readFileLines(filePath).split("\n");
+            for(int i=0; i<lines.length; ++i) {
+                String line = lines[i];
+                if(cliContext.isEmpty()) {
+                    System.out.println(line);
+                } else if(fileUtils.areSimilarLines(cliOption, line, cliContext)) {
+                    System.out.println(line);
+                }
+
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }

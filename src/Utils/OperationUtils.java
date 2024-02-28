@@ -65,7 +65,8 @@ public final class OperationUtils {
      */
     public void readFileLinesOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
-            fileOperations.readFileLines(optionVerification.verifyFirstFile(i));
+            String m  = fileOperations.readFileLines(optionVerification.verifyFirstFile(i));
+            System.out.println(m);
         }
     }
     /**
@@ -87,6 +88,15 @@ public final class OperationUtils {
     /**
      */
     public void searchFileLineOperation() {
+        String
+            filePath = optionVerification.verifyFirstFile(i),
+            cliOption = (i+2) < options.length ? options[i+2] : "",
+            cliContext = (i+3) < options.length ? options[i+3] : "";
+        fileOperations.searchFileLine(
+                filePath,
+                cliOption,
+                cliContext
+        );
     }
     /**
      * realiza la opreacion de mover los directorios

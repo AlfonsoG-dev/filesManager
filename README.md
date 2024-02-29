@@ -46,6 +46,11 @@ java -jar app.jar operation
 >>- name: `-n "textutils"`
 >>>- `java -jar app.jar -ff .\bin\ -n "textutils"`
 
+>- `-fl`: search for a word in the given file path by:
+>>- `-i`: ignore case
+>>- `-s`: smart ignore case
+>>>- `java -jar app.jar -fl .\src\Main.jar -s "args"`
+
 ### make
 
 >- `-md`: create a folder

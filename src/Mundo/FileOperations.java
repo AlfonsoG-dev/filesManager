@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
-
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -161,6 +161,31 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
+    private synchronized void searchLine(String[] lines, String filePath, String cliOption, String cliContext) {
+        System.out.println("\n \tSEARCHING ...\n");
+        for(int i=0; i<lines.length; ++i) {
+            String line = lines[i];
+            if(cliContext.isEmpty()) {
+                System.out.println(
+                        String.format(
+                            "%s:%d:%s",
+                            filePath,
+                            i+1,
+                            line
+                        )
+                );
+            } else if(fileUtils.areSimilarLines(cliOption, line, cliContext)) {
+                System.out.println(
+                        String.format(
+                            "%s:%d:%s",
+                            filePath,
+                            i+1,
+                            line
+                        )
+                );
+            }
+        }
+    }
     /**
      * search for a pattern or line inside files according to the CLI options
      * @param filePath: path to search for the cli context
@@ -168,31 +193,23 @@ public class FileOperations {
      * @param cliContext: context to search in the given path
      */
     public void searchFileLine(String filePath, String cliOption, String cliContext) {
-        System.out.println("SEARCHING ...");
         try {
-            String[] lines = readFileLines(filePath).split("\n");
-            for(int i=0; i<lines.length; ++i) {
-                String line = lines[i];
-                if(cliContext.isEmpty()) {
-                    System.out.println(
-                            String.format(
-                                "%s:%d:%s",
-                                filePath,
-                                i+1,
-                                line
-                            )
-                    );
-                } else if(fileUtils.areSimilarLines(cliOption, line, cliContext)) {
-                    System.out.println(
-                            String.format(
-                                "%s:%d:%s",
-                                filePath,
-                                i+1,
-                                line
-                            )
-                    );
-                }
-
+            File f = new File(filePath);
+            if(f.isFile()) {
+                String[] lines = readFileLines(filePath).split("\n");
+                searchLine(
+                        lines,
+                        filePath,
+                        cliOption,
+                        cliContext
+                );
+            } else {
+                ArrayList<String> files = fileUtils.listFilesFromPath(f.getPath());
+                files
+                    .parallelStream()
+                    .forEach(e -> {
+                        searchFileLine(e, cliOption, cliContext);
+                    });
             }
         } catch(Exception e) {
             e.printStackTrace();

@@ -10,8 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 import Utils.FileUtils;
 import Utils.TextUtils;
@@ -170,15 +169,28 @@ public class FileOperations {
      */
     public void searchFileLine(String filePath, String cliOption, String cliContext) {
         System.out.println("SEARCHING ...");
-        // TODO: message format must include fileLines & filePath
         try {
             String[] lines = readFileLines(filePath).split("\n");
             for(int i=0; i<lines.length; ++i) {
                 String line = lines[i];
                 if(cliContext.isEmpty()) {
-                    System.out.println(line);
+                    System.out.println(
+                            String.format(
+                                "%s:%d:%s",
+                                filePath,
+                                i+1,
+                                line
+                            )
+                    );
                 } else if(fileUtils.areSimilarLines(cliOption, line, cliContext)) {
-                    System.out.println(line);
+                    System.out.println(
+                            String.format(
+                                "%s:%d:%s",
+                                filePath,
+                                i+1,
+                                line
+                            )
+                    );
                 }
 
             }

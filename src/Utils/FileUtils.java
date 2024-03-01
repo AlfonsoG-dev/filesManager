@@ -24,7 +24,9 @@ public class FileUtils {
      * @return the name of the given path
      */
     public String getLocalName(String localPath) {
-        String n = "", p = "";
+        String 
+            n = "",
+            p = "";
         try {
             File local = new File(localPath);
             if(local.exists()) {
@@ -41,16 +43,16 @@ public class FileUtils {
      * @param miFiles: elementos del directorio
      * @return string con la ruta de los elementos del directorio
      */
-    public ArrayList<String> getDirectoryNames(DirectoryStream<Path> myFiles) {
-        ArrayList<String> ld = new ArrayList<>();
+    public ArrayList<File> getDirectoryNames(DirectoryStream<Path> myFiles) {
+        ArrayList<File> dirs = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();
                 if(f.isDirectory()) {
-                    ld.add(f.getPath());
+                    dirs.add(f);
                     if(f.listFiles() != null) {
                         try {
-                            ld.addAll(
+                            dirs.addAll(
                                     getDirectoryNames(
                                         Files.newDirectoryStream(f.toPath())
                                     )
@@ -61,23 +63,23 @@ public class FileUtils {
                     }
                 }
             });
-        return ld;
+        return dirs;
     }
     /**
      * ayuda a generar la ruta de los archivos dentro de cualquier directorio
      * @param miFiles: los archivos dentro de un directorio
      * @return la ruta de los archivos dentro de cualquier directorio
      */
-    public ArrayList<String> getDirectoryFiles(DirectoryStream<Path> myFiles) {
-        ArrayList<String> lf = new ArrayList<>();
+    public ArrayList<File> getDirectoryFiles(DirectoryStream<Path> myFiles) {
+        ArrayList<File> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();
                 if(f.exists() && f.isFile()) {
-                    lf.add(f.getPath());
+                    files.add(f);
                 } else if(f.isDirectory()) {
                     try {
-                        lf.addAll(
+                        files.addAll(
                                 getDirectoryFiles(
                                     Files.newDirectoryStream(f.toPath())
                                 )
@@ -87,21 +89,21 @@ public class FileUtils {
                     }
                 }
             });
-        return lf;
+        return files;
     }
     /**
      * litar la ruta de todos los archivos del directorio 
      * @param filePath: ruta del directorio a buscar
      * @return un String con la ruta de todos los archivos
      */
-    public ArrayList<String> listFilesFromPath(String filePath) {
-        ArrayList<String> lf = new ArrayList<>();
+    public ArrayList<File> listFilesFromPath(String filePath) {
+        ArrayList<File> files = new ArrayList<>();
         try {
             File f = new File(filePath);
             if(f.exists() && f.isFile()) {
-                lf.add(f.getPath());
+                files.add(f);
             } else {
-                lf.addAll(
+                files.addAll(
                     getDirectoryFiles(
                         Files.newDirectoryStream(f.toPath())
                     )
@@ -110,9 +112,13 @@ public class FileUtils {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return lf;
+        return files;
     }
 
+    /**
+     * helper method to print the file path.
+     * @param f: file to print its path
+     */
     public void printFilePath(File f) {
         System.out.println(
                 String.format(
@@ -121,23 +127,29 @@ public class FileUtils {
                 )
         );
     }
+    /**
+     * compare the directory names.
+     * @param f: file to compare its name
+     * @param cliOption: cli options to compare the directory names
+     * @param cliContext: name to compare with the file name
+     *
+     */
     public boolean areSimilarDirs(File f, String cliOption, String cliContext) throws IOException {
         boolean similar = false;
-        String contextLowerCase = cliContext.toLowerCase();
+        String c = cliContext.toLowerCase();
         switch(cliOption) {
             case "-td":
                 if(f.isDirectory() && f.listFiles() != null) {
-                    ArrayList<String> dirNames = getDirectoryNames(
+                    ArrayList<File> dirNames = getDirectoryNames(
                             Files.newDirectoryStream(f.toPath())
                     );
                     dirNames
                         .parallelStream()
-                        .map(e -> new File(e))
-                        .filter(e -> e.getName().toLowerCase().contains(contextLowerCase))
+                        .filter(e -> e.getName().toLowerCase().contains(c))
                         .forEach(e -> {
                             printFilePath(e);
                         });
-                } else if(f.getName().toLowerCase().contains(contextLowerCase)) {
+                } else if(f.getName().toLowerCase().contains(c)) {
                     printFilePath(f);
                 }
             break;
@@ -151,7 +163,7 @@ public class FileUtils {
      * @param second: second file
      * @return true if the file have similarities, false otherwise
      */
-    public boolean areSimilar(String cliOption, File first, String second) {
+    public boolean areSimilar(File first, String cliOption, String second) {
         boolean similar = false;
         String s = "";
         if(second.contains(".")) {

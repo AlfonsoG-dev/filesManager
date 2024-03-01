@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
+
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import java.util.ArrayList;
-
 
 import Utils.FileUtils;
 import Utils.TextUtils;
@@ -54,17 +54,17 @@ public class FileOperations {
      * lista los archivos del directorio
      */
     public void listFiles() {
-        File lf = null;
+        File lf = new File(localFilePath);
         try {
-            lf = new File(localFilePath);
-            if(lf.isDirectory() && lf.listFiles() !=  null) {
-                for(File f: lf.listFiles()) {
-                    System.out.println(textUtils.getCleanPath(f.getPath()));
-                }
-            } else {
-                System.out.println(lf.getPath());
-                System.out.println("\n\t CARPETA SIN ARCHIVOS \n");
-            }
+            DirectoryStream<Path> files = Files.newDirectoryStream(lf.toPath());
+            files
+                .forEach(e -> {
+                    System.out.println(
+                            textUtils.getCleanPath(
+                                e.toFile().getPath()
+                            )
+                    );
+                });
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -84,9 +84,8 @@ public class FileOperations {
      * @param filePath: path of the file to open
      */
     public void startOrOpenFile(String filePath) {
-        File f = null;
+        File f = new File(filePath);
         try {
-            f = new File(filePath);
             if(f.exists()) {
                 Runtime.getRuntime().exec(
                         "pwsh -NoProfile -Command start " +
@@ -108,7 +107,7 @@ public class FileOperations {
         File f = new File(p);
         try {
             if(f.isDirectory()) {
-                throw new Exception("ONLY FILES ARE SUPPORTED");
+                throw new Exception("CANNOT READ LINES USING DIRECTORIES");
             }
             reader = new BufferedReader(new FileReader(f));
             while(reader.ready()) {
@@ -147,11 +146,10 @@ public class FileOperations {
                     );
                     break;
                 default:
-                    ArrayList<String> fileNames = fileUtils.listFilesFromPath(filePath);
+                    ArrayList<File> fileNames = fileUtils.listFilesFromPath(filePath);
                     fileNames
                         .parallelStream()
-                        .map(e -> new File(e))
-                        .filter(e -> fileUtils.areSimilar(cliOption, e, cliContext))
+                        .filter(e -> fileUtils.areSimilar(e, cliOption, cliContext))
                         .forEach(e -> {
                             fileUtils.printFilePath(e);
                         });
@@ -161,6 +159,13 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
+    /**
+     * helper method to show the result of search line of file. 
+     * @param lines: the file lines
+     * @param filePath: the filePath to read
+     * @param cliOption: the option to use in the search
+     * @param cliContext: the search sentence
+     */
     private synchronized void searchLine(String[] lines, String filePath, String cliOption, String cliContext) {
         System.out.println("\n \tSEARCHING ...\n");
         for(int i=0; i<lines.length; ++i) {
@@ -204,9 +209,10 @@ public class FileOperations {
                         cliContext
                 );
             } else {
-                ArrayList<String> files = fileUtils.listFilesFromPath(f.getPath());
+                ArrayList<File> files = fileUtils.listFilesFromPath(f.getPath());
                 files
                     .parallelStream()
+                    .map(e -> e.getPath())
                     .forEach(e -> {
                         searchFileLine(e, cliOption, cliContext);
                     });
@@ -246,10 +252,9 @@ public class FileOperations {
      */
     public void createFiles(String fileName) {
         try {
-            File lf = new File(localFilePath);
             String 
                 cf    = textUtils.getCleanPath(fileName),
-                nFile = lf.getPath() + "\\" + cf;
+                nFile = localFilePath + "\\" + cf;
             File f = new File(nFile);
             if(!f.exists() && f.createNewFile()) {
                 System.out.println(
@@ -454,9 +459,10 @@ public class FileOperations {
                         )
                 );
             } else if(sf.isDirectory()) {
-                ArrayList<String> files = fileUtils.listFilesFromPath(sourceFilePath);
+                ArrayList<File> files = fileUtils.listFilesFromPath(sourceFilePath);
                 files
                     .parallelStream()
+                    .map(e -> e.getPath())
                     .forEach(e -> {
                         try {
                             String

@@ -21,7 +21,7 @@ public class OptionVerification {
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
             int permision = options[j].indexOf("--y");
-            if(assignation == 0 || permision == 0) {
+            if(assignation != -1 || permision != -1) {
                 res = true;
             }
         }
@@ -35,7 +35,7 @@ public class OptionVerification {
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
             int otherAssignation = options[j].indexOf("--y");
-            if(assignation == 0 || otherAssignation == 0) {
+            if(assignation != -1 || otherAssignation != -1) {
                 res = j;
             }
         }
@@ -50,7 +50,7 @@ public class OptionVerification {
         int res = -1;
         for(int j=0; j<options.length; ++j) {
             int option = options[j].indexOf(mOption);
-            if(option == 0 || option != -1) {
+            if(option != -1) {
                 res = j;
             }
         }
@@ -62,7 +62,10 @@ public class OptionVerification {
      */
     public String verifyFirstFile(int i) {
         String res = "";
-        if((i+1) < options.length && !options[i+1].isEmpty()) {
+        boolean 
+            conditionA = (i+1) < options.length,
+            conditionB = !options[i+1].isEmpty();
+        if(conditionA && conditionB) {
             res = options[i+1];
         }
         return res;

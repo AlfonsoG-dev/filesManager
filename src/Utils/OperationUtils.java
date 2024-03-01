@@ -36,7 +36,9 @@ public final class OperationUtils {
      */
     public void changeDirectoryOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
-            fileOperations.changeDirectory(optionVerification.verifyFirstFile(i));
+            fileOperations.changeDirectory(
+                    optionVerification.verifyFirstFile(i)
+            );
             fileOperations.listFiles();
         }
     }
@@ -65,7 +67,10 @@ public final class OperationUtils {
      */
     public void readFileLinesOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
-            String m  = fileOperations.readFileLines(optionVerification.verifyFirstFile(i));
+            String 
+                m  = fileOperations.readFileLines(
+                    optionVerification.verifyFirstFile(i)
+                );
             System.out.println(m);
         }
     }
@@ -82,7 +87,11 @@ public final class OperationUtils {
         String CLI_option = (i+2) < options.length ? options[i+2] : "";
         if(filePath != "" && CLI_option != "") {
             String cliContext = (i+3) < options.length ? options[i+3] : "";
-            fileOperations.searchFileOrFolder(filePath, CLI_option, cliContext);
+            fileOperations.searchFileOrFolder(
+                    filePath,
+                    CLI_option,
+                    cliContext
+            );
         }
     }
     /**
@@ -102,8 +111,13 @@ public final class OperationUtils {
      * realiza la opreacion de mover los directorios
      */
     public void moveDirectoryOperation() throws Exception {
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") &&
-                !optionVerification.verifySecondFile().contains(",") && !optionVerification.verifySecondFile().isEmpty() && optionVerification.verifyAssign()) { 
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(","),
+            conditionC = optionVerification.verifySecondFile().isEmpty(),
+            conditionD = optionVerification.verifySecondFile().contains(","),
+            conditionE = optionVerification.verifyAssign();
+        if(!conditionA && !conditionB && !conditionC && !conditionD && conditionE) { 
             fileOperations.moveFromSourceToTarget(
                     optionVerification.verifyFirstFile(i),
                     optionVerification.verifySecondFile()
@@ -113,14 +127,13 @@ public final class OperationUtils {
         * move 1 source to more than 1 target
         * not require assignation
         */
-        if(!optionVerification.verifyFirstFile(i).contains(",") && optionVerification.verifySecondFile().contains(",")) {
+        if(!conditionB && conditionD) {
             throw new Exception("move to more than 1 target is not possible");
         }
         /**
          * move more than 1 source to 1 target
          */
-        if(optionVerification.verifyFirstFile(i).contains(",") && !options[options.length-2].contains(",") &&
-                optionVerification.verifyAssign()) {
+        if(conditionB && !conditionD && conditionE) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
                 fileOperations.moveFromSourceToTarget(
@@ -134,9 +147,12 @@ public final class OperationUtils {
      * move the source files to target
      */
     public void moveSourceFilesToTarget() {
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") &&
-                !optionVerification.verifySecondFile().isEmpty() &&
-                !optionVerification.verifySecondFile().contains(",") && options.length < 4) {
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(","),
+            conditionC = optionVerification.verifySecondFile().isEmpty(),
+            conditionD = optionVerification.verifySecondFile().contains(",");
+        if(!conditionA && !conditionB && !conditionC && !conditionD && options.length < 4) {
             fileOperations.moveFromSourceToTarget(
                     optionVerification.verifyFirstFile(i),
                     optionVerification.verifySecondFile()
@@ -145,9 +161,12 @@ public final class OperationUtils {
         /**
          * move all files of 1 or more sources in 1 target
          */
-        if(!options[i+1].contains(",") && optionVerification.verifyAssign()) {
+        if(!conditionB && optionVerification.verifyAssign()) {
             for(int j=i+1; j<optionVerification.getAssignIndex(); ++j) {
-                fileOperations.moveFromSourceToTarget(options[j], options[options.length-1]);
+                fileOperations.moveFromSourceToTarget(
+                        options[j],
+                        options[options.length-1]
+                );
             }
         }
     }
@@ -156,8 +175,10 @@ public final class OperationUtils {
      * <br> pre: </br> en realidad es mover el archivo pero en este caso crea el target
      */
     public void renameDirectory() {
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifySecondFile().isEmpty()
-                && optionVerification.verifyAssign()) {
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifySecondFile().isEmpty();
+        if(!conditionA && !conditionB && optionVerification.verifyAssign()) {
             fileOperations.renameDirectory(
                     optionVerification.verifyFirstFile(i),
                     optionVerification.verifySecondFile()
@@ -168,8 +189,13 @@ public final class OperationUtils {
      * realiza la operacion de crear un directorio
      */
     public void createDirectoryOperation() {
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",")) {
-            fileOperations.createDirectories(optionVerification.verifyFirstFile(i));
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(",");
+        if(!conditionA && !conditionB) {
+            fileOperations.createDirectories(
+                    optionVerification.verifyFirstFile(i)
+            );
         } else {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
@@ -181,7 +207,10 @@ public final class OperationUtils {
      * creates a file wihtin the CLI options
      */
     public void createFileOperation() {
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",")) {
+        boolean
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(",");
+        if(!conditionA && !conditionB) {
             fileOperations.createFiles(optionVerification.verifyFirstFile(i));
         } else {
             for(int j = i+1; j<options.length; ++j) {
@@ -197,12 +226,15 @@ public final class OperationUtils {
         // -i include only this files not implemented
         int includeIndex = optionVerification.getIndexOfOption("-i");
         String compressPath = "", includeOption = "";
-        if(!options[i+1].isEmpty() && includeIndex != -1 && (i+3) < options.length) {
-            compressPath = options[i+1];
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = includeIndex != -1;
+        if(!conditionA && conditionB && (i+3) < options.length) {
+            compressPath = optionVerification.verifyFirstFile(i);
             includeOption = options[i+3];
             fileOperations.compressFilesInPath(compressPath, includeOption);
         }
-        if(includeIndex == -1) {
+        if(!conditionB) {
             compressPath = options[i+1];
             fileOperations.compressFilesInPath(compressPath, null);
         }
@@ -214,12 +246,15 @@ public final class OperationUtils {
         // -l list the files inside the compressed archive
         int includeIndex = optionVerification.getIndexOfOption("-l");
         String deCompressPath = "", includeOption = "";
-        if(!options[i+1].isEmpty() && includeIndex != -1 && (i+3) < options.length) {
-            deCompressPath = options[i+1];
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = includeIndex != -1;
+        if(!conditionA && conditionB && (i+3) < options.length) {
+            deCompressPath = optionVerification.verifyFirstFile(i);
             includeOption = options[i+3];
             fileOperations.deCompressFilesInPath(deCompressPath, includeOption);
         }
-        if(includeIndex == -1) {
+        if(!conditionB) {
             deCompressPath = options[i+1];
             fileOperations.deCompressFilesInPath(deCompressPath, null);
         }
@@ -228,14 +263,17 @@ public final class OperationUtils {
      * realiza la opreacion de eliminar el directorio
      */
     public void deleteDirectoryOperation() {
-        if(!optionVerification.verifyAssign()) {
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(","),
+            conditionC = optionVerification.verifyAssign();
+        if(!conditionC) {
             System.out.println("use --y to delete");
         }
-        if(!options[i+1].isEmpty() && optionVerification.verifyAssign() &&
-                !options[i+1].contains(",") && options.length < 4) {
+        if(!conditionA && conditionC && !conditionB && options.length < 4) {
             fileOperations.deleteDirectories(options[i+1]);
         }
-        if(options[i+1].contains(",") && optionVerification.verifyAssign()) {
+        if(conditionB && conditionC) {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
                 fileOperations.deleteDirectories(fFile);
@@ -246,22 +284,25 @@ public final class OperationUtils {
      * delete files from path but not the folder that contains the files
      */
     public void deleteFilesOperation() {
-        if(!optionVerification.verifyAssign()) {
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(","),
+            conditionC = optionVerification.verifyAssign();
+        if(!conditionC) {
             System.out.println("use --y to delete");
         }
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && optionVerification.verifyAssign() && 
-                !options[i+1].contains(",") && options.length < 4) {
+        if(!conditionA && conditionC && !conditionB && options.length < 4) {
             fileOperations.deleteFilesFromPath(options[i+1]);
         }
         /**
          * copy all files of 1 or more sources in 1 target
          */
-        if(!options[i+1].contains(",") && optionVerification.verifyAssign()) {
+        if(!conditionB && conditionC) {
             for(int j=i+1; j<optionVerification.getAssignIndex(); ++j) {
                 fileOperations.deleteFilesFromPath(options[j]);
             }
         }
-        if(options[i+1].contains(",") && optionVerification.verifyAssign()) {
+        if(conditionB && conditionC) {
             for(int j=i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
                 fileOperations.deleteFilesFromPath(fFile);
@@ -272,35 +313,49 @@ public final class OperationUtils {
      * realiza la operacion de copiar source en target
      */
     public void copySourceDirectoryToTargetOperation() {
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(","),
+            conditionC = optionVerification.verifySecondFile().isEmpty(),
+            conditionD = optionVerification.verifySecondFile().contains(","),
+            conditionE = optionVerification.verifyAssign();
         //require assignation "source to target"
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") &&
-                !optionVerification.verifySecondFile().contains(",") &&!optionVerification.verifySecondFile().isEmpty() && optionVerification.verifyAssign()) {
-            fileOperations.copyFromSourceToTarget(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
+        if(!conditionA && !conditionB && !conditionC && !conditionD && conditionE) {
+            fileOperations.copyFromSourceToTarget(
+                    optionVerification.verifyFirstFile(i),
+                    optionVerification.verifySecondFile()
+            );
         }
         /** 
         * copy 1 source to more than 1 target
         * not require assignation
         */
-        if(!optionVerification.verifyFirstFile(i).contains(",") && optionVerification.verifySecondFile().contains(",")) {
+        if(!conditionB && conditionD) {
             for(int j=i+3; j<options.length; ++j) {
                 String sFile = options[j].replace(",", "");
-                fileOperations.copyFromSourceToTarget(optionVerification.verifyFirstFile(i), sFile);
+                fileOperations.copyFromSourceToTarget(
+                        optionVerification.verifyFirstFile(i),
+                        sFile
+                );
             }
         }
         /**
          * copy more than 1 source to 1 target
          */
-        if(optionVerification.verifyFirstFile(i).contains(",") && !options[options.length-2].contains(",")) {
+        if(conditionB && !options[options.length-2].contains(",")) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
-                fileOperations.copyFromSourceToTarget(sFile, options[options.length-1]);
+                fileOperations.copyFromSourceToTarget(
+                        sFile,
+                        options[options.length-1]
+                );
             }
         }
         /**
          * copy from more than 1 source to more than 1 target
          * assignation is in the middle
          */
-        if(optionVerification.verifyFirstFile(i).contains(",") && options[options.length-2].contains(",")) {
+        if(conditionB && options[options.length-2].contains(",")) {
             for(int f=i+1; f<optionVerification.getAssignIndex(); ++f) {
                 for(int s=optionVerification.getAssignIndex()+1; s<options.length; ++s) {
                     String fFile = options[f].replace(",", "");
@@ -314,22 +369,33 @@ public final class OperationUtils {
      * copy files from source to target
      */
     public void copyFilesSourceToTarget() {
-        if(!optionVerification.verifyFirstFile(i).isEmpty() && !optionVerification.verifyFirstFile(i).contains(",") && !optionVerification.verifySecondFile().isEmpty() &&
-                !optionVerification.verifySecondFile().contains(",") && options.length < 4) {
-            fileOperations.copyFromSourceToTarget(optionVerification.verifyFirstFile(i), optionVerification.verifySecondFile());
+        boolean 
+            conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
+            conditionB = optionVerification.verifyFirstFile(i).contains(","),
+            conditionC = optionVerification.verifySecondFile().isEmpty(),
+            conditionD = optionVerification.verifySecondFile().contains(","),
+            conditionE = optionVerification.verifyAssign();
+        if(!conditionA && !conditionB && !conditionC && !conditionD && options.length < 4) {
+            fileOperations.copyFromSourceToTarget(
+                    optionVerification.verifyFirstFile(i),
+                    optionVerification.verifySecondFile()
+            );
         }
         /**
          * copy all files of 1 or more sources in 1 target
          */
-        if(!options[i+1].contains(",") && optionVerification.verifyAssign()) {
+        if(!conditionB && conditionE) {
             for(int j=i+1; j<optionVerification.getAssignIndex(); ++j) {
-                fileOperations.copyFromSourceToTarget(options[j], options[options.length-1]);
+                fileOperations.copyFromSourceToTarget(
+                        options[j],
+                        options[options.length-1]
+                );
             }
         }
         /**
          * copy all files of source in more than 1 target
          */
-        if(!options[i+1].contains(",") && options[options.length-2].contains(",") && optionVerification.verifyAssign()) {
+        if(!conditionB && options[options.length-2].contains(",") && conditionE) {
             for(int f=i+1; f<optionVerification.getAssignIndex(); ++f) {
                 for(int t=optionVerification.getAssignIndex()+1; t<options.length; ++t) {
                     String tFile = options[t].replace(",", "");

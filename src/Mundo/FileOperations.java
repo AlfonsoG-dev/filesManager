@@ -101,9 +101,8 @@ public class FileOperations {
      */
     public String readFileLines(String fileName) {
         BufferedReader reader = null;
-        String 
-            p = textUtils.getCleanPath(fileName),
-            b = "";
+        String p = textUtils.getCleanPath(fileName);
+        StringBuffer b = new StringBuffer();
         File f = new File(p);
         try {
             if(f.isDirectory()) {
@@ -111,7 +110,7 @@ public class FileOperations {
             }
             reader = new BufferedReader(new FileReader(f));
             while(reader.ready()) {
-                b += reader.readLine() + "\n";
+                b.append(reader.readLine() + "\n");
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -125,7 +124,7 @@ public class FileOperations {
                 reader = null;
             }
         }
-        return b;
+        return b.toString();
     }
     /**
      * search for a file or folder according to Cli option
@@ -166,11 +165,11 @@ public class FileOperations {
      * @param cliOption: the option to use in the search
      * @param cliContext: the search sentence
      */
-    private synchronized void searchLine(String[] lines, String filePath, String cliOption, String cliContext) {
+    private synchronized void searchLine(String[] lines, String filePath, String option, String context) {
         System.out.println("\n \tSEARCHING ...\n");
         for(int i=0; i<lines.length; ++i) {
             String line = lines[i];
-            if(cliContext.isEmpty()) {
+            if(context.isEmpty()) {
                 System.out.println(
                         String.format(
                             "%s:%d:%s",
@@ -179,7 +178,7 @@ public class FileOperations {
                             line
                         )
                 );
-            } else if(fileUtils.areSimilarLines(cliOption, line, cliContext)) {
+            } else if(fileUtils.areSimilarLines(option, line, context)) {
                 System.out.println(
                         String.format(
                             "%s:%d:%s",

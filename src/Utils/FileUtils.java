@@ -1,6 +1,7 @@
 package Utils;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -33,7 +34,7 @@ public class FileUtils {
                 p = local.getCanonicalPath(); 
                 n = new File(p).getName();
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
         return n;
@@ -58,7 +59,7 @@ public class FileUtils {
                                             Files.newDirectoryStream(f.toPath())
                                         )
                                 );
-                            } catch(Exception err) {
+                            } catch(IOException err) {
                                 err.printStackTrace();
                             }
                         }
@@ -94,7 +95,7 @@ public class FileUtils {
                                         Files.newDirectoryStream(f.toPath())
                                     )
                             );
-                        } catch( IOException err) {
+                        } catch(IOException err) {
                             err.printStackTrace();
                         }
 
@@ -234,21 +235,17 @@ public class FileUtils {
      * @param parentFileNames: nombres de los directorios a crear
      */
     public void createParentFile(String targetFilePath, String parentFileNames) {
-        try {
-            String[] pn = parentFileNames.split("\n");
-            for(String p: pn) {
-                String fileName = p.replace(targetFilePath, "");
-                File miFile = new File(p);
-                int c = textUtils.countNestedLevels(fileName);
-                if(!miFile.exists() && c > 1) {
-                    miFile.mkdirs();
-                } else if(!miFile.exists() && c <= 1) {
-                    miFile.mkdir();
-                }
-                System.out.println("CREATED: " + miFile.getPath());
+        String[] pn = parentFileNames.split("\n");
+        for(String p: pn) {
+            String fileName = p.replace(targetFilePath, "");
+            File miFile = new File(p);
+            int c = textUtils.countNestedLevels(fileName);
+            if(!miFile.exists() && c > 1) {
+                miFile.mkdirs();
+            } else if(!miFile.exists() && c <= 1) {
+                miFile.mkdir();
             }
-        } catch(Exception e) {
-            e.printStackTrace();
+            System.out.println("CREATED: " + miFile.getPath());
         }
     }
     private void addZipFileConcurrent(File source, String base, ZipOutputStream zop) {
@@ -265,7 +262,7 @@ public class FileUtils {
                     while((lenght = fileInput.read(buffer)) > 0) {
                         zop.write(buffer, 0, lenght);
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
                     if(fileInput != null) {
@@ -357,13 +354,13 @@ public class FileUtils {
                     zipOutput,
                     includeFiles
             );
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         } finally {
             if(zipOutput != null) {
                 try {
                     zipOutput.close();
-                } catch(Exception e) {
+                } catch(IOException e) {
                     e.printStackTrace();
                 }
                 zipOutput = null;
@@ -371,7 +368,7 @@ public class FileUtils {
             if(fileOutput != null) {
                 try {
                     fileOutput.close();
-                } catch(Exception e) {
+                } catch(IOException e) {
                     e.printStackTrace();
                 }
                 fileOutput = null;
@@ -392,13 +389,13 @@ public class FileUtils {
             while((readBytes = zipIn.read(buffer)) != -1) {
                 myFileOutputStream.write(buffer, 0, readBytes);
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         } finally {
             if(myFileOutputStream != null) {
                 try {
                     myFileOutputStream.close();
-                } catch(Exception e) {
+                } catch(IOException e) {
                     e.printStackTrace();
                 }
                 myFileOutputStream = null;
@@ -434,7 +431,7 @@ public class FileUtils {
             }
             System.out.println("de-compress operation finished");
 
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -465,13 +462,13 @@ public class FileUtils {
                     zEntry = zipIn.getNextEntry();
                 }
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         } finally {
             if(zipIn != null) {
                 try {
                     zipIn.close();
-                } catch(Exception e) {
+                } catch(IOException e) {
                     e.printStackTrace();
                 }
                 zipIn = null;

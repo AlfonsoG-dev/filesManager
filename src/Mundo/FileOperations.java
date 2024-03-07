@@ -42,13 +42,8 @@ public class FileOperations {
      */
     public void changeDirectory(String nPath) {
         File f = new File(localFilePath);
-        String p = "";
-        try {
-            p = textUtils.getCleanPath(nPath);
-            localFilePath = f.getPath().concat("\\" + p);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        String p = textUtils.getCleanPath(nPath);
+        localFilePath = f.getPath().concat("\\" + p);
     }
     /**
      * lista los archivos del directorio
@@ -65,7 +60,7 @@ public class FileOperations {
                             )
                     );
                 });
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -73,11 +68,7 @@ public class FileOperations {
      * lista los archivos de un zip
      */
     public void listZipEntries(String zipFilePath) {
-        try {
-            fileUtils.zipEntries(zipFilePath);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        fileUtils.zipEntries(zipFilePath);
     }
     /**
      * start or open a file
@@ -92,7 +83,7 @@ public class FileOperations {
                         f.getPath()
                 );
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -154,7 +145,7 @@ public class FileOperations {
                         });
                     break;
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -222,23 +213,19 @@ public class FileOperations {
      * @throws Execute no soporta crear varios directorios separados por ","
      */
     public void createDirectories(String directoryNames) {
-        try {
-            File lf = new File(localFilePath);
-            String d = textUtils.getCleanPath(directoryNames);
-            int c = textUtils.countNestedLevels(d);
-            if(c <= 1) {
-                String nd = lf.getPath() + "\\"+ d;
-                File f = new File(nd);
-                if(!f.exists()) {
-                    if(f.mkdir()) {
-                        System.out.println("CREATED: " + f.getPath());
-                    }
+        File lf = new File(localFilePath);
+        String d = textUtils.getCleanPath(directoryNames);
+        int c = textUtils.countNestedLevels(d);
+        if(c <= 1) {
+            String nd = lf.getPath() + "\\"+ d;
+            File f = new File(nd);
+            if(!f.exists()) {
+                if(f.mkdir()) {
+                    System.out.println("CREATED: " + f.getPath());
                 }
-            } else if(c > 1) {
-                fileUtils.createParentFile(lf.getPath(), d);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else if(c > 1) {
+            fileUtils.createParentFile(lf.getPath(), d);
         }
     }
     /**
@@ -259,7 +246,7 @@ public class FileOperations {
                         )
                 );
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -307,35 +294,31 @@ public class FileOperations {
      * @param directoryPath: direccion del directorio(s) a eliminar
      */
     public void deleteDirectories(String filePath) {
-        try {
-            File f = new File(filePath);
-            if(f.exists()) {
-                if(f.isDirectory() && f.listFiles() != null) {
-                    for(File mf: f.listFiles()) {
-                        deleteDirectories(mf.getPath());
-                    }
-                } 
-                if(f.isDirectory() && f.delete()) {
-                    System.out.println(
-                            String.format(
-                                "File: %s \thas been deleted.",
-                                f.getPath()
-                            )
-                    );
+        File f = new File(filePath);
+        if(f.exists()) {
+            if(f.isDirectory() && f.listFiles() != null) {
+                for(File mf: f.listFiles()) {
+                    deleteDirectories(mf.getPath());
                 }
-                if(f.isFile() && f.delete()) {
-                    System.out.println(
-                            String.format(
-                                "File: %s \thas been deleted.",
-                                f.getPath()
-                            )
-                    );
-                } else {
-                    deleteDirectories(f.getPath());
-                }
+            } 
+            if(f.isDirectory() && f.delete()) {
+                System.out.println(
+                        String.format(
+                            "File: %s \thas been deleted.",
+                            f.getPath()
+                        )
+                );
             }
-        } catch(Exception e) {
-            e.printStackTrace();
+            if(f.isFile() && f.delete()) {
+                System.out.println(
+                        String.format(
+                            "File: %s \thas been deleted.",
+                            f.getPath()
+                        )
+                );
+            } else {
+                deleteDirectories(f.getPath());
+            }
         }
     }
     /**
@@ -345,20 +328,16 @@ public class FileOperations {
      * @param deletePath: path of the files or folders to delete
      */
     public void deleteFilesFromPath(String deletePath) {
-        try {
-            File f = new File(deletePath);
-            if(f.exists() && f.isFile()) {
-                 System.out.println(
-                         f.delete() ?
-                         String.format("File: %s\thas been deleted", f.getPath()) : ""
-                 );
-            } else if(f.isDirectory() && f.listFiles() != null) {
-                for(File mf: f.listFiles()) {
-                    deleteFilesFromPath(mf.getPath());
-                }
+        File f = new File(deletePath);
+        if(f.exists() && f.isFile()) {
+            System.out.println(
+                    f.delete() ?
+                    String.format("File: %s\thas been deleted", f.getPath()) : ""
+            );
+        } else if(f.isDirectory() && f.listFiles() != null) {
+            for(File mf: f.listFiles()) {
+                deleteFilesFromPath(mf.getPath());
             }
-        } catch(Exception e) {
-            e.printStackTrace();
         }
     }
     /**
@@ -477,7 +456,7 @@ public class FileOperations {
                         }
                     });
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

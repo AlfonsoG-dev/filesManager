@@ -45,24 +45,33 @@ public class FileUtils {
      */
     public ArrayList<File> getDirectoryNames(DirectoryStream<Path> myFiles) {
         ArrayList<File> dirs = new ArrayList<>();
-        myFiles
-            .forEach(e -> {
-                File f = e.toFile();
-                if(f.isDirectory()) {
-                    dirs.add(f);
-                    if(f.listFiles() != null) {
-                        try {
-                            dirs.addAll(
-                                    getDirectoryNames(
-                                        Files.newDirectoryStream(f.toPath())
-                                    )
-                            );
-                        } catch(Exception err) {
-                            err.printStackTrace();
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                for(Path p: myFiles) {
+                    File f = p.toFile();
+                    if(f.isDirectory()) {
+                        dirs.add(f);
+                        if(f.listFiles() != null) {
+                            try {
+                                dirs.addAll(
+                                        getDirectoryNames(
+                                            Files.newDirectoryStream(f.toPath())
+                                        )
+                                );
+                            } catch(Exception err) {
+                                err.printStackTrace();
+                            }
                         }
                     }
                 }
-            });
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+        }
         return dirs;
     }
     /**
@@ -72,23 +81,33 @@ public class FileUtils {
      */
     public ArrayList<File> getDirectoryFiles(DirectoryStream<Path> myFiles) {
         ArrayList<File> files = new ArrayList<>();
-        myFiles
-            .forEach(e -> {
-                File f = e.toFile();
-                if(f.exists() && f.isFile()) {
-                    files.add(f);
-                } else if(f.isDirectory()) {
-                    try {
-                        files.addAll(
-                                getDirectoryFiles(
-                                    Files.newDirectoryStream(f.toPath())
-                                )
-                        );
-                    } catch(Exception err) {
-                        err.printStackTrace();
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                for(Path p: myFiles) {
+                    File f = p.toFile();
+                    if(f.exists() && f.isFile()) {
+                        files.add(f);
+                    } else if(f.isDirectory()) {
+                        try {
+                            files.addAll(
+                                    getDirectoryFiles(
+                                        Files.newDirectoryStream(f.toPath())
+                                    )
+                            );
+                        } catch( IOException err) {
+                            err.printStackTrace();
+                        }
+
                     }
                 }
-            });
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+        }
         return files;
     }
     /**
@@ -109,7 +128,7 @@ public class FileUtils {
                     )
                 );
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
         return files;
@@ -232,6 +251,41 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+    private void addZipFileConcurrent(File source, String base, ZipOutputStream zop) {
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                FileInputStream fileInput = null;
+                try {
+                    fileInput = new FileInputStream(source);
+                    ZipEntry zEntry = new ZipEntry(base);
+                    zop.putNextEntry(zEntry);
+
+                    byte[] buffer = new byte[1024];
+                    int lenght;
+                    while((lenght = fileInput.read(buffer)) > 0) {
+                        zop.write(buffer, 0, lenght);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if(fileInput != null) {
+                        try {
+                            fileInput.close();
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                        fileInput = null;
+                    }
+                }
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch(InterruptedException err) {
+            err.printStackTrace();
+        }
+    }
     /**
      * recursive add file to the zip 
      * @param source: source of the files
@@ -279,29 +333,11 @@ public class FileUtils {
 
             }
         } else {
-            FileInputStream fileInput = null;
-            try {
-                fileInput = new FileInputStream(source);
-                ZipEntry zEntry = new ZipEntry(base);
-                zop.putNextEntry(zEntry);
-
-                byte[] buffer = new byte[1024];
-                int lenght;
-                while((lenght = fileInput.read(buffer)) > 0) {
-                    zop.write(buffer, 0, lenght);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if(fileInput != null) {
-                    try {
-                        fileInput.close();
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                    fileInput = null;
-                }
-            }
+            addZipFileConcurrent(
+                    source,
+                    base,
+                    zop
+            );
         }
     }
     /**

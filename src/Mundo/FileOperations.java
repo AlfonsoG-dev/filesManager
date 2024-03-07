@@ -197,27 +197,23 @@ public class FileOperations {
      * @param cliContext: context to search in the given path
      */
     public void searchFileLine(String filePath, String cliOption, String cliContext) {
-        try {
-            File f = new File(filePath);
-            if(f.isFile()) {
-                String[] lines = readFileLines(filePath).split("\n");
-                searchLine(
-                        lines,
-                        filePath,
-                        cliOption,
-                        cliContext
-                );
-            } else {
-                ArrayList<File> files = fileUtils.listFilesFromPath(f.getPath());
-                files
-                    .parallelStream()
-                    .map(e -> e.getPath())
-                    .forEach(e -> {
-                        searchFileLine(e, cliOption, cliContext);
-                    });
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        File f = new File(filePath);
+        if(f.isFile()) {
+            String[] lines = readFileLines(filePath).split("\n");
+            searchLine(
+                    lines,
+                    filePath,
+                    cliOption,
+                    cliContext
+            );
+        } else {
+            ArrayList<File> files = fileUtils.listFilesFromPath(f.getPath());
+            files
+                .parallelStream()
+                .map(e -> e.getPath())
+                .forEach(e -> {
+                    searchFileLine(e, cliOption, cliContext);
+                });
         }
     }
     /**

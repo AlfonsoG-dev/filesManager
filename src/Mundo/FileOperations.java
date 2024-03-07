@@ -317,6 +317,8 @@ public class FileOperations {
                             )
                     );
                 }
+            } else if(f.isFile()) {
+                System.out.println("delete all files using -df first");
             }
         } catch(Exception e) {
             e.printStackTrace();

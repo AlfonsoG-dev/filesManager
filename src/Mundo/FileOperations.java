@@ -295,30 +295,31 @@ public class FileOperations {
      */
     public void deleteDirectories(String filePath) {
         File f = new File(filePath);
-        if(f.exists()) {
-            if(f.isDirectory() && f.listFiles() != null) {
-                for(File mf: f.listFiles()) {
-                    deleteDirectories(mf.getPath());
+        try {
+            if(!f.exists()) {
+                throw new Exception(
+                        String.format(
+                            "File: %s doesn't exists or has been deleted",
+                            f.getPath()
+                        )
+                );
+            } else if(f.exists() && f.isDirectory()) {
+                if(f.listFiles() != null) {
+                    for(File mf: f.listFiles()) {
+                        deleteDirectories(mf.getPath());
+                    }
+                } 
+                if(f.delete()) {
+                    System.out.println(
+                            String.format(
+                                "File: %s \thas been deleted.",
+                                f.getPath()
+                            )
+                    );
                 }
-            } 
-            if(f.isDirectory() && f.delete()) {
-                System.out.println(
-                        String.format(
-                            "File: %s \thas been deleted.",
-                            f.getPath()
-                        )
-                );
             }
-            if(f.isFile() && f.delete()) {
-                System.out.println(
-                        String.format(
-                            "File: %s \thas been deleted.",
-                            f.getPath()
-                        )
-                );
-            } else {
-                deleteDirectories(f.getPath());
-            }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
     /**

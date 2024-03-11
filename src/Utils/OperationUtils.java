@@ -270,13 +270,15 @@ public final class OperationUtils {
         if(!conditionC) {
             System.out.println("use --y to delete");
         }
-        if(!conditionA && conditionC && !conditionB && options.length < 4) {
-            fileOperations.deleteDirectories(options[i+1]);
+        if(!conditionA && !conditionB && options.length < 4 && conditionC) {
+            fileOperations.deleteDirectories(optionVerification.verifyFirstFile(i));
         }
         if(conditionB && conditionC) {
             for(int j = i+1; j<options.length; ++j) {
                 String fFile = options[j].replace(",", "");
-                fileOperations.deleteDirectories(fFile);
+                if(!fFile.contains("--")) {
+                    fileOperations.deleteDirectories(fFile);
+                }
             }
         } 
     }
@@ -309,6 +311,13 @@ public final class OperationUtils {
             }
         }
     }
+    protected void copyFileHelper(String target, String source, boolean isReplaceable) {
+        fileOperations.copyFromSourceToTarget(
+                target,
+                source,
+                isReplaceable
+        );
+    }
     /**
      * realiza la operacion de copiar source en target
      */
@@ -318,12 +327,14 @@ public final class OperationUtils {
             conditionB = optionVerification.verifyFirstFile(i).contains(","),
             conditionC = optionVerification.verifySecondFile().isEmpty(),
             conditionD = optionVerification.verifySecondFile().contains(","),
-            conditionE = optionVerification.verifyAssign();
+            conditionE = optionVerification.verifyAssign(),
+            conditionH = optionVerification.verifyIsReplaceable();
         //require assignation "source to target"
         if(!conditionA && !conditionB && !conditionC && !conditionD && conditionE) {
-            fileOperations.copyFromSourceToTarget(
+            copyFileHelper(
                     optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile()
+                    optionVerification.verifySecondFile(),
+                    conditionH
             );
         }
         /** 
@@ -333,9 +344,10 @@ public final class OperationUtils {
         if(!conditionB && conditionD) {
             for(int j=i+3; j<options.length; ++j) {
                 String sFile = options[j].replace(",", "");
-                fileOperations.copyFromSourceToTarget(
+                copyFileHelper(
                         optionVerification.verifyFirstFile(i),
-                        sFile
+                        sFile,
+                        conditionH
                 );
             }
         }
@@ -345,9 +357,10 @@ public final class OperationUtils {
         if(conditionB && !options[options.length-2].contains(",")) {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
-                fileOperations.copyFromSourceToTarget(
+                copyFileHelper(
                         sFile,
-                        options[options.length-1]
+                        options[options.length-1],
+                        conditionH
                 );
             }
         }
@@ -358,9 +371,10 @@ public final class OperationUtils {
         if(conditionB && options[options.length-2].contains(",")) {
             for(int f=i+1; f<optionVerification.getAssignIndex(); ++f) {
                 for(int s=optionVerification.getAssignIndex()+1; s<options.length; ++s) {
-                    String fFile = options[f].replace(",", "");
-                    String sFile = options[s].replace(",", "");
-                    fileOperations.copyFromSourceToTarget(fFile, sFile);
+                    String 
+                        fFile = options[f].replace(",", ""),
+                        sFile = options[s].replace(",", "");
+                    copyFileHelper(fFile, sFile, conditionH);
                 }
             }
         }
@@ -374,11 +388,13 @@ public final class OperationUtils {
             conditionB = optionVerification.verifyFirstFile(i).contains(","),
             conditionC = optionVerification.verifySecondFile().isEmpty(),
             conditionD = optionVerification.verifySecondFile().contains(","),
-            conditionE = optionVerification.verifyAssign();
+            conditionE = optionVerification.verifyAssign(),
+            conditionH = optionVerification.verifyIsReplaceable();
         if(!conditionA && !conditionB && !conditionC && !conditionD && options.length < 4) {
-            fileOperations.copyFromSourceToTarget(
+            copyFileHelper(
                     optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile()
+                    optionVerification.verifySecondFile(),
+                    conditionH
             );
         }
         /**
@@ -386,9 +402,10 @@ public final class OperationUtils {
          */
         if(!conditionB && conditionE) {
             for(int j=i+1; j<optionVerification.getAssignIndex(); ++j) {
-                fileOperations.copyFromSourceToTarget(
+                copyFileHelper(
                         options[j],
-                        options[options.length-1]
+                        options[options.length-1],
+                        conditionH
                 );
             }
         }
@@ -399,7 +416,7 @@ public final class OperationUtils {
             for(int f=i+1; f<optionVerification.getAssignIndex(); ++f) {
                 for(int t=optionVerification.getAssignIndex()+1; t<options.length; ++t) {
                     String tFile = options[t].replace(",", "");
-                    fileOperations.copyFromSourceToTarget(options[f], tFile);
+                    copyFileHelper(options[f], tFile, conditionH);
                 }
             }
         }

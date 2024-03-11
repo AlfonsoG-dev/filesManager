@@ -27,11 +27,25 @@ public class OptionVerification {
         }
         return res;
     }
+    public boolean verifyIsReplaceable() {
+        boolean isReplaceable = false;
+        for(int j=0; j<options.length; ++j) {
+            int 
+                replaceable = options[j].indexOf("--r"),
+                copyable    = options[j].indexOf("--c");
+            if(replaceable != -1) {
+                isReplaceable = true;
+            } else if(copyable != -1) {
+                isReplaceable = false;
+            }
+        }
+        return isReplaceable;
+    }
     /**
      * da el indice de la asignacion
      */
     public int getAssignIndex() {
-        int  res =0;
+        int  res = -1;
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
             int otherAssignation = options[j].indexOf("--y");

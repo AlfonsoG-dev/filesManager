@@ -318,7 +318,7 @@ public class FileOperations {
                     );
                 }
             } else if(f.isFile()) {
-                System.out.println("delete all files using -df first");
+                System.out.println("DELETE ALL FILES USING -DF FIRST");
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -413,13 +413,33 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
+    protected void copyOption(Path source, Path target, boolean isReplaceable) throws IOException {
+        if(!isReplaceable) {
+            System.out.println(
+                    Files.copy(
+                        source,
+                        target,
+                        StandardCopyOption.COPY_ATTRIBUTES
+                    )
+            );
+        } else {
+            System.out.println(
+                    Files.copy(
+                        source,
+                        target,
+                        StandardCopyOption.REPLACE_EXISTING
+                    )
+            );
+        }
+    }
     /**
      * copia el directorio source en el target
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
      * @param sourceFilePath: ruta del directorio source
      * @param targetFilePath: ruta del directorio target
+     * @param isReplaceable: REPLACE_EXISTING, COPY_ATTRIBUTES
      */
-    public void copyFromSourceToTarget(String sourceFilePath, String targetFilePath) {
+    public void copyFromSourceToTarget(String sourceFilePath, String targetFilePath, boolean isReplaceable) {
         try {
             File sf = new File(sourceFilePath);
             if(sf.isFile()) {
@@ -428,12 +448,10 @@ public class FileOperations {
                         targetFilePath + "\\" +
                         sfn
                 );
-                System.out.println(
-                        Files.copy(
-                            new File(sf.getPath()).toPath(),
-                            tf.toPath(),
-                            StandardCopyOption.COPY_ATTRIBUTES
-                        )
+                copyOption(
+                        new File(sf.getPath()).toPath(),
+                        tf.toPath(),
+                        isReplaceable
                 );
             } else if(sf.isDirectory()) {
                 ArrayList<File> files = fileUtils.listFilesFromPath(sourceFilePath);
@@ -447,12 +465,10 @@ public class FileOperations {
                                 sourceWithoutParent = e.replace(source, "");
                             File target = new File(targetFilePath + "\\" + sourceWithoutParent);
                             fileUtils.createParentFile(target.getPath(), target.getParent());
-                            System.out.println(
-                                    Files.copy(
-                                        new File(e).toPath(),
-                                        target.toPath(),
-                                        StandardCopyOption.COPY_ATTRIBUTES
-                                    )
+                            copyOption(
+                                    new File(e).toPath(),
+                                    target.toPath(),
+                                    isReplaceable
                             );
                         } catch(Exception err) {
                             err.printStackTrace();

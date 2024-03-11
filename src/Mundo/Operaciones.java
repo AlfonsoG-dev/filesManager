@@ -89,6 +89,7 @@ public class Operaciones {
                         System.out.println("\tuse -i search file line using ignore case");
                         System.out.println("use -cp copy to source dir to target");
                         System.out.println("\tuse -cf to copy source file to target");
+                        System.out.println("\t\tuse --r to REPLACE or --c to COPY");
                         System.out.println("use -mv to move source dir to target");
                         System.out.println("\tuse -mf to move source file to target");
                         System.out.println("use -rn to rename file or dir");

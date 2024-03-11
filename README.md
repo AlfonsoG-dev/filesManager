@@ -114,6 +114,14 @@ java -jar app.jar operation
 >>- also supports copy form more than 1 source to more than 1 target
 >>- `-cp source1, source2 to target1, target2`
 
+#### Sub-Command
+
+>- `--r`: used when you need to replace existing resources of the target.
+>>- `java -jar -cp .\src\App.java to .\example\ --r`
+>- `--c`: used when you need to copy and the source files or directories don't exists in the target.
+>>- `java -jar -cp .\src\App.java to .\example\ --c`
+>>>- `--c`: also is the default option.
+
 ### Delete
 
 

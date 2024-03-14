@@ -377,6 +377,14 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
+    public void renameFile(Path oldName, Path newName) throws IOException {
+        System.out.println("rename to: " + newName);
+        Files.move(
+                oldName,
+                newName,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+    }
     /**
      * renombra un directorio con otro nombre
      * <br> post: </br> los archivos del source se quedan
@@ -385,30 +393,9 @@ public class FileOperations {
      */
     public void renameDirectory(String oldName, String newName) {
         try {
-            if(oldName.equals(newName)) {
-                throw new Exception("CANNOT RENAME");
-            }
-            File sf = new File(oldName);
-            File tf = new File(newName);
-            if(!tf.exists()) {
-                tf.mkdir();
-            }
-            if(sf.exists() && tf.exists()) {
-                Path sp = sf.toPath();
-                Path tp = tf.toPath();
-                Files.move(
-                        sp,
-                        tp,
-                        StandardCopyOption.REPLACE_EXISTING
-                );
-                if(sf.delete()) {
-                    System.out.println(
-                            "File: " +
-                            oldName + " now is: " +
-                            newName
-                    );
-                }
-            }
+            Path sp = new File(oldName).toPath();
+            Path tp = new File(newName).toPath();
+            renameFile(sp, tp);
         } catch(Exception e) {
             e.printStackTrace();
         }

@@ -177,11 +177,16 @@ public final class OperationUtils {
     public void renameDirectory() {
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
-            conditionB = optionVerification.verifySecondFile().isEmpty();
-        if(!conditionA && !conditionB && optionVerification.verifyAssign()) {
+            conditionB = options[options.length-1].equals("to");
+        if(conditionA == true || conditionB == true) {
+            System.err.println("please give the file path and the new Name for that file");
+        }
+        if(optionVerification.verifyAssign() == false) {
+            System.err.println("give a new name using: to after file path");
+        } else if(conditionA == false && conditionB == false) {
             fileOperations.renameDirectory(
                     optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile()
+                    options[options.length-1]
             );
         }
     }

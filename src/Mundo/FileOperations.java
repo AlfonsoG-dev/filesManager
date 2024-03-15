@@ -54,10 +54,12 @@ public class FileOperations {
             DirectoryStream<Path> files = Files.newDirectoryStream(lf.toPath());
             files
                 .forEach(e -> {
+                    ArrayList<File> dirFiles = fileUtils.listFilesFromPath(e.toFile().getPath());
                     System.out.println(
                             textUtils.getCleanPath(
                                 e.toFile().getPath()
-                            )
+                            ) + " :: " + 
+                            dirFiles.size()
                     );
                 });
         } catch(IOException e) {

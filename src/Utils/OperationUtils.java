@@ -224,24 +224,43 @@ public final class OperationUtils {
             }
         }
     }
+    protected String nameIndex() {
+        int index = optionVerification.getIndexOfOption("-n");
+        if(index != -1) {
+            return options[index+1];
+        } else {
+            return null;
+        }
+    }
     /**
      * create a compression CLI option for the operation
      */
     public void createCompressionOperation() throws Exception {
         // -i include only this files not implemented
         int includeIndex = optionVerification.getIndexOfOption("-i");
-        String compressPath = "", includeOption = "";
+        String 
+            compressPath = "",
+            includeOption = "",
+            name = nameIndex();
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
             conditionB = includeIndex != -1;
         if(!conditionA && conditionB && (i+3) < options.length) {
             compressPath = optionVerification.verifyFirstFile(i);
             includeOption = options[i+3];
-            fileOperations.compressFilesInPath(compressPath, includeOption);
+            fileOperations.compressFilesInPath(
+                    compressPath,
+                    includeOption,
+                    name
+            );
         }
         if(!conditionB) {
             compressPath = options[i+1];
-            fileOperations.compressFilesInPath(compressPath, null);
+            fileOperations.compressFilesInPath(
+                    compressPath,
+                    null,
+                    name
+            );
         }
     }
     /**

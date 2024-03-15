@@ -255,13 +255,18 @@ public class FileOperations {
      * @param givenPath: path of the files to compress
      * @param includeFiles: files or names or patters to exlude in the compression
      */
-    public void compressFilesInPath(String givenPath, String includeFiles) {
+    public void compressFilesInPath(String givenPath, String includeFiles, String name) {
         try {
             File f = new File(givenPath);
             if(!f.exists()) {
                 throw new IOException("FILE NOT FOUND");
             }
-            String ln = fileUtils.getLocalName(localFilePath);
+            String ln = "";
+            if(name.isEmpty() || name == null) {
+                ln = fileUtils.getLocalName(localFilePath);
+            } else {
+                ln = name;
+            }
             fileUtils.createZipFile(
                     f,
                     new File(ln + ".zip"),

@@ -159,10 +159,7 @@ public class FileUtils {
         switch(cliOption) {
             case "-td":
                 if(f.isDirectory() && f.listFiles() != null) {
-                    ArrayList<File> dirNames = getDirectoryNames(
-                            Files.newDirectoryStream(f.toPath())
-                    );
-                    dirNames
+                    getDirectoryNames(Files.newDirectoryStream(f.toPath()))
                         .parallelStream()
                         .filter(e -> e.getName().toLowerCase().contains(c))
                         .forEach(e -> {

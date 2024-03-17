@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
 
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -51,14 +50,13 @@ public class FileOperations {
     public void listFiles() {
         File lf = new File(localFilePath);
         try {
-            DirectoryStream<Path> files = Files.newDirectoryStream(lf.toPath());
-            files
-                .forEach(e -> {
+            Files.newDirectoryStream(lf.toPath())
+            .forEach(e -> {
                     ArrayList<File> dirFiles = fileUtils.listFilesFromPath(e.toFile().getPath());
                     System.out.println(
                             textUtils.getCleanPath(
                                 e.toFile().getPath()
-                            ) + " :: " + 
+                            ) + "::" + 
                             dirFiles.size()
                     );
                 });

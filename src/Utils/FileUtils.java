@@ -111,7 +111,7 @@ public class FileUtils {
         return files;
     }
     /**
-     * litar la ruta de todos los archivos del directorio 
+     * listar la ruta de todos los archivos del directorio 
      * @param filePath: ruta del directorio a buscar
      * @return un String con la ruta de todos los archivos
      */
@@ -142,7 +142,7 @@ public class FileUtils {
         System.out.println(
                 String.format(
                     "| %s |",
-                    f.getPath()
+                    Colors.GREEN_UNDERLINE + f.getPath() + Colors.RESET
                 )
         );
     }
@@ -241,7 +241,10 @@ public class FileUtils {
             } else if(!miFile.exists() && c <= 1) {
                 miFile.mkdir();
             }
-            System.out.println("CREATED: " + miFile.getPath());
+            System.out.println(
+                    Colors.YELLOW_UNDERLINE + "CREATED: " + Colors.RESET
+                    + miFile.getPath()
+            );
         }
     }
     private void addZipFileConcurrent(File source, String base, ZipOutputStream zop) {
@@ -414,7 +417,9 @@ public class FileUtils {
                 if(!miFile.exists()) {
                     System.out.println(
                             String.format(
-                                "THE FOLDER STRUCTURE: | %s | ARE NEDDED.",
+                                Colors.YELLOW_UNDERLINE +
+                                "THE FOLDER STRUCTURE: | %s | ARE NEDDED." + 
+                                Colors.RESET,
                                 miFile.getPath()
                             )
                     );
@@ -425,7 +430,9 @@ public class FileUtils {
                 zipIn.closeEntry();
                 entry = zipIn.getNextEntry();
             }
-            System.out.println("de-compress operation finished");
+            System.out.println(
+                    Colors.YELLOW_UNDERLINE + "de-compress operation finished" + Colors.RESET
+            );
 
         } catch(IOException e) {
             e.printStackTrace();
@@ -442,7 +449,9 @@ public class FileUtils {
             zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
             ZipEntry zEntry = zipIn.getNextEntry();
             if(zEntry == null) {
-                System.out.println("EMPTY ZIP FILE");
+                System.out.println(
+                        Colors.YELLOW_UNDERLINE + "EMPTY ZIP FILE" + Colors.RESET
+                );
             } else {
                 int count = 1;
                 while(zEntry != null) {
@@ -450,9 +459,9 @@ public class FileUtils {
                             String.format(
                                 "%s: %s",
                                 count,
-                                zEntry.getName()
-                                )
-                            );
+                                Colors.GREEN_UNDERLINE + zEntry.getName() + Colors.RESET
+                            )
+                    );
                     ++count;
                     zipIn.closeEntry();
                     zEntry = zipIn.getNextEntry();

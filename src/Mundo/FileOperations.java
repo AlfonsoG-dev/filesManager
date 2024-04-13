@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import Utils.FileUtils;
 import Utils.TextUtils;
+import Utils.Colors;
 public class FileOperations {
     /**
      * declaración de la instancia {@link FileUtils}
@@ -53,10 +54,10 @@ public class FileOperations {
             Files.newDirectoryStream(lf.toPath())
             .forEach(e -> {
                     ArrayList<File> dirFiles = fileUtils.listFilesFromPath(e.toFile().getPath());
+                    String filePath = textUtils.getCleanPath(e.toFile().getPath());
                     System.out.println(
-                            textUtils.getCleanPath(
-                                e.toFile().getPath()
-                            ) + "::" + 
+                            Colors.GREEN_UNDERLINE + filePath + Colors.RESET + 
+                            "::" + 
                             dirFiles.size()
                     );
                 });
@@ -97,11 +98,15 @@ public class FileOperations {
         File f = new File(p);
         try {
             if(f.isDirectory()) {
-                throw new Exception("CANNOT READ LINES USING DIRECTORIES");
+                throw new Exception(
+                        Colors.RED + "CANNOT READ LINES USING DIRECTORIES" + Colors.RESET
+                );
             }
             reader = new BufferedReader(new FileReader(f));
             while(reader.ready()) {
-                b.append(reader.readLine() + "\n");
+                b.append(
+                        Colors.YELLOW +  reader.readLine() + "\n" + Colors.RESET
+                );
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -149,6 +154,15 @@ public class FileOperations {
             e.printStackTrace();
         }
     }
+    private String paintLine(String first, String second) {
+        String m = "";
+        if(first.contains(second)) {
+            m = first.replace(second, Colors.YELLOW + second + Colors.RESET);
+        } else {
+            m = first;
+        }
+        return m;
+    }
     /**
      * helper method to show the result of search line of file. 
      * @param lines: the file lines
@@ -164,16 +178,17 @@ public class FileOperations {
                 System.out.println(
                         String.format(
                             "%s:%d:%s",
-                            filePath,
+                            Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
                             i+1,
                             line
                         )
                 );
             } else if(fileUtils.areSimilarLines(option, line, context)) {
+                line = paintLine(line, context);
                 System.out.println(
                         String.format(
                             "%s:%d:%s",
-                            filePath,
+                            Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
                             i+1,
                             line
                         )
@@ -221,7 +236,10 @@ public class FileOperations {
             File f = new File(nd);
             if(!f.exists()) {
                 if(f.mkdir()) {
-                    System.out.println("CREATED: " + f.getPath());
+                    System.out.println(
+                            Colors.YELLOW_UNDERLINE + "CREATED: " + Colors.RESET +
+                            f.getPath()
+                    );
                 }
             }
         } else if(c > 1) {
@@ -241,7 +259,7 @@ public class FileOperations {
             if(!f.exists() && f.createNewFile()) {
                 System.out.println(
                         String.format(
-                            "FILE: %S HAS BEEN CREATED",
+                            Colors.YELLOW_UNDERLINE + "FILE: %S HAS BEEN CREATED" + Colors.RESET,
                             f.getName()
                         )
                 );
@@ -259,7 +277,7 @@ public class FileOperations {
         try {
             File f = new File(givenPath);
             if(!f.exists()) {
-                throw new IOException("FILE NOT FOUND");
+                throw new IOException(Colors.RED + "FILE NOT FOUND" + Colors.RESET);
             }
             String ln = "";
             if(name.isEmpty() || name == null) {
@@ -283,9 +301,11 @@ public class FileOperations {
     public void deCompressFilesInPath(String givenPath, String listOption) {
         try {
             File f = new File(givenPath);
-            if(!f.exists()) { throw new Exception("file not found"); }
+            if(!f.exists()) {
+                throw new Exception(Colors.RESET + "file not found" + Colors.RESET); 
+            }
             if(listOption != null) { 
-                throw new Exception("not implemented yet");
+                throw new Exception(Colors.RED + "not implemented yet" + Colors.RESET);
             } else {
                 fileUtils.createUnZipFile(givenPath, localFilePath);
             }
@@ -304,7 +324,8 @@ public class FileOperations {
             if(!f.exists()) {
                 throw new Exception(
                         String.format(
-                            "File: %s doesn't exists or has been deleted",
+                            Colors.YELLOW_UNDERLINE +
+                            "File: %s doesn't exists or has been deleted" + Colors.RESET,
                             f.getPath()
                         )
                 );
@@ -317,13 +338,16 @@ public class FileOperations {
                 if(f.delete()) {
                     System.out.println(
                             String.format(
-                                "File: %s \thas been deleted.",
+                                Colors.YELLOW_UNDERLINE +
+                                "File: %s \thas been deleted." + Colors.RESET,
                                 f.getPath()
                             )
                     );
                 }
             } else if(f.isFile()) {
-                System.out.println("DELETE ALL FILES USING -DF FIRST");
+                System.out.println(
+                        Colors.YELLOW_UNDERLINE + "DELETE ALL FILES USING -DF FIRST" + Colors.RESET
+                );
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -340,7 +364,10 @@ public class FileOperations {
         if(f.exists() && f.isFile()) {
             System.out.println(
                     f.delete() ?
-                    String.format("File: %s\thas been deleted", f.getPath()) : ""
+                    String.format(
+                       Colors.YELLOW_UNDERLINE + "File: %s\thas been deleted" + Colors.RESET,
+                       f.getPath()
+                    ) : ""
             );
         } else if(f.isDirectory() && f.listFiles() != null) {
             for(File mf: f.listFiles()) {
@@ -357,7 +384,7 @@ public class FileOperations {
     public void moveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(sourceFilePath.equals(targetFilePath)) {
-                throw new Exception("CANNOT MOVE SOURCE FILE TO TARGET FILE");
+                throw new Exception(Colors.RED + "CANNOT MOVE SOURCE FILE TO TARGET FILE" + Colors.RESET);
             }
             File sf = new File(sourceFilePath);
             File tf = new File(targetFilePath);
@@ -371,9 +398,9 @@ public class FileOperations {
                 );
                 if(!mp.toFile().getName().isEmpty()) {
                     System.out.println(
-                            "MOVED: " +
+                            Colors.YELLOW_UNDERLINE + "MOVED: " + Colors.RESET + 
                             sourceFilePath +
-                            " TO: " +
+                            Colors.YELLOW_UNDERLINE + " TO: " + Colors.RESET +
                             targetFilePath
                     );
                 }
@@ -383,7 +410,10 @@ public class FileOperations {
         }
     }
     public void renameFile(Path oldName, Path newName) throws IOException {
-        System.out.println("rename to: " + newName);
+        System.out.println(
+                Colors.YELLOW_UNDERLINE + "rename to: " + Colors.RESET +
+                Colors.GREEN_UNDERLINE + newName + Colors.RESET
+        );
         Files.move(
                 oldName,
                 newName,

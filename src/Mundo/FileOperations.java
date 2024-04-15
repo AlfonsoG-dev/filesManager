@@ -9,8 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import java.util.ArrayList;
-
 import Utils.FileUtils;
 import Utils.TextUtils;
 import Utils.Colors;
@@ -52,13 +50,14 @@ public class FileOperations {
         File lf = new File(localFilePath);
         try {
             Files.newDirectoryStream(lf.toPath())
-            .forEach(e -> {
-                    ArrayList<File> dirFiles = fileUtils.listFilesFromPath(e.toFile().getPath());
+                .forEach(e -> {
                     String filePath = textUtils.getCleanPath(e.toFile().getPath());
                     System.out.println(
-                            Colors.GREEN_UNDERLINE + filePath + Colors.RESET + 
-                            "::" + 
-                            dirFiles.size()
+                            String.format(
+                                "%s::%d",
+                                Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
+                                fileUtils.listFilesFromPath(e.toFile().getPath()).size()
+                            )
                     );
                 });
         } catch(IOException e) {
@@ -141,8 +140,7 @@ public class FileOperations {
                     );
                     break;
                 default:
-                    ArrayList<File> fileNames = fileUtils.listFilesFromPath(filePath);
-                    fileNames
+                    fileUtils.listFilesFromPath(filePath)
                         .parallelStream()
                         .filter(e -> fileUtils.areSimilar(e, cliOption, cliContext))
                         .forEach(e -> {
@@ -213,8 +211,7 @@ public class FileOperations {
                     cliContext
             );
         } else {
-            ArrayList<File> files = fileUtils.listFilesFromPath(f.getPath());
-            files
+            fileUtils.listFilesFromPath(f.getPath())
                 .parallelStream()
                 .map(e -> e.getPath())
                 .forEach(e -> {
@@ -237,8 +234,7 @@ public class FileOperations {
             if(!f.exists()) {
                 if(f.mkdir()) {
                     System.out.println(
-                            Colors.YELLOW_UNDERLINE + "CREATED: " + Colors.RESET +
-                            f.getPath()
+                            Colors.YELLOW_UNDERLINE + "CREATED: " + Colors.RESET + f.getPath()
                     );
                 }
             }
@@ -259,7 +255,7 @@ public class FileOperations {
             if(!f.exists() && f.createNewFile()) {
                 System.out.println(
                         String.format(
-                            Colors.YELLOW_UNDERLINE + "FILE: %S HAS BEEN CREATED" + Colors.RESET,
+                            Colors.YELLOW_UNDERLINE + "FILE: %s HAS BEEN CREATED" + Colors.RESET,
                             f.getName()
                         )
                 );
@@ -346,7 +342,7 @@ public class FileOperations {
                 }
             } else if(f.isFile()) {
                 System.out.println(
-                        Colors.YELLOW_UNDERLINE + "DELETE ALL FILES USING -DF FIRST" + Colors.RESET
+                        Colors.YELLOW_UNDERLINE + "DELETE ALL FILES USING -df FIRST" + Colors.RESET
                 );
             }
         } catch(Exception e) {
@@ -398,10 +394,11 @@ public class FileOperations {
                 );
                 if(!mp.toFile().getName().isEmpty()) {
                     System.out.println(
-                            Colors.YELLOW_UNDERLINE + "MOVED: " + Colors.RESET + 
-                            sourceFilePath +
-                            Colors.YELLOW_UNDERLINE + " TO: " + Colors.RESET +
-                            targetFilePath
+                            String.format(
+                                Colors.YELLOW_UNDERLINE + "MOVED: %s TO: %s" + Colors.RESET,
+                                sourceFilePath,
+                                targetFilePath
+                            )
                     );
                 }
             }
@@ -411,8 +408,11 @@ public class FileOperations {
     }
     public void renameFile(Path oldName, Path newName) throws IOException {
         System.out.println(
-                Colors.YELLOW_UNDERLINE + "rename to: " + Colors.RESET +
-                Colors.GREEN_UNDERLINE + newName + Colors.RESET
+                String.format(
+                    Colors.YELLOW_UNDERLINE + "%s RENAME TO: %s" + Colors.RESET,
+                    oldName,
+                    Colors.GREEN_UNDERLINE + newName + Colors.RESET
+                )
         );
         Files.move(
                 oldName,
@@ -476,19 +476,17 @@ public class FileOperations {
                         isReplaceable
                 );
             } else if(sf.isDirectory()) {
-                ArrayList<File> files = fileUtils.listFilesFromPath(sourceFilePath);
-                files
+                fileUtils.listFilesFromPath(sourceFilePath)
                     .parallelStream()
-                    .map(e -> e.getPath())
                     .forEach(e -> {
                         try {
                             String
                                 source              = new File(sf.getCanonicalPath()).getParent(),
-                                sourceWithoutParent = e.replace(source, "");
+                                sourceWithoutParent = e.getPath().replace(source, "");
                             File target = new File(targetFilePath + "\\" + sourceWithoutParent);
                             fileUtils.createParentFile(target.getPath(), target.getParent());
                             copyOption(
-                                    new File(e).toPath(),
+                                    e.toPath(),
                                     target.toPath(),
                                     isReplaceable
                             );

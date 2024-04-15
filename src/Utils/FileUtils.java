@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -43,8 +44,8 @@ public class FileUtils {
      * @param miFiles: elementos del directorio
      * @return string con la ruta de los elementos del directorio
      */
-    public ArrayList<File> getDirectoryNames(DirectoryStream<Path> myFiles) {
-        ArrayList<File> dirs = new ArrayList<>();
+    public List<File> getDirectoryNames(DirectoryStream<Path> myFiles) {
+        List<File> dirs = new ArrayList<>();
         Thread t = new Thread(new Runnable() {
             public void run() {
                 for(Path p: myFiles) {
@@ -79,8 +80,8 @@ public class FileUtils {
      * @param miFiles: los archivos dentro de un directorio
      * @return la ruta de los archivos dentro de cualquier directorio
      */
-    public ArrayList<File> getDirectoryFiles(DirectoryStream<Path> myFiles) {
-        ArrayList<File> files = new ArrayList<>();
+    public List<File> getDirectoryFiles(DirectoryStream<Path> myFiles) {
+        List<File> files = new ArrayList<>();
         Thread t = new Thread(new Runnable() {
             public void run() {
                 for(Path p: myFiles) {
@@ -115,8 +116,8 @@ public class FileUtils {
      * @param filePath: ruta del directorio a buscar
      * @return un String con la ruta de todos los archivos
      */
-    public ArrayList<File> listFilesFromPath(String filePath) {
-        ArrayList<File> files = new ArrayList<>();
+    public List<File> listFilesFromPath(String filePath) {
+        List<File> files = new ArrayList<>();
         try {
             File f = new File(filePath);
             if(f.exists() && f.isFile()) {
@@ -151,7 +152,7 @@ public class FileUtils {
      * @param f: file to compare its name
      * @param cliOption: cli options to compare the directory names
      * @param cliContext: name to compare with the file name
-     *
+     * @return true if the files are similar otherwise false
      */
     public boolean areSimilarDirs(File f, String cliOption, String cliContext) throws IOException {
         boolean similar = false;

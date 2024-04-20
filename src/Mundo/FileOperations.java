@@ -98,6 +98,7 @@ public class FileOperations {
         try {
             if(f.isDirectory()) {
                 throw new Exception(
+                        "[ ERROR ]: " +
                         Colors.RED + "CANNOT READ LINES USING DIRECTORIES" + Colors.RESET
                 );
             }
@@ -128,7 +129,7 @@ public class FileOperations {
      * @param cliContext: context to search in the given path
      */
     public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
-        System.out.println("SEARCHING ...");
+        System.out.println("[ SEARCHING ] ...");
         try {
             File f = new File(filePath);
             switch(cliOption) {
@@ -169,7 +170,7 @@ public class FileOperations {
      * @param cliContext: the search sentence
      */
     private synchronized void searchLine(String[] lines, String filePath, String option, String context) {
-        System.out.println("\n \tSEARCHING ...\n");
+        System.out.println("\n \t[ SEARCHING ] ...\n");
         for(int i=0; i<lines.length; ++i) {
             String line = lines[i];
             if(context.isEmpty()) {
@@ -234,7 +235,7 @@ public class FileOperations {
             if(!f.exists()) {
                 if(f.mkdir()) {
                     System.out.println(
-                            Colors.YELLOW_UNDERLINE + "CREATED: " + Colors.RESET + f.getPath()
+                            Colors.YELLOW_UNDERLINE + "[ CREATED ]: " + Colors.RESET + f.getPath()
                     );
                 }
             }
@@ -273,7 +274,10 @@ public class FileOperations {
         try {
             File f = new File(givenPath);
             if(!f.exists()) {
-                throw new IOException(Colors.RED + "FILE NOT FOUND" + Colors.RESET);
+                throw new IOException(
+                        "[ ERROR ]: " +
+                        Colors.RED + "FILE NOT FOUND" + Colors.RESET
+                );
             }
             String ln = "";
             if(name.isEmpty() || name == null) {
@@ -298,10 +302,16 @@ public class FileOperations {
         try {
             File f = new File(givenPath);
             if(!f.exists()) {
-                throw new Exception(Colors.RESET + "file not found" + Colors.RESET); 
+                throw new Exception(
+                        "[ ERROR ]: " +
+                        Colors.RESET + "file not found" + Colors.RESET
+                ); 
             }
             if(listOption != null) { 
-                throw new Exception(Colors.RED + "not implemented yet" + Colors.RESET);
+                throw new Exception(
+                        "[ ERROR ]: " +
+                        Colors.RED + "not implemented yet" + Colors.RESET
+                );
             } else {
                 fileUtils.createUnZipFile(givenPath, localFilePath);
             }
@@ -320,6 +330,7 @@ public class FileOperations {
             if(!f.exists()) {
                 throw new Exception(
                         String.format(
+                            "[ ERROR ]: " +
                             Colors.YELLOW_UNDERLINE +
                             "File: %s doesn't exists or has been deleted" + Colors.RESET,
                             f.getPath()
@@ -380,7 +391,10 @@ public class FileOperations {
     public void moveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(sourceFilePath.equals(targetFilePath)) {
-                throw new Exception(Colors.RED + "CANNOT MOVE SOURCE FILE TO TARGET FILE" + Colors.RESET);
+                throw new Exception(
+                        "[ ERROR ]: " +
+                        Colors.RED + "CANNOT MOVE SOURCE FILE TO TARGET FILE" + Colors.RESET
+                );
             }
             File sf = new File(sourceFilePath);
             File tf = new File(targetFilePath);

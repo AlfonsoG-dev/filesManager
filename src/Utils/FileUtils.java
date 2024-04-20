@@ -223,7 +223,7 @@ public class FileUtils {
                 miFile.mkdir();
             }
             System.out.println(
-                    Colors.YELLOW_UNDERLINE + "CREATED: " + Colors.RESET
+                    Colors.YELLOW_UNDERLINE + "[ CREATED ]: " + Colors.RESET
                     + miFile.getPath()
             );
         }
@@ -420,7 +420,8 @@ public class FileUtils {
             zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
             ZipEntry zEntry = zipIn.getNextEntry();
             if(zEntry == null) {
-                System.out.println(
+                System.err.println(
+                        "[ ERROR ]: " +
                         Colors.YELLOW_UNDERLINE + "EMPTY ZIP FILE" + Colors.RESET
                 );
             } else {

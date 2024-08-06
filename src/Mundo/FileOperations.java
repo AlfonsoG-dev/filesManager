@@ -41,7 +41,7 @@ public class FileOperations {
     public void changeDirectory(String nPath) {
         File f = new File(localFilePath);
         String p = textUtils.getCleanPath(nPath);
-        localFilePath = f.getPath().concat("\\" + p);
+        localFilePath = f.getPath().concat(File.separator + p);
     }
     /**
      * lista los archivos del directorio
@@ -230,7 +230,7 @@ public class FileOperations {
         String d = textUtils.getCleanPath(directoryNames);
         int c = textUtils.countNestedLevels(d);
         if(c <= 1) {
-            String nd = lf.getPath() + "\\"+ d;
+            String nd = lf.getPath() + File.separator + d;
             File f = new File(nd);
             if(!f.exists()) {
                 if(f.mkdir()) {
@@ -251,7 +251,7 @@ public class FileOperations {
         try {
             String 
                 cf    = textUtils.getCleanPath(fileName),
-                nFile = localFilePath + "\\" + cf;
+                nFile = localFilePath + File.separator + cf;
             File f = new File(nFile);
             if(!f.exists() && f.createNewFile()) {
                 System.out.println(
@@ -481,7 +481,7 @@ public class FileOperations {
             if(sf.isFile()) {
                 String sfn = sf.getName();
                 File tf = new File(
-                        targetFilePath + "\\" +
+                        targetFilePath + File.separator +
                         sfn
                 );
                 copyOption(
@@ -497,7 +497,7 @@ public class FileOperations {
                             String
                                 source              = new File(sf.getCanonicalPath()).getParent(),
                                 sourceWithoutParent = e.getPath().replace(source, "");
-                            File target = new File(targetFilePath + "\\" + sourceWithoutParent);
+                            File target = new File(targetFilePath + File.separator + sourceWithoutParent);
                             fileUtils.createParentFile(target.getPath(), target.getParent());
                             copyOption(
                                     e.toPath(),

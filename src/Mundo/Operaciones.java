@@ -1,6 +1,7 @@
 package Mundo;
 
 import Utils.OperationUtils;
+import java.io.File;
 /**
  * clase que se encarga de organizar las opciones según la operacion
  */
@@ -21,7 +22,7 @@ public class Operaciones {
     public void organizeOptions(String[] args) {
         try {
             outter:for(int i=0; i<args.length; ++i) {
-                op = new OperationUtils(".\\", args, i);
+                op = new OperationUtils("." + File.separator, args, i);
                 switch(args[i]) {
                     case "-ls": 
                         op.changeDirectoryOperation();

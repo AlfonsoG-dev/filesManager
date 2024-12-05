@@ -451,21 +451,9 @@ public class FileOperations {
     }
     protected void copyOption(Path source, Path target, boolean isReplaceable) throws IOException {
         if(!isReplaceable) {
-            System.out.println(
-                    Files.copy(
-                        source,
-                        target,
-                        StandardCopyOption.COPY_ATTRIBUTES
-                    )
-            );
+            Files.copy(source,target, StandardCopyOption.COPY_ATTRIBUTES);
         } else {
-            System.out.println(
-                    Files.copy(
-                        source,
-                        target,
-                        StandardCopyOption.REPLACE_EXISTING
-                    )
-            );
+            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }
     /**
@@ -484,6 +472,9 @@ public class FileOperations {
                         targetFilePath + File.separator +
                         sfn
                 );
+                System.out.println(
+                        String.format("[Info] Copying %s -> %s", sf.getPath(), tf.getPath())
+                );
                 copyOption(
                         new File(sf.getPath()).toPath(),
                         tf.toPath(),
@@ -499,6 +490,10 @@ public class FileOperations {
                                 sourceWithoutParent = e.getPath().replace(source, "");
                             File target = new File(targetFilePath + File.separator + sourceWithoutParent);
                             fileUtils.createParentFile(target.getPath(), target.getParent());
+
+                            System.out.println(
+                                    String.format("[Info] Copying %s -> %s", e.getPath(), target.getPath())
+                            );
                             copyOption(
                                     e.toPath(),
                                     target.toPath(),

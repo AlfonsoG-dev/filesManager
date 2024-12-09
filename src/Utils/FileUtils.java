@@ -72,23 +72,24 @@ public class FileUtils {
      */
     public List<File> getDirectoryFiles(DirectoryStream<Path> myFiles) {
         List<File> files = new ArrayList<>();
-        for(Path p: myFiles) {
-            File f = p.toFile();
-            if(f.exists() && f.isFile()) {
-                files.add(f);
-            } else if(f.isDirectory()) {
-                try {
-                    files.addAll(
-                            getDirectoryFiles(
-                                Files.newDirectoryStream(f.toPath())
-                            )
-                    );
-                } catch(IOException err) {
-                    err.printStackTrace();
-                }
+        myFiles
+            .forEach(p -> {
+                File f = p.toFile();
+                if(f.isFile()) {
+                    files.add(f);
+                } else if(f.isDirectory()) {
+                    try {
+                        files.addAll(
+                                getDirectoryFiles(
+                                    Files.newDirectoryStream(f.toPath())
+                                )
+                        );
+                    } catch(IOException err) {
+                        err.printStackTrace();
+                    }
 
-            }
-        }
+                }
+            });
         return files;
     }
     /**

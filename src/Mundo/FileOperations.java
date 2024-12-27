@@ -78,10 +78,9 @@ public class FileOperations {
         File f = new File(filePath);
         try {
             if(f.exists()) {
-                Runtime.getRuntime().exec(
-                        "pwsh -NoProfile -Command start " +
-                        f.getPath()
-                );
+                ProcessBuilder b = new ProcessBuilder();
+                b.command("pwsh -NoProfile -Command start " + f.getPath());
+                Process p = b.start();
             }
         } catch(IOException e) {
             e.printStackTrace();

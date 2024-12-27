@@ -80,7 +80,7 @@ public class FileOperations {
             if(f.exists()) {
                 ProcessBuilder b = new ProcessBuilder();
                 b.command("pwsh -NoProfile -Command start " + f.getPath());
-                Process p = b.start();
+                b.start();
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -458,13 +458,13 @@ public class FileOperations {
     /**
      * copia el directorio source en el target
      * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
-     * @param sourceFilePath: ruta del directorio source
-     * @param targetFilePath: ruta del directorio target
-     * @param isReplaceable: REPLACE_EXISTING, COPY_ATTRIBUTES
+     * @param sourceFilePath ruta del directorio source
+     * @param targetFilePath ruta del directorio target
+     * @param isReplaceable REPLACE_EXISTING, COPY_ATTRIBUTES
      */
     public void copyFromSourceToTarget(String sourceFilePath, String targetFilePath, boolean isReplaceable) {
+        File sf = new File(sourceFilePath);
         try {
-            File sf = new File(sourceFilePath);
             if(sf.isFile()) {
                 String sfn = sf.getName();
                 File tf = new File(

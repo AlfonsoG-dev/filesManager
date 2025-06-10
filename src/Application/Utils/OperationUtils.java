@@ -37,7 +37,7 @@ public final class OperationUtils {
     public void changeDirectoryOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
             fileOperations.changeDirectory(
-                    optionVerification.verifyFirstFile(i)
+                optionVerification.verifyFirstFile(i)
             );
             fileOperations.listFiles();
         }
@@ -48,7 +48,7 @@ public final class OperationUtils {
     public void listZipEntriesOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
             fileOperations.listZipEntries(
-                    optionVerification.verifyFirstFile(i)
+                optionVerification.verifyFirstFile(i)
             );
         }
     }
@@ -67,10 +67,7 @@ public final class OperationUtils {
      */
     public void readFileLinesOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
-            String 
-                m  = fileOperations.readFileLines(
-                    optionVerification.verifyFirstFile(i)
-                );
+            String m  = fileOperations.readFileLines(optionVerification.verifyFirstFile(i));
             System.out.println(m);
         }
     }
@@ -88,9 +85,9 @@ public final class OperationUtils {
         if(filePath != "" && CLI_option != "") {
             String cliContext = (i+3) < options.length ? options[i+3] : "";
             fileOperations.searchFileOrFolder(
-                    filePath,
-                    CLI_option,
-                    cliContext
+                filePath,
+                CLI_option,
+                cliContext
             );
         }
     }
@@ -102,9 +99,9 @@ public final class OperationUtils {
             cliOption = (i+2) < options.length ? options[i+2] : "",
             cliContext = (i+3) < options.length ? options[i+3] : "";
         fileOperations.searchFileLine(
-                filePath,
-                cliOption,
-                cliContext
+            filePath,
+            cliOption,
+            cliContext
         );
     }
     /**
@@ -119,8 +116,8 @@ public final class OperationUtils {
             conditionE = optionVerification.verifyAssign();
         if(!conditionA && !conditionB && !conditionC && !conditionD && conditionE) { 
             fileOperations.moveFromSourceToTarget(
-                    optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile()
+                optionVerification.verifyFirstFile(i),
+                optionVerification.verifySecondFile()
             );
         }
         /** 
@@ -137,8 +134,8 @@ public final class OperationUtils {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
                 fileOperations.moveFromSourceToTarget(
-                        sFile,
-                        options[options.length-1]
+                    sFile,
+                    options[options.length-1]
                 );
             }
         }
@@ -154,8 +151,8 @@ public final class OperationUtils {
             conditionD = optionVerification.verifySecondFile().contains(",");
         if(!conditionA && !conditionB && !conditionC && !conditionD && options.length < 4) {
             fileOperations.moveFromSourceToTarget(
-                    optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile()
+                optionVerification.verifyFirstFile(i),
+                optionVerification.verifySecondFile()
             );
         }
         /**
@@ -164,8 +161,8 @@ public final class OperationUtils {
         if(!conditionB && optionVerification.verifyAssign()) {
             for(int j=i+1; j<optionVerification.getAssignIndex(); ++j) {
                 fileOperations.moveFromSourceToTarget(
-                        options[j],
-                        options[options.length-1]
+                    options[j],
+                    options[options.length-1]
                 );
             }
         }
@@ -185,8 +182,8 @@ public final class OperationUtils {
             System.err.println("give a new name using: to after file path");
         } else if(conditionA == false && conditionB == false) {
             fileOperations.renameDirectory(
-                    optionVerification.verifyFirstFile(i),
-                    options[options.length-1]
+                optionVerification.verifyFirstFile(i),
+                options[options.length-1]
             );
         }
     }
@@ -199,7 +196,7 @@ public final class OperationUtils {
             conditionB = optionVerification.verifyFirstFile(i).contains(",");
         if(!conditionA && !conditionB) {
             fileOperations.createDirectories(
-                    optionVerification.verifyFirstFile(i)
+                optionVerification.verifyFirstFile(i)
             );
         } else {
             for(int j = i+1; j<options.length; ++j) {
@@ -249,17 +246,17 @@ public final class OperationUtils {
             compressPath = optionVerification.verifyFirstFile(i);
             includeOption = options[i+3];
             fileOperations.compressFilesInPath(
-                    compressPath,
-                    includeOption,
-                    name
+                compressPath,
+                includeOption,
+                name
             );
         }
         if(!conditionB) {
             compressPath = options[i+1];
             fileOperations.compressFilesInPath(
-                    compressPath,
-                    null,
-                    name
+                compressPath,
+                null,
+                name
             );
         }
     }
@@ -337,9 +334,9 @@ public final class OperationUtils {
     }
     protected void copyFileHelper(String target, String source, boolean isReplaceable) {
         fileOperations.copyFromSourceToTarget(
-                target,
-                source,
-                isReplaceable
+            target,
+            source,
+            isReplaceable
         );
     }
     /**
@@ -356,9 +353,9 @@ public final class OperationUtils {
         //require assignation "source to target"
         if(!conditionA && !conditionB && !conditionC && !conditionD && conditionE) {
             copyFileHelper(
-                    optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile(),
-                    conditionH
+                optionVerification.verifyFirstFile(i),
+                optionVerification.verifySecondFile(),
+                conditionH
             );
         }
         /** 
@@ -369,9 +366,9 @@ public final class OperationUtils {
             for(int j=i+3; j<options.length; ++j) {
                 String sFile = options[j].replace(",", "");
                 copyFileHelper(
-                        optionVerification.verifyFirstFile(i),
-                        sFile,
-                        conditionH
+                    optionVerification.verifyFirstFile(i),
+                    sFile,
+                    conditionH
                 );
             }
         }
@@ -382,9 +379,9 @@ public final class OperationUtils {
             for(int j=i+1; j<options.length-2; ++j) {
                 String  sFile = options[j].replace(",", "");
                 copyFileHelper(
-                        sFile,
-                        options[options.length-1],
-                        conditionH
+                    sFile,
+                    options[options.length-1],
+                    conditionH
                 );
             }
         }
@@ -416,9 +413,9 @@ public final class OperationUtils {
             conditionH = optionVerification.verifyIsReplaceable();
         if(!conditionA && !conditionB && !conditionC && !conditionD && options.length < 4) {
             copyFileHelper(
-                    optionVerification.verifyFirstFile(i),
-                    optionVerification.verifySecondFile(),
-                    conditionH
+                optionVerification.verifyFirstFile(i),
+                optionVerification.verifySecondFile(),
+                conditionH
             );
         }
         /**
@@ -427,9 +424,9 @@ public final class OperationUtils {
         if(!conditionB && conditionE) {
             for(int j=i+1; j<optionVerification.getAssignIndex(); ++j) {
                 copyFileHelper(
-                        options[j],
-                        options[options.length-1],
-                        conditionH
+                    options[j],
+                    options[options.length-1],
+                    conditionH
                 );
             }
         }

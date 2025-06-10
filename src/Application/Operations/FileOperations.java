@@ -9,9 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+
 import Application.Utils.FileUtils;
 import Application.Utils.TextUtils;
 import Application.Utils.Colors;
+
 public class FileOperations {
     /**
      * declaración de la instancia {@link FileUtils}
@@ -48,20 +50,15 @@ public class FileOperations {
      */
     public void listFiles() {
         File lf = new File(localFilePath);
-        try {
-            Files.newDirectoryStream(lf.toPath())
-                .forEach(e -> {
-                    String filePath = textUtils.getCleanPath(e.toFile().getPath());
-                    System.out.println(
-                            String.format(
-                                "%s::%d",
-                                Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
-                                fileUtils.listFilesFromPath(e.toFile().getPath()).size()
-                            )
-                    );
-                });
-        } catch(IOException e) {
-            e.printStackTrace();
+        for(File f: lf.listFiles()) {
+            String filePath = textUtils.getCleanPath(f.getPath());
+            System.out.println(
+                String.format(
+                    "%s::%d",
+                    Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
+                    fileUtils.listFilesFromPath(f.getPath()).size()
+                )
+            );
         }
     }
     /**
@@ -76,48 +73,46 @@ public class FileOperations {
      */
     public void startOrOpenFile(String filePath) {
         File f = new File(filePath);
+        Process p = null;
         try {
             if(f.exists()) {
                 ProcessBuilder b = new ProcessBuilder();
                 b.command("pwsh -NoProfile -Command start " + f.getPath());
-                b.start();
+                p = b.start();
             }
         } catch(IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if(p != null) {
+                    p.waitFor();
+                    p.destroy();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
     /**
      * read the file lines like the cat command
      */
     public String readFileLines(String fileName) {
-        BufferedReader reader = null;
         String p = textUtils.getCleanPath(fileName);
         StringBuffer b = new StringBuffer();
         File f = new File(p);
-        try {
+        try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
             if(f.isDirectory()) {
-                throw new Exception(
-                        "[ ERROR ]: " +
-                        Colors.RED + "CANNOT READ LINES USING DIRECTORIES" + Colors.RESET
+                System.out.println(
+                    "[ ERROR ]: " +
+                    Colors.RED + "CANNOT READ LINES USING DIRECTORIES" + Colors.RESET
                 );
+                return "";
             }
-            reader = new BufferedReader(new FileReader(f));
             while(reader.ready()) {
-                b.append(
-                        Colors.YELLOW +  reader.readLine() + "\n" + Colors.RESET
-                );
+                b.append(Colors.YELLOW +  reader.readLine() + "\n" + Colors.RESET);
             }
         } catch(Exception e) {
             e.printStackTrace();
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                reader = null;
-            }
         }
         return b.toString();
     }
@@ -134,9 +129,9 @@ public class FileOperations {
             switch(cliOption) {
                 case "-td":
                     fileUtils.areSimilarDirs(
-                            f,
-                            cliOption,
-                            cliContext
+                        f,
+                        cliOption,
+                        cliContext
                     );
                     break;
                 default:
@@ -174,22 +169,22 @@ public class FileOperations {
             String line = lines[i];
             if(context.isEmpty()) {
                 System.out.println(
-                        String.format(
-                            "%s:%d:%s",
-                            Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
-                            i+1,
-                            line
-                        )
+                    String.format(
+                        "%s:%d:%s",
+                        Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
+                        i+1,
+                        line
+                    )
                 );
             } else if(fileUtils.areSimilarLines(option, line, context)) {
                 line = paintLine(line, context);
                 System.out.println(
-                        String.format(
-                            "%s:%d:%s",
-                            Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
-                            i+1,
-                            line
-                        )
+                    String.format(
+                        "%s:%d:%s",
+                        Colors.GREEN_UNDERLINE + filePath + Colors.RESET,
+                        i+1,
+                        line
+                    )
                 );
             }
         }
@@ -205,10 +200,10 @@ public class FileOperations {
         if(f.isFile()) {
             String[] lines = readFileLines(filePath).split("\n");
             searchLine(
-                    lines,
-                    filePath,
-                    cliOption,
-                    cliContext
+                lines,
+                filePath,
+                cliOption,
+                cliContext
             );
         } else {
             fileUtils.listFilesFromPath(f.getPath())
@@ -234,7 +229,7 @@ public class FileOperations {
             if(!f.exists()) {
                 if(f.mkdir()) {
                     System.out.println(
-                            Colors.YELLOW_UNDERLINE + "[ CREATED ]: " + Colors.RESET + f.getPath()
+                        Colors.YELLOW_UNDERLINE + "[ CREATED ]: " + Colors.RESET + f.getPath()
                     );
                 }
             }
@@ -254,10 +249,10 @@ public class FileOperations {
             File f = new File(nFile);
             if(!f.exists() && f.createNewFile()) {
                 System.out.println(
-                        String.format(
-                            Colors.YELLOW_UNDERLINE + "FILE: %s HAS BEEN CREATED" + Colors.RESET,
-                            f.getName()
-                        )
+                    String.format(
+                        Colors.YELLOW_UNDERLINE + "FILE: %s HAS BEEN CREATED" + Colors.RESET,
+                        f.getName()
+                    )
                 );
             }
         } catch(IOException e) {
@@ -270,52 +265,44 @@ public class FileOperations {
      * @param includeFiles: files or names or patters to exlude in the compression
      */
     public void compressFilesInPath(String givenPath, String includeFiles, String name) {
-        try {
-            File f = new File(givenPath);
-            if(!f.exists()) {
-                throw new IOException(
-                        "[ ERROR ]: " +
-                        Colors.RED + "FILE NOT FOUND" + Colors.RESET
-                );
-            }
-            String ln = "";
-            if(name.isEmpty() || name == null) {
-                ln = fileUtils.getLocalName(localFilePath);
-            } else {
-                ln = name;
-            }
-            fileUtils.createZipFile(
-                    f,
-                    new File(ln + ".zip"),
-                    includeFiles
+        File f = new File(givenPath);
+        if(!f.exists()) {
+            System.out.println(
+                "[ ERROR ]: " +
+                Colors.RED + "FILE NOT FOUND" + Colors.RESET
             );
-        } catch(Exception e) {
-            e.printStackTrace();
         }
+        String ln = "";
+        if(name.isEmpty() || name == null) {
+            ln = fileUtils.getLocalName(localFilePath);
+        } else {
+            ln = name;
+        }
+        fileUtils.createZipFile(
+                f,
+                new File(ln + ".zip"),
+                includeFiles
+        );
     }
     /**
      * de-compre all the files inside the compressed archive
      * -l list the files inside the compressed archive
      */
     public void deCompressFilesInPath(String givenPath, String listOption) {
-        try {
-            File f = new File(givenPath);
-            if(!f.exists()) {
-                throw new Exception(
-                        "[ ERROR ]: " +
-                        Colors.RESET + "file not found" + Colors.RESET
-                ); 
-            }
-            if(listOption != null) { 
-                throw new Exception(
-                        "[ ERROR ]: " +
-                        Colors.RED + "not implemented yet" + Colors.RESET
-                );
-            } else {
-                fileUtils.createUnZipFile(givenPath, localFilePath);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        File f = new File(givenPath);
+        if(!f.exists()) {
+            System.out.println(
+                "[ ERROR ]: " +
+                Colors.RESET + "file not found" + Colors.RESET
+            ); 
+        }
+        if(listOption != null) { 
+            System.out.println(
+                "[ ERROR ]: " +
+                Colors.RED + "not implemented yet" + Colors.RESET
+            );
+        } else {
+            fileUtils.createUnZipFile(givenPath, localFilePath);
         }
     }
     /**
@@ -325,15 +312,14 @@ public class FileOperations {
      */
     public void deleteDirectories(String filePath) {
         File f = new File(filePath);
-        try {
             if(!f.exists()) {
-                throw new Exception(
-                        String.format(
-                            "[ ERROR ]: " +
-                            Colors.YELLOW_UNDERLINE +
-                            "File: %s doesn't exists or has been deleted" + Colors.RESET,
-                            f.getPath()
-                        )
+                System.out.println(
+                    String.format(
+                        "[ ERROR ]: " +
+                        Colors.YELLOW_UNDERLINE +
+                        "File: %s doesn't exists or has been deleted" + Colors.RESET,
+                        f.getPath()
+                    )
                 );
             } else if(f.exists() && f.isDirectory()) {
                 if(f.listFiles() != null) {
@@ -343,21 +329,18 @@ public class FileOperations {
                 } 
                 if(f.delete()) {
                     System.out.println(
-                            String.format(
-                                Colors.YELLOW_UNDERLINE +
-                                "File: %s \thas been deleted." + Colors.RESET,
-                                f.getPath()
-                            )
+                        String.format(
+                            Colors.YELLOW_UNDERLINE +
+                            "File: %s \thas been deleted." + Colors.RESET,
+                            f.getPath()
+                        )
                     );
                 }
             } else if(f.isFile()) {
                 System.out.println(
-                        Colors.YELLOW_UNDERLINE + "DELETE ALL FILES USING -df FIRST" + Colors.RESET
+                    Colors.YELLOW_UNDERLINE + "DELETE ALL FILES USING -df FIRST" + Colors.RESET
                 );
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
     }
     /**
      * delete files from folder given by path
@@ -369,7 +352,7 @@ public class FileOperations {
         File f = new File(deletePath);
         if(f.exists() && f.isFile()) {
             System.out.println(
-                    f.delete() ?
+                f.delete() ?
                     String.format(
                        Colors.YELLOW_UNDERLINE + "File: %s\thas been deleted" + Colors.RESET,
                        f.getPath()
@@ -390,9 +373,9 @@ public class FileOperations {
     public void moveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
             if(sourceFilePath.equals(targetFilePath)) {
-                throw new Exception(
-                        "[ ERROR ]: " +
-                        Colors.RED + "CANNOT MOVE SOURCE FILE TO TARGET FILE" + Colors.RESET
+                System.out.println(
+                    "[ ERROR ]: " +
+                    Colors.RED + "CANNOT MOVE SOURCE FILE TO TARGET FILE" + Colors.RESET
                 );
             }
             File sf = new File(sourceFilePath);
@@ -401,17 +384,17 @@ public class FileOperations {
                 Path sp = sf.toPath();
                 Path tp = tf.toPath();
                 Path mp = Files.move(
-                        sp,
-                        tp.resolve(sp.getFileName()),
-                        StandardCopyOption.REPLACE_EXISTING
+                    sp,
+                    tp.resolve(sp.getFileName()),
+                    StandardCopyOption.REPLACE_EXISTING
                 );
                 if(!mp.toFile().getName().isEmpty()) {
                     System.out.println(
-                            String.format(
-                                Colors.YELLOW_UNDERLINE + "MOVED: %s TO: %s" + Colors.RESET,
-                                sourceFilePath,
-                                targetFilePath
-                            )
+                        String.format(
+                            Colors.YELLOW_UNDERLINE + "MOVED: %s TO: %s" + Colors.RESET,
+                            sourceFilePath,
+                            targetFilePath
+                        )
                     );
                 }
             }
@@ -421,16 +404,16 @@ public class FileOperations {
     }
     public void renameFile(Path oldName, Path newName) throws IOException {
         System.out.println(
-                String.format(
-                    Colors.YELLOW_UNDERLINE + "%s RENAME TO: %s" + Colors.RESET,
-                    oldName,
-                    Colors.GREEN_UNDERLINE + newName + Colors.RESET
-                )
+            String.format(
+                Colors.YELLOW_UNDERLINE + "%s RENAME TO: %s" + Colors.RESET,
+                oldName,
+                Colors.GREEN_UNDERLINE + newName + Colors.RESET
+            )
         );
         Files.move(
-                oldName,
-                newName,
-                StandardCopyOption.REPLACE_EXISTING
+            oldName,
+            newName,
+            StandardCopyOption.REPLACE_EXISTING
         );
     }
     /**
@@ -468,35 +451,34 @@ public class FileOperations {
             if(sf.isFile()) {
                 String sfn = sf.getName();
                 File tf = new File(
-                        targetFilePath + File.separator +
-                        sfn
+                    targetFilePath + File.separator +
+                    sfn
                 );
                 System.out.println(
-                        String.format("[Info] Copying %s -> %s", sf.getPath(), tf.getPath())
+                    String.format("[Info] Copying %s -> %s", sf.getPath(), tf.getPath())
                 );
                 copyOption(
-                        new File(sf.getPath()).toPath(),
-                        tf.toPath(),
-                        isReplaceable
+                    new File(sf.getPath()).toPath(),
+                    tf.toPath(),
+                    isReplaceable
                 );
             } else if(sf.isDirectory()) {
                 fileUtils.listFilesFromPath(sourceFilePath)
                     .parallelStream()
                     .forEach(e -> {
                         try {
-                            String
-                                source              = new File(sf.getCanonicalPath()).getParent(),
-                                sourceWithoutParent = e.getPath().replace(source, "");
+                            String source = new File(sf.getCanonicalPath()).getParent();
+                            String sourceWithoutParent = e.getPath().replace(source, "");
                             File target = new File(targetFilePath + File.separator + sourceWithoutParent);
                             fileUtils.createParentFile(target.getPath(), target.getParent());
 
                             System.out.println(
-                                    String.format("[Info] Copying %s -> %s", e.getPath(), target.getPath())
+                                String.format("[Info] Copying %s -> %s", e.getPath(), target.getPath())
                             );
                             copyOption(
-                                    e.toPath(),
-                                    target.toPath(),
-                                    isReplaceable
+                                e.toPath(),
+                                target.toPath(),
+                                isReplaceable
                             );
                         } catch(Exception err) {
                             err.printStackTrace();

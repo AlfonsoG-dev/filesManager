@@ -53,9 +53,9 @@ public class FileUtils {
                 if(f.listFiles() != null) {
                     try {
                         dirs.addAll(
-                                getDirectoryNames(
-                                    Files.newDirectoryStream(f.toPath())
-                                )
+                            getDirectoryNames(
+                                Files.newDirectoryStream(f.toPath())
+                            )
                         );
                     } catch(IOException err) {
                         err.printStackTrace();
@@ -80,9 +80,9 @@ public class FileUtils {
                 } else if(f.isDirectory()) {
                     try {
                         files.addAll(
-                                getDirectoryFiles(
-                                    Files.newDirectoryStream(f.toPath())
-                                )
+                            getDirectoryFiles(
+                                Files.newDirectoryStream(f.toPath())
+                            )
                         );
                     } catch(IOException err) {
                         err.printStackTrace();
@@ -122,10 +122,10 @@ public class FileUtils {
      */
     public void printFilePath(File f) {
         System.out.println(
-                String.format(
-                    "| %s |",
-                    Colors.GREEN_UNDERLINE + f.getPath() + Colors.RESET
-                )
+            String.format(
+                "| %s |",
+                Colors.GREEN_UNDERLINE + f.getPath() + Colors.RESET
+            )
         );
     }
     /**
@@ -237,9 +237,9 @@ public class FileUtils {
             zop.putNextEntry(zEntry);
 
             byte[] buffer = new byte[1024];
-            int lenght;
-            while((lenght = fileInput.read(buffer)) > 0) {
-                zop.write(buffer, 0, lenght);
+            int length;
+            while((length = fileInput.read(buffer)) > 0) {
+                zop.write(buffer, 0, length);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -266,10 +266,10 @@ public class FileUtils {
             if(includeFiles == null) {
                 for(File sf: sourceFiles) {
                     addFilesToZip(
-                            sf,
-                            base + File.separator + sf.getName(),
-                            zop,
-                            includeFiles
+                        sf,
+                        base + File.separator + sf.getName(),
+                        zop,
+                        includeFiles
                     );
                 }
             }
@@ -279,10 +279,10 @@ public class FileUtils {
                     for(String ic: includes) {
                         if(sf.getPath().contains(ic.trim())) {
                             addFilesToZip(
-                                    sf,
-                                    base + File.separator + sf.getName(),
-                                    zop,
-                                    includeFiles
+                                sf,
+                                base + File.separator + sf.getName(),
+                                zop,
+                                includeFiles
                             );
                         }
                     }
@@ -291,10 +291,10 @@ public class FileUtils {
                 for(File sf: sourceFiles) {
                     if(sf.getPath().contains(includeFiles)) {
                         addFilesToZip(
-                                sf,
-                                base + File.separator + sf.getName(),
-                                zop,
-                                includeFiles
+                            sf,
+                            base + File.separator + sf.getName(),
+                            zop,
+                            includeFiles
                         );
                     }
                 }
@@ -302,9 +302,9 @@ public class FileUtils {
             }
         } else {
             addZipFileConcurrent(
-                    source,
-                    base,
-                    zop
+                source,
+                base,
+                zop
             );
         }
     }
@@ -320,10 +320,10 @@ public class FileUtils {
             fileOutput = new FileOutputStream(destination);
             zipOutput = new ZipOutputStream(fileOutput);
             addFilesToZip(
-                    source,
-                    source.getName(),
-                    zipOutput,
-                    includeFiles
+                source,
+                source.getName(),
+                zipOutput,
+                includeFiles
             );
         } catch(IOException e) {
             e.printStackTrace();
@@ -388,12 +388,12 @@ public class FileUtils {
                 miFile = new File(entryParent);
                 if(!miFile.exists()) {
                     System.out.println(
-                            String.format(
-                                Colors.YELLOW_UNDERLINE +
-                                "THE FOLDER STRUCTURE: | %s | ARE NEDDED." + 
-                                Colors.RESET,
-                                miFile.getPath()
-                            )
+                        String.format(
+                            Colors.YELLOW_UNDERLINE +
+                            "THE FOLDER STRUCTURE: | %s | ARE NEDDED." + 
+                            Colors.RESET,
+                            miFile.getPath()
+                        )
                     );
                     break outter;
                 } else if(!entry.isDirectory()) {
@@ -403,7 +403,7 @@ public class FileUtils {
                 entry = zipIn.getNextEntry();
             }
             System.out.println(
-                    Colors.YELLOW_UNDERLINE + "de-compress operation finished" + Colors.RESET
+                Colors.YELLOW_UNDERLINE + "de-compress operation finished" + Colors.RESET
             );
 
         } catch(IOException e) {
@@ -422,18 +422,18 @@ public class FileUtils {
             ZipEntry zEntry = zipIn.getNextEntry();
             if(zEntry == null) {
                 System.err.println(
-                        "[ ERROR ]: " +
-                        Colors.YELLOW_UNDERLINE + "EMPTY ZIP FILE" + Colors.RESET
+                    "[ ERROR ]: " +
+                    Colors.YELLOW_UNDERLINE + "EMPTY ZIP FILE" + Colors.RESET
                 );
             } else {
                 int count = 1;
                 while(zEntry != null) {
                     System.out.println(
-                            String.format(
-                                "%s: %s",
-                                count,
-                                Colors.GREEN_UNDERLINE + zEntry.getName() + Colors.RESET
-                            )
+                        String.format(
+                            "%s: %s",
+                            count,
+                            Colors.GREEN_UNDERLINE + zEntry.getName() + Colors.RESET
+                        )
                     );
                     ++count;
                     zipIn.closeEntry();

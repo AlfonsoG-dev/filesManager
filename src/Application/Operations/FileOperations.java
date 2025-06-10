@@ -1,4 +1,4 @@
-package Mundo;
+package Application.Operations;
 
 import java.io.File;
 import java.io.FileReader;
@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import Utils.FileUtils;
-import Utils.TextUtils;
-import Utils.Colors;
+import Application.Utils.FileUtils;
+import Application.Utils.TextUtils;
+import Application.Utils.Colors;
 public class FileOperations {
     /**
      * declaración de la instancia {@link FileUtils}

@@ -1,4 +1,4 @@
-package Utils;
+package Application.Utils;
 
 public record Colors() {
     /**

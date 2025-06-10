@@ -1,7 +1,7 @@
-package Utils;
+package Application.Utils;
 
-import Mundo.FileOperations;
-import Utils.Verifications.OptionVerification;
+import Application.Operations.FileOperations;
+import Application.Utils.Verifications.OptionVerification;
 /**
  * clase para ayudar a crear la operaciones de forma ordenada
  */

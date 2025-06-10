@@ -1,4 +1,4 @@
-package Utils.Verifications;
+package Application.Utils.Verifications;
 
 public class OptionVerification {
     private String[] options;

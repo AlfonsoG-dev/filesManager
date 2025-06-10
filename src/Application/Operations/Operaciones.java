@@ -1,6 +1,7 @@
-package Mundo;
+package Application.Operations;
 
-import Utils.OperationUtils;
+import Application.Utils.OperationUtils;
+
 import java.io.File;
 /**
  * clase que se encarga de organizar las opciones según la operacion

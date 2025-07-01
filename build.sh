@@ -1,5 +1,5 @@
-srcClases="./src/*.java ./src/Utils/*.java ./src/Mundo/*.java ./src/Utils/Verifications/*.java "
+srcClases="src/*.java src/Application/Operations/*.java src/Application/Utils/*.java src/Application/Utils/Verifications/*.java "
 libFiles=""
-javac -Werror -Xlint:all -d ./bin/ $srcClases
+javac --release 23 -Werror -Xlint:all -d ./bin/ $srcClases
 jar -cfm filesManager.jar Manifesto.txt -C ./bin/ .
 java -jar filesManager.jar

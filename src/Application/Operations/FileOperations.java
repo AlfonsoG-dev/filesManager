@@ -1,9 +1,7 @@
 package Application.Operations;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.BufferedReader;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -98,23 +96,16 @@ public class FileOperations {
      */
     public String readFileLines(String fileName) {
         String p = textUtils.getCleanPath(fileName);
-        StringBuffer b = new StringBuffer();
         File f = new File(p);
-        try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
-            if(f.isDirectory()) {
-                System.out.println(
-                    "[ ERROR ]: " +
-                    Colors.RED + "CANNOT READ LINES USING DIRECTORIES" + Colors.RESET
-                );
-                return "";
-            }
-            while(reader.ready()) {
-                b.append(Colors.YELLOW +  reader.readLine() + "\n" + Colors.RESET);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        if(f.isDirectory()) {
+            System.out.println(
+                "[ ERROR ]: " +
+                Colors.RED + "CANNOT READ LINES USING DIRECTORIES" + Colors.RESET
+            );
+            return "";
+        } else {
+            return fileUtils.getFileLines(f);
         }
-        return b.toString();
     }
     /**
      * search for a file or folder according to Cli option

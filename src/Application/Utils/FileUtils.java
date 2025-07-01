@@ -1,18 +1,23 @@
 package Application.Utils;
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.FileVisitOption;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
 public class FileUtils {
     private TextUtils textUtils;
 
@@ -44,52 +49,33 @@ public class FileUtils {
      * @param miFiles: elementos del directorio
      * @return string con la ruta de los elementos del directorio
      */
-    public List<File> getDirectoryNames(DirectoryStream<Path> myFiles) {
-        List<File> dirs = new ArrayList<>();
-        for(Path p: myFiles) {
-            File f = p.toFile();
-            if(f.isDirectory()) {
-                dirs.add(f);
-                if(f.listFiles() != null) {
-                    try {
-                        dirs.addAll(
-                            getDirectoryNames(
-                                Files.newDirectoryStream(f.toPath())
-                            )
-                        );
-                    } catch(IOException err) {
-                        err.printStackTrace();
-                    }
-                }
-            }
+    public List<File> listDirectoryNames(File f) {
+        List<File> names = new ArrayList<>();
+        try {
+            names = Files.walk(f.toPath(), FileVisitOption.FOLLOW_LINKS)
+                .map(Path::toFile)
+                .filter(p -> p.isDirectory())
+                .toList();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
-        return dirs;
+        return names;
     }
     /**
      * ayuda a generar la ruta de los archivos dentro de cualquier directorio
      * @param miFiles: los archivos dentro de un directorio
      * @return la ruta de los archivos dentro de cualquier directorio
      */
-    public List<File> getDirectoryFiles(DirectoryStream<Path> myFiles) {
+    public List<File> listDirectoryFiles(File f) {
         List<File> files = new ArrayList<>();
-        myFiles
-            .forEach(p -> {
-                File f = p.toFile();
-                if(f.isFile()) {
-                    files.add(f);
-                } else if(f.isDirectory()) {
-                    try {
-                        files.addAll(
-                            getDirectoryFiles(
-                                Files.newDirectoryStream(f.toPath())
-                            )
-                        );
-                    } catch(IOException err) {
-                        err.printStackTrace();
-                    }
-
-                }
-            });
+        try {
+            files = Files.walk(f.toPath(), FileVisitOption.FOLLOW_LINKS)
+                .map(Path::toFile)
+                .filter(p -> p.isFile())
+                .toList();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
         return files;
     }
     /**
@@ -101,15 +87,10 @@ public class FileUtils {
         List<File> files = new ArrayList<>();
         try {
             File f = new File(filePath);
-            if(f.exists() && f.isFile()) {
-                files.add(f);
-            } else {
-                files.addAll(
-                    getDirectoryFiles(
-                        Files.newDirectoryStream(f.toPath())
-                    )
-                );
-            }
+            files = Files.walk(f.toPath(), FileVisitOption.FOLLOW_LINKS)
+                .map(Path::toFile)
+                .filter(p -> p.isFile())
+                .toList();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -128,6 +109,18 @@ public class FileUtils {
             )
         );
     }
+    public String getFileLines(File f) {
+        StringBuffer b = new StringBuffer();
+        try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                b.append(Colors.YELLOW +  line + "\n" + Colors.RESET);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return b.toString();
+    }
     /**
      * compare the directory names.
      * @param f: file to compare its name
@@ -141,7 +134,7 @@ public class FileUtils {
         switch(cliOption) {
             case "-td":
                 if(f.isDirectory() && f.listFiles() != null) {
-                    getDirectoryNames(Files.newDirectoryStream(f.toPath()))
+                    listDirectoryNames(f)
                         .parallelStream()
                         .filter(e -> e.getName().toLowerCase().contains(c))
                         .forEach(e -> {

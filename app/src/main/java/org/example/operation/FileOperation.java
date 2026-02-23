@@ -4,7 +4,7 @@ import org.example.utils.*;
 
 import java.util.stream.Stream;
 import java.util.List;
-
+import java.io.Console;
 import java.io.File;
 
 import java.nio.file.Path;
@@ -15,6 +15,13 @@ public class FileOperation {
 
     private FileUtils fileUtils;
     private TextUtils textUtils;
+    private static final Console consol = System.console();
+    private static final String CONSOLE_FORMAT = "[%s] %s%n";
+    private static final String[] LOG_LEVEL = {
+        "Info",
+        "Error"
+    };
+
 
     public FileOperation(FileUtils fileUtils, TextUtils textUtils) {
         this.fileUtils = fileUtils;
@@ -26,12 +33,12 @@ public class FileOperation {
     }
     public void createDirectory(String pathURI) {
         if(!fileUtils.createDirectory(pathURI)) {
-            System.out.println("[Error] Couldn't create directory");
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[1],"Couldn't create directory");
         }
     }
     public void createFile(String fileURI) {
         if(!fileUtils.createFile(fileURI)) {
-            System.err.println("[Error] Couldn't create file");
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[1],"Couldn't create file");
         }
     }
 
@@ -46,10 +53,10 @@ public class FileOperation {
         boolean recursively = false;
         if(!permission.isBlank() && permission.equals("--r")) recursively = true; 
         if(!fileUtils.deleteDirectory(pathURI,recursively)) {
-            System.err.println("[Error] Can't delete this directory");
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[1],"Can't delete this directory");
         }
-        if(recursively == false) {
-            System.out.println("[Info] If the directory to delete contain files you must provide --r");
+        if(!recursively) {
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[0],"If the directory to delete contain files you must provide --r");
         }
     }
     /**
@@ -58,7 +65,7 @@ public class FileOperation {
      */
     public void deleteFile(String fileURI) {
         if(!fileUtils.deleteFile(fileURI)) {
-            System.err.println("[Error] Can't delete this file");
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[1],"Can't delete this file");
         }
     }
     /**
@@ -72,11 +79,11 @@ public class FileOperation {
         if(!permission.isBlank() && permission.equals("--r")) level = 0;
         List<Path> paths = fileUtils.listDirContent(pathURI, level);
         if(paths.isEmpty()) {
-            System.out.println("[Info] EMPTY");
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[0]," EMPTY");
             return;
         }
         for(Path p: paths) {
-            System.out.println(p);
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[0], p);
         }
     }
     /**
@@ -218,7 +225,10 @@ public class FileOperation {
         }
     }
     public void readCompressedFile(String fileURI) {
-        // TODO: only compressed file types allowed
+        if(!fileURI.contains(".zip") || !fileURI.contains(".rar")) {
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[1], "No zip file was provided");
+            return;
+        }
         fileUtils.readZipFile(fileURI);
     }
     public void compressPath(String sourceURI, String targetURI, String permission) {
@@ -236,7 +246,7 @@ public class FileOperation {
         for(int i=0; i<lines.length; ++i) {
             String l = lines[i];
             int c = i;
-            System.out.println(String.format("%d:%s", ++c, l));
+            consol.printf(CONSOLE_FORMAT, LOG_LEVEL[0], ++c + ":" + l);
         }
     }
     public void printFileLines(String fileURI, int start, int stop) {
@@ -246,7 +256,7 @@ public class FileOperation {
             start = start > 0 && start < stop ? start-1 : 0;
             for(int i=start; i<stop; ++i) {
                 int c = i;
-                System.out.println(String.format("%d:%s", ++c, lines.get(i)));
+                consol.printf(CONSOLE_FORMAT, LOG_LEVEL[0], ++c + ":" + lines.get(i));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -267,7 +277,7 @@ public class FileOperation {
                 String l = lines.get(i);
                 if(textUtils.lineContainsWord(l, word)) {
                     int lineNumber = i;
-                    System.out.println(String.format("%s:%d\t\t%s",fileURI, ++lineNumber, l));
+                    consol.printf(CONSOLE_FORMAT, LOG_LEVEL[0], String.format("%s:%d\t\t%s", fileURI, ++lineNumber, l));
                 }
             }
         } catch(Exception e) {
@@ -290,7 +300,7 @@ public class FileOperation {
             if(p.toFile().isFile()) {
                 searchWordInFile(p.toString(), word);
             }
-            System.out.println();
+            consol.printf("%s%n", " ");
         }
     }
 

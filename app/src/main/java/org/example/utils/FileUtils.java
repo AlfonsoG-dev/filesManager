@@ -25,7 +25,12 @@ import java.nio.file.StandardCopyOption;
 
 public class FileUtils {
     private static Console console = System.console();
-    private static final String CONSOLE_FORMAT = "%s%n";
+    private static final String CONSOLE_FORMAT = "[%s] %s%n";
+    private static final String[] LOG_LEVEL = {
+        "Info",
+        "Error",
+        "Warning"
+    };
     /**
      * transform {@Path} to {@String}
      */
@@ -46,7 +51,7 @@ public class FileUtils {
         try {
             Path p = Files.createDirectories(f.toPath());
             if(p != null) {
-                console.printf(CONSOLE_FORMAT, "[Info] Creating directory => " + getString.apply(p));
+                System.console().printf(CONSOLE_FORMAT, LOG_LEVEL[0], "Creating directory => " + getString.apply(p));
                 return true;
             }
         } catch(IOException e) {
@@ -68,7 +73,7 @@ public class FileUtils {
                 if(parent != null) createDirectory(getString.apply(parent));
             }
             if(path2File.apply(p).createNewFile()) {
-                console.printf(CONSOLE_FORMAT, String.format("[Info] Creating file => %s", getString.apply(p)));
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[0], String.format("Creating file => %s", getString.apply(p)));
                 return true;
             }
         } catch(IOException e) {
@@ -93,14 +98,14 @@ public class FileUtils {
                     .toList();
                 for(Path p: paths) {
                     if(Files.isRegularFile(p) && Files.deleteIfExists(p)) {
-                        console.printf(CONSOLE_FORMAT, "[Info] Deleting file => " + p);
+                        console.printf(CONSOLE_FORMAT, LOG_LEVEL[0], "Deleting file => " + p);
                     } else if(Files.deleteIfExists(p)) {
-                        console.printf(CONSOLE_FORMAT, "[Info] Deleting directory => " + p);
+                        console.printf(CONSOLE_FORMAT, LOG_LEVEL[0], "Deleting directory => " + p);
                     }
                 }
             } else {
                 if(Files.deleteIfExists(f.toPath())) {
-                    console.printf(CONSOLE_FORMAT, "[Info] Deleting directory => " + f.toString());
+                    console.printf(CONSOLE_FORMAT, LOG_LEVEL[0], "Deleting directory => " + f.toString());
                     return true;
                 }
             }
@@ -119,11 +124,15 @@ public class FileUtils {
         if(!f.isFile()) return false;
         try {
             if(Files.deleteIfExists(f.toPath())) {
-                console.printf(CONSOLE_FORMAT, "[Info] Deleting file => " + f.toString());
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[0], "[Info] Deleting file => " + f.toString());
                 return true;
             }
         } catch(IOException e) {
             e.printStackTrace();
+        }
+        if(f.delete()) {
+            console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],  "Deleting file => " + f.toString());
+            return true;
         }
         return false;
     }
@@ -152,8 +161,8 @@ public class FileUtils {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
             if(result != null) {
-                console.printf(CONSOLE_FORMAT, 
-                        String.format("[Info] copy %s %n\tinto \t=>[%s]",
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],
+                        String.format("Copy %s %n\tinto \t=>[%s]",
                             getString.apply(sourcePath), getString.apply(result))
                 );
             }
@@ -180,7 +189,7 @@ public class FileUtils {
                     createDirectory(getString.apply(destination));
                 } else {
                     Path r = Files.copy(p, destination, StandardCopyOption.COPY_ATTRIBUTES);
-                    console.printf(CONSOLE_FORMAT, String.format("[Info] Copy %s %n\tinto \t=>[%s]", p, r));
+                    console.printf(CONSOLE_FORMAT, LOG_LEVEL[0], String.format("Copy %s %n\tinto \t=>[%s]", p, r));
                 }
             }
         } catch(Exception e) {
@@ -201,7 +210,7 @@ public class FileUtils {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.move(sourcePath, destination, StandardCopyOption.REPLACE_EXISTING);
             if(result != null) {
-                console.printf(CONSOLE_FORMAT, String.format("[Info] Move %s %n\tinto \t=>[%s]", sourcePath, result));
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],String.format("Move %s %n\tinto \t=>[%s]", sourcePath, result));
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -221,7 +230,7 @@ public class FileUtils {
                     createDirectory(getString.apply(destination));
                 } else {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
-                    console.printf(CONSOLE_FORMAT, String.format("[Info] Move %s %n\tinto \t=>[%s]", p, r));
+                    console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],String.format("Move %s %n\tinto \t=>[%s]", p, r));
                 }
             }
         } catch(IOException e) {
@@ -238,7 +247,7 @@ public class FileUtils {
         try(ZipFile z = new ZipFile(f)) {
             int i=1;
             for(Enumeration<?> e = z.entries(); e.hasMoreElements();) {
-                console.printf(CONSOLE_FORMAT, String.format("%d:%s", i, e.nextElement()));
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],String.format("%d:%s", i, e.nextElement()));
                 ++i;
             }
         } catch(IOException e) {
@@ -258,16 +267,16 @@ public class FileUtils {
                 .filter(Files::isRegularFile)
                 .toList();
             if(paths.isEmpty()) {
-                console.printf(CONSOLE_FORMAT, "[Error] Empty file provided");
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[1],"Empty file provided");
                 return;
             }
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
                 // replace "\\" with "/" by zip standards.
                 ZipEntry entry = new ZipEntry(getString.apply(relative).replace("\\", "/"));
-                console.printf(CONSOLE_FORMAT, 
+                console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],
                         String.format(
-                            "[Info] Adding %s to the compressed file %s",
+                            "Adding %s to the compressed file %s",
                             getString.apply(relative),
                             getString.apply(targetPath)
                         )
@@ -290,7 +299,7 @@ public class FileUtils {
         File f = new File(fileURI);
         if(!f.isFile() && !f.exists()) return;
         try(ZipFile z = new ZipFile(f)) {
-            console.printf(CONSOLE_FORMAT, "[Info] Decompressing file...");
+            console.printf(CONSOLE_FORMAT, LOG_LEVEL[0],"Decompressing file...");
             Enumeration<? extends ZipEntry> zipEntries = z.entries();
             while(zipEntries.hasMoreElements()) {
                 ZipEntry entry = zipEntries.nextElement();
@@ -302,12 +311,12 @@ public class FileUtils {
                 Path parent = destination.getParent();
                 if(parent != null) {
                     Path cd = Files.createDirectories(parent);
-                    console.printf(CONSOLE_FORMAT, "[Info] Creating directory %n\t=> " + cd);
+                    console.printf(CONSOLE_FORMAT, LOG_LEVEL[0]," Creating directory %n\t=> " + cd);
                 }
 
                 // extract file
                 try(InputStream is = z.getInputStream(entry); OutputStream os = Files.newOutputStream(destination)) {
-                    console.printf(CONSOLE_FORMAT, "[Info] Transferring files %n\tTo => " + destination);
+                    console.printf(CONSOLE_FORMAT, LOG_LEVEL[0]," Transferring files %n\tTo => " + destination);
                     is.transferTo(os);
                 }
 
